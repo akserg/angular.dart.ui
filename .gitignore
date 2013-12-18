@@ -1,4 +1,13 @@
 .DS_Store
-packages
 .project
+.children
+*.dart.js
+*.dart.js_
+*.dart.js.map
+packages
+packages/
 pubspec.lock
+.buildlog
+content_shell*.zip
+drt-*
+test.log
