@@ -8,6 +8,9 @@ library angular.ui.test;
  * Unit testing for Monomer library.
  */
 
+import 'dart:html';
+import 'dart:async';
+
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
 
