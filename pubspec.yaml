@@ -2,11 +2,12 @@ name: angular_ui
 version: 0.1.0
 author: Sergey Akopkokhyants <akserg@gmail.com>
 description: Port of Angular-UI to Dart.
+homepage: http://akserg.github.io/angular.dart.ui
 environment:
   sdk: '>=1.0.0+10 <2.0.0'
 dependencies:
-  angular: any
-  browser: any
-  js: any
+  angular: '>=0.9.4'
+  browser: '>=0.9.1'
+  js: '>=0.2.1'
 dev_dependencies:
-  unittest: any
+  unittest: '>=0.9.3'

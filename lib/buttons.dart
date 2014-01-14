@@ -32,24 +32,27 @@ class ButtonConfig {
  */
 @NgDirective(selector:'[btn-radio]')
 class BtnRadio {
+  
   @NgAttr("btn-radio")
-  String pattern;
+  String btnRadioAttr;
   
   ButtonConfig config;
   NgModel ngModel;
   
   dom.Element element;
+  Scope scope;
   
-  BtnRadio(this.element, this.ngModel, this.config) {
+  BtnRadio(this.element, this.ngModel, this.config, this.scope) {
     // model -> UI
     ngModel.render = (value) {
-      element.classes.toggle(config.activeClass, ngModel.modelValue == pattern);
+      //element.classes.toggle(config.activeClass, ngModel.modelValue == btnRadioAttr);
+      element.classes.toggle(config.activeClass, ngModel.modelValue == scope.$eval(btnRadioAttr));
     };
     
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
       if (!element.classes.contains(config.activeClass)) {
-        ngModel.viewValue = pattern;
+        ngModel.viewValue = scope.$eval(btnRadioAttr);
       }
     });
   }
@@ -72,15 +75,24 @@ class BtnCheckbox {
   Scope scope;
   dom.Element element;
   
+  dynamic get trueValue => getCheckboxValue(btnCheckboxTrue, true);
+  
+  dynamic get falseValue => getCheckboxValue(btnCheckboxFalse, false);
+  
+  dynamic getCheckboxValue(attributeValue, defaultValue) {
+    var val = scope.$eval(attributeValue);
+    return val != null ? val : defaultValue;
+  }
+  
   BtnCheckbox(this.element, this.ngModel, this.config, this.scope) {
     // model -> UI
     ngModel.render = (value) {
-      element.classes.toggle(config.activeClass, ngModel.modelValue == true);
+      element.classes.toggle(config.activeClass, ngModel.modelValue == trueValue);
     };
   
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
-      ngModel.viewValue = !element.classes.contains(config.activeClass);
+      ngModel.viewValue = element.classes.contains(config.activeClass) ? falseValue : trueValue;
     });
   }
 }

@@ -5,6 +5,7 @@ library angular.ui.demo;
 
 import 'package:angular/angular.dart';
 import 'package:angular_ui/buttons.dart';
+import 'package:angular_ui/collapse.dart';
 
 /**
  * Entry point into app.
@@ -19,28 +20,44 @@ main() {
 class DemoModule extends Module {
   DemoModule() {
     install(new ButtonsModule());
+    install(new CollapseModule());
     type(ButtonsCtrl);
+    type(CollapseCtrl);
   }
 }
 
 /**
  * Buttons controller.
  */
-@NgController(selector: 'buttons-ctrl', publishAs: 'ctrl')
+@NgController(selector: '[buttons-ctrl]', publishAs: 'ctrl')
 class ButtonsCtrl {
   
-  @NgTwoWay("singleModel")
-  var singleModel = '0';
+  var scope;
   
-  @NgTwoWay("radioModel")
-  var radioModel = 'Middle';
+  ButtonsCtrl(Scope this.scope);
   
-  @NgTwoWay("leftModel")
+  var singleModel = 1;
+  
+  var radioModel = 'Right';
+  
   var leftModel = false;
   
-  @NgTwoWay("middleModel")
-  var middleModel = false;
+  var middleModel = true;
   
-  @NgTwoWay("rightModel")
   var rightModel = false;
+}
+
+@NgController(selector: '[collapse-ctrl]', publishAs: 'ctrl')
+class CollapseCtrl {
+  
+  var scope;
+  
+  var isCollapsed = true;
+  
+  CollapseCtrl(Scope this.scope);
+  
+  void clickHandler() {
+    isCollapsed = !isCollapsed;
+    print('Click. $isCollapsed');
+  }
 }

@@ -79,7 +79,7 @@ void buttonsTests() {
       expect(btns[0].classes.contains('active'), isFalse);
       expect(btns[1].classes.contains('active'), isFalse);
 
-      scope.model = '2';
+      scope.model = 2;
       scope.$digest();
       expect(btns[0].classes.contains('active'), isFalse);
       expect(btns[1].classes.contains('active'), isTrue);
@@ -94,13 +94,13 @@ void buttonsTests() {
       
       btns[0].click();
       scope.$digest();
-      expect(scope.model, equals('1'));
+      expect(scope.model, equals(1));
       expect(btns[0].classes.contains('active'), isTrue);
       expect(btns[1].classes.contains('active'), isFalse);
       
       btns[1].click();
       scope.$digest();
-      expect(scope.model, equals('2'));
+      expect(scope.model, equals(2));
       expect(btns[0].classes.contains('active'), isFalse);
       expect(btns[1].classes.contains('active'), isTrue);
     }));
