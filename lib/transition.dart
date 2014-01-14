@@ -1,89 +1,104 @@
 // Copyright (c) 2013, akserg (Sergey Akopkokhyants)
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
+library angular.ui.transition;
 
-part of angular.ui;
+import 'dart:html' as dom;
+import 'dart:async' as async;
+import "package:angular/angular.dart";
+
+/**
+ * Transition Module.
+ */
+class TransitionModule extends Module {
+  TransitionModule() {
+    type(Transition);
+  }
+}
 
 class Transition {
   
-  static const Map transitionEndEventNames = const {
-   'WebkitTransition': 'webkitTransitionEnd',
-   'MozTransition': 'transitionend',
-   'OTransition': 'oTransitionEnd',
-   'transition': 'transitionend'
+  // Work out the name of the transitionEnd event
+  var _transElement = new dom.DivElement();
+  var _transitionEndEventNames = {
+    'WebkitTransition': 'webkitTransitionEnd',
+    'MozTransition': 'transitionend',
+    'OTransition': 'oTransitionEnd',
+    'transition': 'transitionend'
   };
-  static const Map animationEndEventNames = const {
+  var _animationEndEventNames = {
     'WebkitTransition': 'webkitAnimationEnd',
     'MozTransition': 'animationend',
     'OTransition': 'oAnimationEnd',
     'transition': 'animationend'
   };
   
-  String transitionEndEventName;
-  String animationEndEventName;
+  var transitionEndEventName, animationEndEventName;
   
   Transition() {
-    // Work out the name of the transitionEnd event
-    var transElement = document.createElement('trans');
-    
-    transitionEndEventName = _findEndEventName(transElement, transitionEndEventNames);
-    animationEndEventName = _findEndEventName(transElement, animationEndEventNames);
+    transitionEndEventName = _findEndEventName(_transitionEndEventNames);
+    animationEndEventName = _findEndEventName(_animationEndEventNames);
   }
   
-  String _findEndEventName(Element transElement, Map endEventNames) {
-    endEventNames.forEach((k, v) {
-      if (transElement.classes.contains(k)) {
-        return v;
-      }
-    });
-    return null;
-  }
-  
-  Future make(Scope scope, Element element, trigger, [Map options = null]) {
-    if (options == null) {
-      options = {};
-    }
-    var deferred = new Completer();
-    var endEventName = options.containsKey("animation") ? animationEndEventName : transitionEndEventName ;
-    
-    EventListener transitionEndHandler;
-    transitionEndHandler = (event) {
-      scope.$root.$apply((){
-        element.removeEventListener(endEventName, transitionEndHandler);
+  async.Completer call(dom.Element element, trigger, {Map options:null}) {
+    options = options != null ? options : {};
+    //
+    async.Completer deferred = new async.Completer();
+    //
+    var endEventName = options.containsKey('animation') ? animationEndEventName : transitionEndEventName;
+    //
+    //async.StreamSubscription endEventSubscription;
+    //
+    dom.EventListener transitionEndHandler;
+    transitionEndHandler = (dom.Event event) {
+      //endEventSubscription.cancel();
+      element.removeEventListener(endEventName, transitionEndHandler);
+      if (!deferred.isCompleted) {
         deferred.complete(element);
-      });
+      }
     };
     
     if (endEventName != null) {
       element.addEventListener(endEventName, transitionEndHandler);
     }
     
-    // Wrap in a timeout to allow the browser time to update the DOM before the 
-    // transition is to occur
-    // TODO: Ideas about delaying assign classes
-//    new Timer(new Duration(milliseconds:0), () {
+    // Wrap in a timeout to allow the browser time to update the DOM before the transition is to occur
+    new async.Timer(const Duration(milliseconds: 200), () {
       if (trigger is String) {
         element.classes.add(trigger);
       } else if (trigger is Function) {
-        Function.apply(trigger, [element]);
+        trigger(element);
       } else if (trigger is Map) {
-        trigger.forEach((propertyName, value) {
-          element.style.setProperty(propertyName, value);
-        });
+        trigger.forEach((propertyName, value) => element.style.setProperty(propertyName, value));
       }
-      
       //If browser does not support transitions, instantly resolve
-      if (endEventName == null) {
+      if (endEventName == null && !deferred.isCompleted) {
         deferred.complete(element);
-      }
-//    });
-    
-    deferred.future.catchError((error){
-      if (endEventName != null) {
-        element.removeEventListener(endEventName, transitionEndHandler);
       }
     });
     
-    return deferred.future;
+    // Add our custom cancel function to the promise that is returned
+    // We can call this if we are about to run a new transition, which we know will prevent this transition from ending,
+    // i.e. it will therefore never raise a transitionEnd event for that transition
+    deferred.future.catchError((error) {
+      if (endEventName != null) {
+        element.removeEventListener(endEventName, transitionEndHandler);
+      }
+      if (!deferred.isCompleted) {
+        deferred.completeError('Transition cancelled');
+      }
+    });
+    
+    return deferred;
+  }
+  
+  String _findEndEventName(endEventNames) {
+    endEventNames.forEach((k, v) {
+      if (_transElement.style.getPropertyValue(k) != '') {
+        return v;
+      }
+    });
+    return null;
   }
 }
+
