@@ -17,7 +17,7 @@ import 'package:di/di.dart';
 import 'package:angular/angular.dart';
 import 'package:angular/mock/module.dart';
 
-import 'package:angular_ui/position.dart';
+//import 'package:angular_ui/position.dart';
 import 'package:angular_ui/buttons.dart';
 
 //part 'tests/position_tests.dart';
