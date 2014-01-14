@@ -1,9 +1,11 @@
 .DS_Store
 .project
+.idea
 .children
 *.dart.js
 *.dart.js_
 *.dart.js.map
+*.iml
 packages
 packages/
 pubspec.lock
