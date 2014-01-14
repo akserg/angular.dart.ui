@@ -20,14 +20,14 @@ import 'package:angular/mock/module.dart';
 import 'package:angular_ui/position.dart';
 import 'package:angular_ui/buttons.dart';
 
-part 'tests/position_tests.dart';
+//part 'tests/position_tests.dart';
 part 'tests/buttons_tests.dart';
 
 void main() {
   print('Running unit tests for Angular UI library.');
   useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-    test('Position', () => positionTests());
+//    test('Position', () => positionTests());
     test('Buttons', () => buttonsTests());
   });
 }
