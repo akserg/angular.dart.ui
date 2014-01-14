@@ -1,7 +1,7 @@
 name: angular_ui
-varsion: 0.1.0
+version: 0.1.0
 author: Sergey Akopkokhyants <akserg@gmail.com>
-description: Angular-UI to Dart.
+description: Port of Angular-UI to Dart.
 environment:
   sdk: '>=1.0.0+10 <2.0.0'
 dependencies:

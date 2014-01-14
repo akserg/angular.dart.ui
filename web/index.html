@@ -1,6 +1,10 @@
 <!DOCTYPE html>
-
-<html>
+<!--
+Copyright (c) 2013, akserg (Sergey Akopkokhyants)
+https://github.com/akserg/angular.dart.ui
+All rights reserved.  Please see the LICENSE.md file.
+-->
+<html ng-app>
   <head>
     <meta charset="utf-8">
     <title>Angular dart ui</title>
@@ -8,7 +12,33 @@
     <link rel="stylesheet" href="main.css">
   </head>
   <body>
-    <h1>Angular Dart UI</h1>
+    <h1>Angular Dart UI</h1><hr/>
+
+    <h3>Buttons</h3>    
+    <div buttons-ctrl>
+
+      <h4>Single toggle</h4>
+      <pre>{{ctrl.singleModel}}</pre>
+      <button type="button" class="btn btn-primary" ng-model="ctrl.singleModel" btn-checkbox>
+          Single Toggle
+      </button>
+    
+      <h4>Checkbox</h4>
+      <pre>{{ctrl.leftModel}} - {{ctrl.middleModel}} - {{ctrl.rightModel}}</pre>
+      <div class="btn-group">
+          <button type="button" class="btn btn-primary" ng-model="ctrl.leftModel" btn-checkbox>Left</button>
+          <button type="button" class="btn btn-primary" ng-model="ctrl.middleModel" btn-checkbox>Middle</button>
+          <button type="button" class="btn btn-primary" ng-model="ctrl.rightModel" btn-checkbox>Right</button>
+      </div>
+    
+      <h4>Radio</h4>
+      <pre>{{ctrl.radioModel}}</pre>
+      <div class="btn-group">
+          <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Left">Left</button>
+          <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Middle">Middle</button>
+          <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Right">Right</button>
+      </div>
+    </div>
 
     <script type="application/dart" src="main.dart"></script>
     <script src="packages/browser/dart.js"></script>
