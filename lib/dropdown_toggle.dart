@@ -8,6 +8,7 @@ library angular.ui.dropdownToggle;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
+import "package:angular/utils.dart";
 
 /**
  * DropdownToggle Module.
@@ -43,7 +44,7 @@ class DropdownToggle {
       _closeMenu(null);
     }
 
-    if (!elementWasOpen && !element.classes.contains('disabled') && !element.attributes['disabled']) {
+    if (!elementWasOpen && !element.classes.contains('disabled') && !toBool(element.attributes['disabled'])) {
       element.parent.classes.add('open');
       _openElement = element;
       _closeMenu = (dom.MouseEvent event) {
