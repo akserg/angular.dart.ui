@@ -1,6 +1,6 @@
 name: angular_ui
-version: 0.1.0
-author: Sergey Akopkokhyants <akserg@gmail.com>
+version: 0.2.0
+author: Sergey Akopkokhyants <akserg@gmail.com>, Tõnis Pool <tonis.pool@gmail.com>.
 description: Port of Angular-UI to Dart.
 homepage: http://akserg.github.io/angular.dart.ui
 environment:

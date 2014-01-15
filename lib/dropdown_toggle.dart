@@ -1,3 +1,9 @@
+// Copyright (c) 2013 - 2014, akserg (Sergey Akopkokhyants)
+// https://github.com/akserg/angular.dart.ui
+// All rights reserved.  Please see the LICENSE.md file.
+// 
+// Credits: Tõnis Pool who wrote and donate that code.
+//
 library angular.ui.dropdownToggle;
 
 import 'dart:html' as dom;

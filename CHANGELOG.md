@@ -1,14 +1,20 @@
-Angular UI Changes
-===============
+# Version 0.2.0, In Progress...
 
-## Release 0.2.0, In Progress...
+## Features
 
-- Created Collapse module. Provides a simple way to hide and show an element with a css transition.
+- **Collapse:**
+  - created ([7e8af32](https://github.com/akserg/angular.dart.ui/commit/7e8af32))
+- **DropdownToggle:**
+  - merged pull request ([b3753d3](https://github.com/akserg/angular.dart.ui/commit/b3753d3))
 
-## Release 0.1.0, Released
+# Version 0.1.0, (2014/01/14)
 
-### 2014/01/14
-- Created Buttons module. Module contains two directives that can make a group of buttons to behave like a set of checkboxes or radio buttons.
+## Features
 
-### 2014/01/11
-- Created Position and Transition modules.
+- **Buttons:**
+ - created ([bcedb32](https://github.com/akserg/angular.dart.ui/commit/bcedb32))
+- **Position:**
+ - created ([bcedb32](https://github.com/akserg/angular.dart.ui/commit/bcedb32))
+- **Transition:**
+ - created ([3894ad9](https://github.com/akserg/angular.dart.ui/commit/3894ad9))
+

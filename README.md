@@ -1,7 +1,12 @@
-angular.ui [![Build Status](https://drone.io/github.com/akserg/angular.dart.ui/status.png)](https://drone.io/github.com/akserg/angular.dart.ui/latest)
+angular.dart.ui [![Build Status](https://drone.io/github.com/akserg/angular.dart.ui/status.png)](https://drone.io/github.com/akserg/angular.dart.ui/latest)
 ===============
 
 Port of Angular-UI to Dart.
+
+##Credits
+Big thanks for yours valuable input:
+- **Tõnis Pool** (https://github.com/poolik).
+- **Google AngularJS team**
 
 ###Buttons (ButtonsModule)
 There are 2 directives that can make a group of buttons to behave like a set of checkboxes or radio buttons.
