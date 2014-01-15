@@ -11,7 +11,7 @@ library angular.ui.test;
 import 'dart:html' as dom;
 import 'dart:async';
 //
-//import 'package:unittest/html_enhanced_config.dart';
+import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 
 import 'package:angular_ui/position.dart';
@@ -28,7 +28,7 @@ part 'tests/dropdown_toggle_tests.dart';
 
 void main() {
   print('Running unit tests for Angular UI library.');
-//  useHtmlEnhancedConfiguration();
+  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
     test('Position', () => positionTests());
     test('Transition', () => transitionTests());
