@@ -20,7 +20,7 @@ main() {
  */
 class DemoModule extends Module {
   DemoModule() {
-    install(new ButtonsModule());
+    install(new ButtonModule());
     install(new CollapseModule());
     install(new DropdownToggleModule());
     type(ButtonsCtrl);

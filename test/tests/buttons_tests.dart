@@ -6,104 +6,161 @@ part of angular.ui.test;
 
 void buttonsTests() {
 
-  group('Testing Checkbox buttons:', () {
-    // Add injector and configure Modules before tests
-    setUp(() {
-      setUpInjector();
-      module((Module m) => m.install(new ButtonsModule()));
-    });
+  
+  describe('Testing Checkbox buttons:', () {
+    TestBed _;
+    Scope scope;
     
-    var compileButton = (String html, Scope scope, Injector injector, Compiler compiler) {
-      var div = new dom.Element.tag('div');
-      div.setInnerHtml(html, treeSanitizer: injector.get(dom.NodeTreeSanitizer));
-      var el = compiler(div.nodes)(injector, div.nodes);
+    beforeEach(setUpInjector);
+    beforeEach(module((Module module) {
+      module.install(new ButtonModule());
+    }));
+    beforeEach(inject((TestBed tb) => _ = tb));
+    beforeEach(inject((Scope s) => scope = s));
+
+    afterEach(tearDownInjector);
+    
+    var compileButton = (String markup) {
+      var el = _.compile(markup);
       scope.$digest();
-      return el.elements[0];
+      return el;
     };
     
-    // Remove injector after tests
-    tearDown(tearDownInjector);
-    
-    // model -> UI
-    test('Should work correctly with default model values', inject((Scope scope, Injector injector, Compiler compiler) {
+    //model -> UI
+    it('should work correctly with default model values', () {
       scope.model = false;
-      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>', scope, injector, compiler);
-      expect(btn.classes.contains('active'), isFalse);
+      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>');
+      expect(btn).not.toHaveClass('active');
 
       scope.model = true;
       scope.$digest();
-      expect(btn.classes.contains('active'), isTrue);
-    }));
-    
-    
-    // UI-> model
-    test('Should toggle default model values on click', inject((Scope scope, Injector injector, Compiler compiler) {
-      scope.model = false;
-      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>', scope, injector, compiler);
-
-      btn.click();
-      scope.$digest();
-      expect(scope.model, isTrue);
-      expect(btn.classes.contains('active'), isTrue);
-
-      btn.click();
-      scope.$digest();
-      expect(scope.model, isFalse);
-      expect(btn.classes.contains('active'), isFalse);
-    }));
-    
-  });
-  
-  group('Testing Radio buttons:', () {
-    // Add injector and configure Modules before tests
-    setUp(() {
-      setUpInjector();
-      module((Module m) => m.install(new ButtonsModule()));
+      expect(btn).toHaveClass('active');
     });
     
-    var compileButtons = (String html, Scope scope, Injector injector, Compiler compiler) {
-      var div = new dom.Element.tag('div');
-      div.setInnerHtml(html, treeSanitizer: injector.get(dom.NodeTreeSanitizer));
-      var el = compiler(div.nodes)(injector, div.nodes);
-      scope.$digest();
-      return el.elements;
-    };
+    it('should bind custom model values', () {
+      scope.model = 1;
+      var btn = compileButton('<button ng-model="model" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">click</button>');
+      expect(btn).toHaveClass('active');
 
-    // Remove injector after tests
-    tearDown(tearDownInjector);
+      scope.model = 0;
+      scope.$digest();
+      expect(btn).not.toHaveClass('active');
+    });
     
-    // model -> UI
-    test('Should work correctly with default model values', inject((Scope scope, Injector injector, Compiler compiler) {
-      var btns = compileButtons('<button ng-model="model" btn-radio="1">click1</button><button ng-model="model" btn-radio="2">click2</button>', scope, injector, compiler);
-      expect(btns.length, equals(2));
-      expect(btns[0].classes.contains('active'), isFalse);
-      expect(btns[1].classes.contains('active'), isFalse);
+    //UI-> model
+    it('should toggle default model values on click', () {
+      scope.model = false;
+      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>');
+
+      btn.click();
+      scope.$digest();
+      expect(scope.model).toEqual(true);
+      expect(btn).toHaveClass('active');
+
+      btn.click();
+      scope.$digest();
+      expect(scope.model).toEqual(false);
+      expect(btn).not.toHaveClass('active');
+    });
+    
+    it('should toggle custom model values on click', () {
+      scope.model = 0;
+      var btn = compileButton('<button ng-model="model" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">click</button>');
+
+      btn.click();
+      scope.$digest();
+      expect(scope.model).toEqual(1);
+      expect(btn).toHaveClass('active');
+
+      btn.click();
+      scope.$digest();
+      expect(scope.model).toEqual(0);
+      expect(btn).not.toHaveClass('active');
+    });
+    
+    it('should monitor true / false value changes', () {
+      scope.model = 1;
+      scope.trueVal = 1;
+      var btn = compileButton('<button ng-model="model" btn-checkbox btn-checkbox-true="trueVal">click</button>');
+
+      expect(btn).toHaveClass('active');
+      expect(scope.model).toEqual(1);
+
+      scope.model = 2;
+      scope.trueVal = 2;
+      scope.$digest();
+
+      expect(btn).toHaveClass('active');
+      expect(scope.model).toEqual(2);
+    });
+  });
+  
+  describe('Testing radio buttons:', () {
+    TestBed _;
+    Scope scope;
+    
+    beforeEach(setUpInjector);
+    beforeEach(module((Module module) {
+      module.install(new ButtonModule());
+    }));
+    beforeEach(inject((TestBed tb) => _ = tb));
+    beforeEach(inject((Scope s) => scope = s));
+
+    afterEach(tearDownInjector);
+    
+    var compileButtons = (String markup) {
+      var el = _.compile('<div>'+markup+'</div>');
+      scope.$digest();
+      return el.querySelectorAll('button');
+    };
+    
+    //model -> UI
+    it('should work correctly set active class based on model', () {
+      var btns = compileButtons('<button ng-model="model" btn-radio="1">click1</button><button ng-model="model" btn-radio="2">click2</button>');
+      expect(btns[0]).not.toHaveClass('active');
+      expect(btns[1]).not.toHaveClass('active');
 
       scope.model = 2;
       scope.$digest();
-      expect(btns[0].classes.contains('active'), isFalse);
-      expect(btns[1].classes.contains('active'), isTrue);
-    }));
+      expect(btns[0]).not.toHaveClass('active');
+      expect(btns[1]).toHaveClass('active');
+    });
     
-    
-    // UI-> model
-    test('Should toggle default model values on click', inject((Scope scope, Injector injector, Compiler compiler) {
-      var btns = compileButtons('<button ng-model="model" btn-radio="1">click1</button><button ng-model="model" btn-radio="2">click2</button>', scope, injector, compiler);
-      expect(btns.length, equals(2));
-      expect(scope.model, isNull);
-      
+    //UI->model
+    it('should work correctly set active class based on model', () {
+      var btns = compileButtons('<button ng-model="model" btn-radio="1">click1</button><button ng-model="model" btn-radio="2">click2</button>');
+      expect(scope.model).toBeNull();
+
       btns[0].click();
       scope.$digest();
-      expect(scope.model, equals(1));
-      expect(btns[0].classes.contains('active'), isTrue);
-      expect(btns[1].classes.contains('active'), isFalse);
-      
+      expect(scope.model).toEqual(1);
+      expect(btns[0]).toHaveClass('active');
+      expect(btns[1]).not.toHaveClass('active');
+
       btns[1].click();
       scope.$digest();
-      expect(scope.model, equals(2));
-      expect(btns[0].classes.contains('active'), isFalse);
-      expect(btns[1].classes.contains('active'), isTrue);
-    }));
+      expect(scope.model).toEqual(2);
+      expect(btns[1]).toHaveClass('active');
+      expect(btns[0]).not.toHaveClass('active');
+    });
     
+    it('should watch btn-radio values and update state accordingly', () {
+      scope.myValues = ["value1", "value2"];
+
+      var btns = compileButtons('<button ng-model="model" btn-radio="myValues[0]">click1</button><button ng-model="model" btn-radio="myValues[1]">click2</button>');
+      expect(btns[0]).not.toHaveClass('active');
+      expect(btns[1]).not.toHaveClass('active');
+
+      scope.model = "value2";
+      scope.$digest();
+      expect(btns[0]).not.toHaveClass('active');
+      expect(btns[1]).toHaveClass('active');
+
+      scope.myValues[1] = "value3";
+      scope.model = "value3";
+      scope.$digest();
+      expect(btns[0]).not.toHaveClass('active');
+      expect(btns[1]).toHaveClass('active');
+    });
   });
 }

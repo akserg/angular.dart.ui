@@ -9,17 +9,18 @@ library angular.ui.test;
  */
 
 import 'dart:html' as dom;
+import 'dart:async';
 //
-import 'package:unittest/html_enhanced_config.dart';
+//import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 
-//import 'package:angular_ui/position.dart';
+import 'package:angular_ui/position.dart';
 import 'package:angular_ui/transition.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
 import 'package:angular_ui/dropdown_toggle.dart';
 
-//part 'tests/position_tests.dart';
+part 'tests/position_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/buttons_tests.dart';
 part 'tests/collapse_tests.dart';
@@ -27,12 +28,12 @@ part 'tests/dropdown_toggle_tests.dart';
 
 void main() {
   print('Running unit tests for Angular UI library.');
-  useHtmlEnhancedConfiguration();
+//  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-//    test('Position', () => positionTests());
+    test('Position', () => positionTests());
     test('Transition', () => transitionTests());
     test('Buttons', () => buttonsTests());
     test('DropdownToggle', () => dropdownToggleTests());
-//    test('Collapse', () => collapseTests());
+    test('Collapse', () => collapseTests());
   });
 }

@@ -6,54 +6,37 @@ part of angular.ui.test;
 
 void collapseTests() {
 
-  group('Testing collapse:', () {
+  describe('Testing collapse:', () {
+    TestBed _;
+    Scope scope;
+    Transition transition; 
     
-    // Add injector and configure Modules before tests
-    setUp(() {
-      setUpInjector();
-      module((Module m) => m.install(new CollapseModule()));
+    beforeEach(setUpInjector);
+    beforeEach(module((Module module) {
+      module.install(new CollapseModule());
+    }));
+    beforeEach(inject((TestBed tb) => _ = tb));
+    beforeEach(inject((Scope s) => scope = s));
+    beforeEach(inject((Transition t) => transition = t));
+
+    afterEach(tearDownInjector);
+    
+    dom.Element element;
+    
+    beforeEach(() {
+      element = _.compile('<div collapse="isCollapsed">Some Content</div>');
+      dom.document.body.append(element);
     });
     
-    var compileElement = (Scope scope, Injector injector, Compiler compiler) {
-      var div = new dom.Element.tag('div');
-      div.setInnerHtml('<div collapse="isCollapsed">Some Content</div>', treeSanitizer: injector.get(dom.NodeTreeSanitizer));
-      var el = compiler(div.nodes)(injector, div.nodes);
-      scope.$digest();
-      var element = el.elements[0];
-      dom.document.body.append(element);
-      return element;
-    };
-    
-    // Remove injector after tests
-    tearDown(tearDownInjector);
-    
-    test('should be hidden on initialization if isCollapsed = true without transition', inject((Scope scope, Injector injector, Compiler compiler) {
-      scope.isCollapsed = true;
-      var element = compileElement(scope, injector, compiler);
-      scope.$digest();
-      //No animation timeout here
-      expect(element.style.height, equals("0px"));
+    afterEach(() {
       element.remove();
-    }));
+    });
     
-    test('should be hidden on initialization if isCollapsed = true without transition', inject((Scope scope, Injector injector, Compiler compiler) {
-      var element = compileElement(scope, injector, compiler);
-      scope.isCollapsed = false;
-      scope.$digest();
+    it('should be hidden on initialization if isCollapsed = true without transition', () {
       scope.isCollapsed = true;
       scope.$digest();
-      //$timeout.flush();
-      expect(element.style.height, equals("0px"));
-      element.remove();
-    }));
-    
-    test('should be shown on initialization if isCollapsed = false without transition', inject((Scope scope, Injector injector, Compiler compiler) {
-      var element = compileElement(scope, injector, compiler);
-      scope.isCollapsed = false;
-      scope.$digest();
       //No animation timeout here
-      expect(element.style.height != "0px", isTrue);
-      element.remove();
-    }));
-  });
+      expect(element.style.height, equals('0px'));
+    });
+  });    
 }
