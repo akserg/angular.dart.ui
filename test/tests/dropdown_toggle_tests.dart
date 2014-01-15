@@ -2,7 +2,7 @@
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 // 
-// Credits: Tõnis Pool who wrote and donate that code.
+// Credits: Tonis Pool who wrote and donate that code.
 //
 
 part of angular.ui.test;
