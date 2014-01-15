@@ -39,67 +39,29 @@
         </div>
 
         <h1>
-<a name="angularui-" class="anchor" href="#angularui-"><span class="octicon octicon-link"></span></a>angular.ui <a href="https://drone.io/github.com/akserg/angular.dart.ui/latest"><img src="https://drone.io/github.com/akserg/angular.dart.ui/status.png" alt="Build Status"></a>
+<a name="angulardartui-" class="anchor" href="#angulardartui-"><span class="octicon octicon-link"></span></a>angular.dart.ui <a href="https://drone.io/github.com/akserg/angular.dart.ui/latest"><img src="https://drone.io/github.com/akserg/angular.dart.ui/status.png" alt="Build Status"></a>
 </h1>
 
 <p>Port of Angular-UI to Dart.</p>
 
 <h3>
-<a name="buttons-buttonsmodule" class="anchor" href="#buttons-buttonsmodule"><span class="octicon octicon-link"></span></a>Buttons (ButtonsModule)</h3>
+<a name="bootstrap-directives-and-components" class="anchor" href="#bootstrap-directives-and-components"><span class="octicon octicon-link"></span></a>Bootstrap directives and components</h3>
 
-<p>There are 2 directives that can make a group of buttons to behave like a set of checkboxes or radio buttons.
-Buttons markup:</p>
+<ul>
+<li><strong>Checkbox and RadioButton</strong></li>
+<li><strong>DropdownToggle</strong></li>
+<li><strong>Collapse</strong></li>
+</ul><h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
 
-<pre><code>&lt;div buttons-ctrl&gt;
+<p>Big thanks for yours valuable input:</p>
 
-  &lt;h4&gt;Single toggle&lt;/h4&gt;
-  &lt;pre&gt;{{ctrl.singleModel}}&lt;/pre&gt;
-  &lt;button type="button" class="btn btn-primary" ng-model="ctrl.singleModel" btn-checkbox&gt;
-      Single Toggle
-  &lt;/button&gt;
-
-  &lt;h4&gt;Checkbox&lt;/h4&gt;
-  &lt;pre&gt;{{ctrl.leftModel}} - {{ctrl.middleModel}} - {{ctrl.rightModel}}&lt;/pre&gt;
-  &lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.leftModel" btn-checkbox&gt;Left&lt;/button&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.middleModel" btn-checkbox&gt;Middle&lt;/button&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.rightModel" btn-checkbox&gt;Right&lt;/button&gt;
-  &lt;/div&gt;
-
-  &lt;h4&gt;Radio&lt;/h4&gt;
-  &lt;pre&gt;{{ctrl.radioModel}}&lt;/pre&gt;
-  &lt;div class="btn-group"&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Left"&gt;Left&lt;/button&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Middle"&gt;Middle&lt;/button&gt;
-      &lt;button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="Right"&gt;Right&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>Buttons Controller Dart code:</p>
-
-<pre><code>/**
- * Buttons controller.
- */
-@NgController(selector: 'buttons-ctrl', publishAs: 'ctrl')
-class ButtonsCtrl {
-
-  @NgTwoWay("singleModel")
-  var singleModel = '0';
-
-  @NgTwoWay("radioModel")
-  var radioModel = 'Middle';
-
-  @NgTwoWay("leftModel")
-  var leftModel = false;
-
-  @NgTwoWay("middleModel")
-  var middleModel = false;
-
-  @NgTwoWay("rightModel")
-  var rightModel = false;
-}
-</code></pre>
+<ul>
+<li>
+<strong>Tõnis Pool</strong> (<a href="https://github.com/poolik">https://github.com/poolik</a>).</li>
+<li>
+<strong>AngularDart project</strong> (<a href="https://github.com/angular/angular.dart">https://github.com/angular/angular.dart</a>)</li>
+</ul>
       </section>
 
     </div>
