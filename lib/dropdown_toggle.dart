@@ -31,10 +31,10 @@ class DropdownToggle {
 
   DropdownToggle(this.element, this.scope) {
     this.element.parent.onClick.listen((dom.MouseEvent evt) => _closeMenu(evt));
-    this.element.onClick.listen(toggleDropDown);
+    this.element.onClick.listen(_toggleDropDown);
   }
 
-  void toggleDropDown(dom.MouseEvent event) {
+  void _toggleDropDown(dom.MouseEvent event) {
     bool elementWasOpen = (element == _openElement);
 
     event.preventDefault();

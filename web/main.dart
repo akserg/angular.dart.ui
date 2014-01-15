@@ -6,6 +6,7 @@ library angular.ui.demo;
 import 'package:angular/angular.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
+import 'package:angular_ui/dropdown_toggle.dart';
 
 /**
  * Entry point into app.
@@ -21,8 +22,10 @@ class DemoModule extends Module {
   DemoModule() {
     install(new ButtonsModule());
     install(new CollapseModule());
+    install(new DropdownToggleModule());
     type(ButtonsCtrl);
     type(CollapseCtrl);
+    type(DropdownCtrl);
   }
 }
 
@@ -58,9 +61,29 @@ class CollapseCtrl {
   var isCollapsed = true;
   
   CollapseCtrl(Scope this.scope);
+}
+
+/**
+ * Buttons controller.
+ */
+@NgController(selector: '[dropdown-ctrl]', publishAs: 'ctrl')
+class DropdownCtrl {
   
-  void clickHandler() {
-    isCollapsed = !isCollapsed;
-    print('Click. $isCollapsed');
+  var scope;
+  
+  List<Item> items;
+  
+  DropdownCtrl(Scope this.scope) {
+    items = [
+      new Item("The first choice!"),
+      new Item("And another choice for you."),
+      new Item("but wait! A third!")
+    ];
   }
+}
+
+class Item {
+  var label;
+  
+  Item(String this.label);
 }

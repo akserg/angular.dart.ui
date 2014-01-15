@@ -47,7 +47,6 @@ class Collapse {
     async.Completer newTransition = transition(element, change);
     
     var newTransitionDone = () {
-      print('newTransitionDone');
       // Make sure it's this transition, otherwise, leave it alone.
       if (currentTransition == newTransition) {
         currentTransition = null;
@@ -77,7 +76,6 @@ class Collapse {
     element.classes.remove('collapsing');
     element.classes.add('collapse-in');
     element.style.height = 'auto';
-    print('expanded. ${element.className}');
   }
   
   void collapse() {
@@ -101,6 +99,5 @@ class Collapse {
   void collapseDone() {
     element.classes.remove('collapsing');
     element.classes.add('collapse');
-    print('collapsed. ${element.className}');
   }
 }

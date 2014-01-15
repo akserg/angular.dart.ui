@@ -8,8 +8,6 @@ void collapseTests() {
 
   group('Testing collapse:', () {
     
-    
-    
     // Add injector and configure Modules before tests
     setUp(() {
       setUpInjector();
