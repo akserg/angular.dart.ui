@@ -4,9 +4,7 @@
 library angular.ui.demo;
 
 import 'package:angular/angular.dart';
-import 'package:angular_ui/buttons.dart';
-import 'package:angular_ui/collapse.dart';
-import 'package:angular_ui/dropdown_toggle.dart';
+import 'package:angular_ui/angular_ui.dart';
 
 /**
  * Entry point into app.
@@ -20,12 +18,12 @@ main() {
  */
 class DemoModule extends Module {
   DemoModule() {
-    install(new ButtonModule());
-    install(new CollapseModule());
-    install(new DropdownToggleModule());
+    install(new AngularUIModule());
+    //
     type(ButtonsCtrl);
     type(CollapseCtrl);
     type(DropdownCtrl);
+    type(AlertCtrl);
   }
 }
 
@@ -34,10 +32,6 @@ class DemoModule extends Module {
  */
 @NgController(selector: '[buttons-ctrl]', publishAs: 'ctrl')
 class ButtonsCtrl {
-  
-  var scope;
-  
-  ButtonsCtrl(Scope this.scope);
   
   var singleModel = 1;
   
@@ -56,34 +50,45 @@ class ButtonsCtrl {
 @NgController(selector: '[collapse-ctrl]', publishAs: 'ctrl')
 class CollapseCtrl {
   
-  var scope;
-  
   var isCollapsed = true;
-  
-  CollapseCtrl(Scope this.scope);
 }
 
 /**
- * Buttons controller.
+ * Dropdown controller.
  */
 @NgController(selector: '[dropdown-ctrl]', publishAs: 'ctrl')
 class DropdownCtrl {
   
-  var scope;
+  var items = [
+    "The first choice!",
+    "And another choice for you.",
+    "but wait! A third!"
+  ];
+}
+
+/**
+ * Dropdown controller.
+ */
+@NgController(selector: '[alert-ctrl]', publishAs: 'ctrl')
+class AlertCtrl {
   
-  List<Item> items;
-  
-  DropdownCtrl(Scope this.scope) {
-    items = [
-      new Item("The first choice!"),
-      new Item("And another choice for you."),
-      new Item("but wait! A third!")
-    ];
+  List<AlertItem> alerts = [
+    new AlertItem(type:'danger', msg:'Oh snap! Change a few things up and try submitting again.'),
+    new AlertItem(type:'success', msg:'Well done! You successfully read this important alert message.')
+  ];
+
+  void addAlert() {
+    alerts.add(new AlertItem(msg:"Another alert!"));
+  }
+
+  void closeAlert(index) {
+    alerts.removeAt(index);
   }
 }
 
-class Item {
-  var label;
+class AlertItem {
+  var type;
+  var msg;
   
-  Item(String this.label);
+  AlertItem({String this.type:null, String this.msg:''});
 }

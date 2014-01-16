@@ -45,7 +45,6 @@ class BtnRadio {
   BtnRadio(this.element, this.ngModel, this.config, this.scope) {
     // model -> UI
     ngModel.render = (value) {
-      //element.classes.toggle(config.activeClass, ngModel.modelValue == btnRadioAttr);
       element.classes.toggle(config.activeClass, ngModel.modelValue == scope.$eval(btnRadioAttr));
     };
     
