@@ -8,7 +8,7 @@
 - **DropdownToggle:**
   - merged pull request ([b3753d3](https://github.com/akserg/angular.dart.ui/commit/b3753d3))
 - **alert**
-  - created ([]())
+  - created ([6ab5094](https://github.com/akserg/angular.dart.ui/commit/6ab5094))
 
 # Version 0.1.0, (2014/01/14)
 
