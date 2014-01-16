@@ -8,6 +8,7 @@ Port of Angular-UI to Dart.
 - **Checkbox and RadioButton**
 - **DropdownToggle**
 - **Collapse**
+- **Alert**
 
 ##Credits
 Big thanks for yours valuable input:
