@@ -7,11 +7,14 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import "package:angular/angular.dart";
 
+import 'timeout.dart';
+
 /**
  * Transition Module.
  */
 class TransitionModule extends Module {
   TransitionModule() {
+    install(new TimeoutModule());
     type(Transition);
   }
 }
@@ -35,7 +38,9 @@ class Transition {
   
   var transitionEndEventName, animationEndEventName;
   
-  Transition() {
+  Timeout timeout;
+  
+  Transition(this.timeout) {
     transitionEndEventName = _findEndEventName(_transitionEndEventNames);
     animationEndEventName = _findEndEventName(_animationEndEventNames);
   }
@@ -47,11 +52,8 @@ class Transition {
     //
     var endEventName = options.containsKey('animation') ? animationEndEventName : transitionEndEventName;
     //
-    //async.StreamSubscription endEventSubscription;
-    //
     dom.EventListener transitionEndHandler;
     transitionEndHandler = (dom.Event event) {
-      //endEventSubscription.cancel();
       element.removeEventListener(endEventName, transitionEndHandler);
       if (!deferred.isCompleted) {
         deferred.complete(element);
@@ -63,7 +65,8 @@ class Transition {
     }
     
     // Wrap in a timeout to allow the browser time to update the DOM before the transition is to occur
-    new async.Timer(const Duration(milliseconds: 200), () {
+    //new async.Timer(const Duration(milliseconds: 200), () {
+    timeout(() {
       if (trigger is String) {
         element.classes.add(trigger);
       } else if (trigger is Function) {

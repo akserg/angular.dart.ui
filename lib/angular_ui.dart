@@ -9,6 +9,7 @@ import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
 import 'package:angular_ui/dropdown_toggle.dart';
 import 'package:angular_ui/alert.dart';
+import 'package:angular_ui/carousel.dart';
 
 /**
  * AngularUI Module
@@ -19,6 +20,7 @@ class AngularUIModule extends Module {
     install(new CollapseModule());
     install(new DropdownToggleModule());
     install(new AlertModule());
+    install(new CarouselModule());
   }
 }
 
