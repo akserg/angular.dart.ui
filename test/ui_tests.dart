@@ -11,7 +11,7 @@ library angular.ui.test;
 import 'dart:html' as dom;
 import 'dart:async';
 //
-//import 'package:unittest/html_enhanced_config.dart';
+import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
@@ -33,7 +33,7 @@ part 'tests/timeout_tests.dart';
 
 void main() {
   print('Running unit tests for Angular UI library.');
-//  useHtmlEnhancedConfiguration();
+  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
     test('Position', () => positionTests());
     test('Timeout', () => timeoutTests());
