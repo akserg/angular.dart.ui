@@ -7,7 +7,7 @@ AngularUI progressbar directive the same way in dart.
 To create stacked progressbars the `<progress>` element has been changed to `<stackedProgress>`
 
 ## CSS
-To quickly see the changes needed to bootstrap.css view the diff poolik@c0cdbba67286e6e33b5431a7d671d51d24f392ea
+To quickly see the changes needed to bootstrap.css view the commit SHA: c0cdbba67286e6e33b5431a7d671d51d24f392ea
 
 Because angulardart uses shadow DOM it's impossible to use css selectors for elements from different
 shadow DOM-s (ie. `.progress-striped .progress-bar` where the `.progress-striped` element resides in one
