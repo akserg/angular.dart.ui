@@ -11,3 +11,7 @@ bool toBool(x) {
   if (x is String) return (x as String).toLowerCase() == "true";
   return false;
 }
+
+dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isDiv);
+
+bool isDiv(dom.Element element) => element is dom.DivElement;
