@@ -22,6 +22,8 @@ import 'package:angular_ui/collapse.dart';
 import 'package:angular_ui/dropdown_toggle.dart';
 import 'package:angular_ui/alert.dart';
 import 'package:angular_ui/timeout.dart';
+import 'package:angular_ui/progressbar/progressbar.dart';
+import 'package:angular_ui/utils/utils.dart';
 
 part 'tests/position_tests.dart';
 part 'tests/transition_tests.dart';
@@ -30,6 +32,7 @@ part 'tests/collapse_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
 part 'tests/alert_tests.dart';
 part 'tests/timeout_tests.dart';
+part 'tests/progressbar_tests.dart';
 
 void main() {
   print('Running unit tests for Angular UI library.');
@@ -42,5 +45,6 @@ void main() {
     test('DropdownToggle', () => dropdownToggleTests());
     test('Collapse', () => collapseTests());
     test('Alert', () => alertTests());
+    test('Progressbar', () => porgressbarTests());
   });
 }
