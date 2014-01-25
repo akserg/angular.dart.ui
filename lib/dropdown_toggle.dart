@@ -8,7 +8,7 @@ library angular.ui.dropdownToggle;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
-import "package:angular/utils.dart";
+import "package:angular_ui/utils/utils.dart";
 
 /**
  * DropdownToggle Module.
