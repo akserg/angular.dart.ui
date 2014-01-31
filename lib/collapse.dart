@@ -75,14 +75,7 @@ class Collapse {
         ..remove('collapse')
         ..add('collapsing');
 
-      var scrollHeight;
-      if(element.children.length == 0) {
-          scrollHeight = element.scrollHeight;
-      } else {
-        scrollHeight = element.children[0].scrollHeight;
-      }
-
-      doTransition({ 'height': '${scrollHeight}px' }).then((value) => expandDone(), onError: (e) {
+      doTransition({ 'height': '${element.scrollHeight}px' }).then((value) => expandDone(), onError: (e) {
         _log.fine('Error on expand: ${e}');
         expandDone();
       });
@@ -98,22 +91,13 @@ class Collapse {
   }
 
   void collapse() {
-    _log.fine('collapse');
     if (initialAnimSkip) {
       initialAnimSkip = false;
       collapseDone();
       element.style.height = "0";
     } else {
-
-      var scrollHeight;
-      if(element.children.length == 0) {
-          scrollHeight = element.scrollHeight;
-      } else {
-        scrollHeight = element.children[0].scrollHeight;
-      }
-
       // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
-      element.style.height = '${scrollHeight}px';
+      element.style.height = '${element.scrollHeight}px';
       //trigger reflow so a browser realizes that height was updated from auto to a specific value
       var x;
       if(element.children.length > 0) {
