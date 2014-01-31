@@ -1,0 +1,11 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a class="accordion-toggle" ng-click="ctrl.isOpen = !ctrl.isOpen"><content select="accordion-heading"></content>{{ctrl.heading}}
+      </a>
+    </h4>
+  </div>
+  <div class="panel-collapse" collapse="!ctrl.isOpen">
+    <div class="panel-body"><content></content></div>
+  </div>
+</div>
