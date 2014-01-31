@@ -9,5 +9,6 @@ dependencies:
   angular: '>=0.9.4'
   browser: '>=0.9.1'
   js: '>=0.2.1'
+  logging_handlers: any
 dev_dependencies:
   unittest: '>=0.9.3'
