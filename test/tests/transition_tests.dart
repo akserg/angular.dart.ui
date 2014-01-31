@@ -10,7 +10,7 @@ void transitionTests() {
 
     TestBed _;
     Transition transition;
-  
+
     beforeEach(setUpInjector);
     beforeEach(module((Module module) {
       module.install(new TransitionModule());
@@ -19,21 +19,21 @@ void transitionTests() {
     beforeEach(inject((Transition t) => transition = t));
 
     afterEach(tearDownInjector);
-  
+
     it('returns our custom promise', () {
       var element = new dom.DivElement();
       Future promise = transition(element, '').future;
       expect(promise.then).toBeNotNull();
       expect(promise.catchError).toBeNotNull();
     });
-  
+
     it('changes the css if passed a string', () {
       var element = new dom.DivElement();
       transition(element, 'triggerClass').future.then((value) {
         expect(element.classes).toContain('triggerClass');
       });
     });
-  
+
     it('changes the style if passed an object', () {
       var element = new dom.DivElement();
       var triggerStyle = { 'height': '11px' };
@@ -42,20 +42,14 @@ void transitionTests() {
         expect(element.style.getPropertyValue('height')).toEqual('11px');
       });
     });
-  
-    it('calls the  if passed', () {
+
+    it('calls the function if passed', () {
       var element = new dom.DivElement();
 
       transition(element, (dom.Element e){
         e.classes.add("test");
       }).future.then((value) {
         expect(element.classes).toContain("test");
-      });
-    });
-
-    describe('transitionEndEventName', () {
-      it('should be undefined', () {
-        expect(transition.transitionEndEventName).toBeNull();
       });
     });
   });
