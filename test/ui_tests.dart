@@ -10,41 +10,49 @@ library angular.ui.test;
 
 import 'dart:html' as dom;
 import 'dart:async';
+import 'package:logging/logging.dart' as logging;
+import 'package:logging_handlers/logging_handlers_shared.dart';
+
 //
 import 'package:unittest/html_enhanced_config.dart';
+import 'package:unittest/unittest.dart' as unit;
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
-import 'package:angular_ui/position.dart';
-import 'package:angular_ui/transition.dart';
+import 'package:angular_ui/alert.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
 import 'package:angular_ui/dropdown_toggle.dart';
-import 'package:angular_ui/alert.dart';
+import 'package:angular_ui/position.dart';
 import 'package:angular_ui/timeout.dart';
+import 'package:angular_ui/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
-import 'package:angular_ui/utils/utils.dart';
 
-part 'tests/position_tests.dart';
-part 'tests/transition_tests.dart';
+part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
 part 'tests/collapse_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
-part 'tests/alert_tests.dart';
-part 'tests/timeout_tests.dart';
+part 'tests/position_tests.dart';
 part 'tests/progressbar_tests.dart';
+part 'tests/timeout_tests.dart';
+part 'tests/transition_tests.dart';
+
+final _log = new logging.Logger('test');
 
 void main() {
-  print('Running unit tests for Angular UI library.');
+  startQuickLogging();
+  logging.Logger.root.level = logging.Level.FINEST;
+  _log.fine('Running unit tests for Angular UI library.');
+
   useHtmlEnhancedConfiguration();
   group('All Tests:', () {
+    test('Alert', () => alertTests());
+    test('Buttons', () => buttonsTests());
+    test('Collapse', () => collapseTests());
+    test('DropdownToggle', () => dropdownToggleTests());
     test('Position', () => positionTests());
+    test('Progressbar', () => porgressbarTests());
     test('Timeout', () => timeoutTests());
     test('Transition', () => transitionTests());
-    test('Buttons', () => buttonsTests());
-    test('DropdownToggle', () => dropdownToggleTests());
-    test('Collapse', () => collapseTests());
-    test('Alert', () => alertTests());
-    test('Progressbar', () => porgressbarTests());
   });
 }
