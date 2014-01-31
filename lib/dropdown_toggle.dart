@@ -1,10 +1,10 @@
 // Copyright (c) 2013 - 2014, akserg (Sergey Akopkokhyants)
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
-// 
+//
 // Credits: Tonis Pool who wrote and donate that code.
 //
-library angular.ui.dropdownToggle;
+library angular.ui.dropdown_toggle;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
@@ -49,7 +49,7 @@ class DropdownToggle {
       _openElement = element;
       _closeMenu = (dom.MouseEvent event) {
         if (event != null) {
-          event.preventDefault();
+          //event.preventDefault();
           event.stopPropagation();
         }
         element.parent.classes.remove('open');
