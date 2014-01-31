@@ -29,7 +29,7 @@ class CollapseModule extends Module {
 class Collapse {
 
   @NgOneWay("collapse")
-  void set collapseAttr(bool value) {
+  void set isCollapsed(bool value) {
     if (toBool(value)) {
       collapse();
     } else {
@@ -74,7 +74,15 @@ class Collapse {
       element.classes
         ..remove('collapse')
         ..add('collapsing');
-      doTransition({ 'height': '${element.children[0].scrollHeight}px' }).then((value) => expandDone(), onError: (e) {
+
+      var scrollHeight;
+      if(element.children.length == 0) {
+          scrollHeight = element.scrollHeight;
+      } else {
+        scrollHeight = element.children[0].scrollHeight;
+      }
+
+      doTransition({ 'height': '${scrollHeight}px' }).then((value) => expandDone(), onError: (e) {
         _log.fine('Error on expand: ${e}');
         expandDone();
       });
@@ -90,15 +98,29 @@ class Collapse {
   }
 
   void collapse() {
+    _log.fine('collapse');
     if (initialAnimSkip) {
       initialAnimSkip = false;
       collapseDone();
       element.style.height = "0";
     } else {
+
+      var scrollHeight;
+      if(element.children.length == 0) {
+          scrollHeight = element.scrollHeight;
+      } else {
+        scrollHeight = element.children[0].scrollHeight;
+      }
+
       // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
-      element.style.height = '${element.children[0].scrollHeight}px';
+      element.style.height = '${scrollHeight}px';
       //trigger reflow so a browser realizes that height was updated from auto to a specific value
-      var x = element.children[0].offsetWidth;
+      var x;
+      if(element.children.length > 0) {
+        x = element.children[0].offsetWidth;
+      } else {
+        x = element.offsetWidth;
+      }
 
       element.classes
         ..remove('collapse')
