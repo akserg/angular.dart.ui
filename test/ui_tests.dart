@@ -1,4 +1,4 @@
-// Copyright (c) 2013 - 2014, akserg (Sergey Akopkokhyants)
+// Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 
@@ -15,7 +15,6 @@ import 'package:logging_handlers/logging_handlers_shared.dart';
 
 //
 import 'package:unittest/html_enhanced_config.dart';
-import 'package:unittest/unittest.dart' as unit;
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
@@ -27,6 +26,7 @@ import 'package:angular_ui/position.dart';
 import 'package:angular_ui/timeout.dart';
 import 'package:angular_ui/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
+import 'package:angular_ui/utils/utils.dart';
 
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';

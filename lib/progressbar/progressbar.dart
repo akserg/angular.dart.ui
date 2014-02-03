@@ -1,3 +1,6 @@
+// Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+// https://github.com/akserg/angular.dart.ui
+// All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.progressbar;
 
 import 'dart:html' as dom;
@@ -41,16 +44,16 @@ class ProgressBar extends _ProgressbarBase {
   ProgressbarConfig _config;
   NodeAttrs _attrs;
 
-  @NgAttr("max")
+  @NgOneWay("max")
   int max;
 
-  @NgAttr("animate")
+  @NgOneWay("animate")
   bool animate;
 
   ProgressBar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element);
 
-  evalMaxOrDefault(Scope scope) => max = (max == null) ? _config.max : scope.$parent.$eval(max);
-  evalAnimateOrDefault(Scope scope) => animate = (animate == null) ? _config.animate : toBool(scope.$parent.$eval(animate));
+  evalMaxOrDefault(Scope scope) => max = (max == null) ? _config.max : toInt(scope.$parent.$eval(max.toString()));
+  evalAnimateOrDefault(Scope scope) => animate = (animate == null) ? _config.animate : toBool(scope.$parent.$eval(animate.toString()));
 
   NodeAttrs get nodeAttr => _attrs;
   dom.Element getShadowElement(shadowRoot) => getFirstDiv(shadowRoot).children.first;

@@ -9,8 +9,10 @@ Port of Angular-UI to Dart.
 - **DropdownToggle**
 - **Collapse**
 - **Alert**
+- **ProgressBar**
 
 ##Credits
-Big thanks for yours valuable input:
+- **Sergey Akopkokhyants** (https://github.com/akserg)
 - **Tõnis Pool** (https://github.com/poolik).
+- **Günter Zöchbauer** (https://github.com/zoechi)
 - **AngularDart project** (https://github.com/angular/angular.dart)
