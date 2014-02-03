@@ -105,18 +105,20 @@ class Carousel implements NgDetachAware {
   }
 
   void select(Slide nextSlide, {String direction: null}) {
-    int nextIndex = slides.indexOf(nextSlide);
-    // Decide direction if it's not given
-    if (direction == null) {
-      direction = nextIndex > _currentIndex ? 'next' : 'prev';
-    }
-    if (nextSlide != null && nextSlide != _currentSlide) {
-      if (_currentTransition != null && !_currentTransition.isCompleted) {
-        _currentTransition.completeError('Transition cancelled');
-        //Timeout so ng-class in template has time to fix classes for finished slide
-        _timeout(() => _goNext(direction, nextIndex));
-      } else {
-        _goNext(direction, nextIndex);
+    if (slides.length > 0) {
+      int nextIndex = slides.indexOf(nextSlide);
+      // Decide direction if it's not given
+      if (direction == null) {
+        direction = nextIndex > _currentIndex ? 'next' : 'prev';
+      }
+      if (nextSlide != null && nextSlide != _currentSlide) {
+        if (_currentTransition != null && !_currentTransition.isCompleted) {
+          _currentTransition.completeError('Transition cancelled');
+          //Timeout so ng-class in template has time to fix classes for finished slide
+          _timeout(() => _goNext(direction, nextIndex));
+        } else {
+          _goNext(direction, nextIndex);
+        }
       }
     }
   }
