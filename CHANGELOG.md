@@ -2,13 +2,14 @@
 
 ## Features
 
-- **alert**
 - **Collapse:**
   - created ([7e8af32](https://github.com/akserg/angular.dart.ui/commit/7e8af32))
 - **DropdownToggle:**
   - merged pull request ([b3753d3](https://github.com/akserg/angular.dart.ui/commit/b3753d3))
-- **alert**
+- **alert:**
   - created ([6ab5094](https://github.com/akserg/angular.dart.ui/commit/6ab5094))
+- **progressbar:**
+  - created ([5f7b606](https://github.com/akserg/angular.dart.ui/commit/5f7b606))
 
 # Version 0.1.0, (2014/01/14)
 

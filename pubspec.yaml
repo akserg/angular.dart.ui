@@ -6,11 +6,9 @@ homepage: http://akserg.github.io/angular.dart.ui
 environment:
   sdk: '>=1.0.0+10 <2.0.0'
 dependencies:
-  angular: #'>=0.9.4'
-    git: git@github.com:angular/angular.dart.git
+  angular: '>=0.9.5'
   browser: '>=0.9.1'
-  js: '>=0.2.1'
-  logging: '>=0.9.1+1'
+  js: '>=0.2.2'
   logging_handlers: '>=0.8.0'
 dev_dependencies:
   unittest: '>=0.9.3'
