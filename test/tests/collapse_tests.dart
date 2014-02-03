@@ -121,12 +121,7 @@ void collapseTests() {
       var collapseHeight = element.clientHeight;
       scope['hid'] = false;
       scope.$digest();
-      //var callback = unit.expectAsync0(() {});
-      //new Timer(new Duration(seconds: 1), () {
-        expect(element.clientHeight, greaterThan(collapseHeight));
-        //callback();
-      //});
-
+      expect(element.clientHeight, greaterThan(collapseHeight));
     });
 
     it('should shrink accordingly when content size inside collapse decreases', () {
