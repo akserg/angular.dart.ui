@@ -5,8 +5,8 @@ library angular.ui.rating;
 
 import 'package:angular/angular.dart';
 
-import 'package:angular_ui/helper/extend.dart';
-import 'package:angular_ui/helper/injectable_service.dart';
+import 'package:angular_ui/utils/extend.dart';
+import 'package:angular_ui/utils/injectable_service.dart';
 
 import 'package:logging/logging.dart' show Logger;
 final _log = new Logger('angular.ui.rating');

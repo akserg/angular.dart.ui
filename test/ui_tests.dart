@@ -18,6 +18,8 @@ import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
+import 'package:angular_ui/utils/utils.dart';
+
 import 'package:angular_ui/alert.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
