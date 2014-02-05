@@ -15,6 +15,10 @@ import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/timeout.dart';
 import 'package:angular_ui/transition.dart';
+import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/utils/compile.dart';
+
+export 'package:angular_ui/modal/modal.dart';
 
 /**
  * AngularUI Module
@@ -31,6 +35,8 @@ class AngularUIModule extends Module {
     install(new RatingModule());
     install(new TimeoutModule());
     install(new TransitionModule());
+    install(new ModalModule());
+    install(new CompileModule());
   }
 }
 

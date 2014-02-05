@@ -3,6 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
+import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular_ui/angular_ui.dart';
@@ -27,6 +28,8 @@ class DemoModule extends Module {
     type(AlertCtrl);
     type(ProgressCtrl);
     type(CarouselDemoController);
+    type(ModalCtrl);
+//    type(ModalInstController);
   }
 }
 
@@ -177,5 +180,34 @@ class CarouselDemoController {
       'text': ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
         ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
     });
+  }
+}
+
+/**
+ * Modal controller.
+ */
+@NgController(selector: '[modal-ctrl]', publishAs: 'ctrl')
+class ModalCtrl {
+  List<String> items = ["One", "Two", "Three", "Four"];
+  
+  String selected;
+  String tmp;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  
+  ModalCtrl(this.modal);
+  
+  void open(id) {
+    modalInstance = modal.show(dom.querySelector(id));
+    modalInstance.result.then((value) {
+        selected = value;
+      }, onError: (reson) {
+        print('Dismiss $reson');
+      });
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
   }
 }
