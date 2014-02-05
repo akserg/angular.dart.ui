@@ -68,13 +68,10 @@ class ModalWindow implements NgAttachAware {
   dom.Element _element;
   dom.Element get element => _element;
   Modal _modal;
-//  Scope _scope;
-//  Scope get scope => _scope;
   async.Completer completer;
   
-  ModalWindow(this._element, this._modal) { //, this._scope) {
+  ModalWindow(this._element, this._modal) {
     _modal.register(_element, this);
-//    print('ModalWindow ${scope.hashCode}');
   }
   
   void attach() {
@@ -154,40 +151,39 @@ class Modal {
   Timeout _timeout;
   TemplateCache templateCache;
   Http http;
+  Compiler compiler;
+  Injector injector;
   
-  Modal(this._compile, this._timeout, this.templateCache, this.http);
-  
-//  dom.Element call({String content, String controller, ModelOptions options:null, Scope scope:null}) {
-//    String html = "<modal ";
-//    if (controller != null) html += "$controller ";
-//    if (options != null) {
-//      if (options.windowClass != null) html += "window-class=\"${options.windowClass}\" ";
-//      if (options.animate != null) html += "animate=\"${options.animate}\" ";
-//      if (options.keyboard != null) html += "keyboard=\"${options.keyboard}\" ";
-//      if (options.backdrop != null) html += "backdrop=\"${options.backdrop}\" ";
-//      if (options.shown != null) html += "shown=\"${options.shown}\" ";
-//    }
-//    html += ">";
-//    if (content != null) {
-//      html += "$content";
-//    }
-//    html += "</modal>";
-//
-//    var modalDomEl = _compile(html, scope:scope);
-//    dom.document.body.append(modalDomEl);
-//    return modalDomEl;
-//  }
+  Modal(this.compiler, this._timeout, this.templateCache, this.http, this.injector);
   
   void register(dom.Element element, ModalWindow window) {
     _windows[element] = window;
   }
   
-  async.Future open({String template:null, String templateUrl:null}) {
-    return getTemplate(template:template, templateUrl:templateUrl).then((String content){
-      String html = "<modal-window></modal-window>";
-      var modalDomEl = _compile(html);
-      dom.document.body.append(modalDomEl);
+  async.Future<dom.Element> open({String template:null, String templateUrl:null, Scope scope:null}) {
+    async.Completer completer = new async.Completer();
+    getTemplate(template:template, templateUrl:templateUrl).then((String content){
+      
+      var injector = this.injector;
+      if(scope != null) {
+        injector = injector.createChild([new Module()..value(Scope, scope)]);
+      }
+      //
+      List<dom.Element> rootElements = toNodeList(content);
+
+      dom.Element rootElement = rootElements.firstWhere((el) { 
+        return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
+      });
+      //
+      compiler(rootElements)(injector, rootElements);
+      //
+      dom.document.body.append(rootElement);
+      //
+      completer.complete(rootElement);
+    }, onError:(error) {
+      completer.completeError(error);
     });
+    return completer.future;
   }
   
   ModalInstance show(dom.Element element) {
@@ -291,13 +287,23 @@ class Modal {
       throw new Exception('One of template or templateUrl options is required.');
     }
     if (template != null) {
-      async.Completer def = new async.Completer()
-        ..complete(template);
+      async.Completer def = new async.Completer()..complete(template);
       return def.future;
     } else {
-//      async.Future<HttpResponse> response = http.get(templateUrl, cache: templateCache);
-//      return response.then((result) => result.data);
       return http.get(templateUrl, cache: templateCache).then((result) => result.data);
     }
+  }
+  
+  /**
+   * Convert an [html] String to a [List] of [Element]s.
+   */
+  List<dom.Element> toNodeList(html) {
+    var div = new dom.DivElement();
+    div.setInnerHtml(html, treeSanitizer: new NullTreeSanitizer());
+    var nodes = [];
+    for(var node in div.nodes) {
+      nodes.add(node);
+    }
+    return nodes;
   }
 }

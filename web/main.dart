@@ -29,7 +29,9 @@ class DemoModule extends Module {
     type(ProgressCtrl);
     type(CarouselDemoController);
     type(ModalCtrl);
-//    type(ModalInstController);
+    type(ModalCtrlTemplate);
+    type(ModalCtrlTagTemplate);
+    type(ModalCtrlFileTemplate);
   }
 }
 
@@ -205,6 +207,122 @@ class ModalCtrl {
       }, onError: (reson) {
         print('Dismiss $reson');
       });
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
+  }
+}
+
+/**
+ * Modal controller with template.
+ */
+@NgController(selector: '[modal-ctrl-tmpl]', publishAs: 'ctrl')
+class ModalCtrlTemplate {
+  List<String> items = ["1111", "2222", "3333", "4444"];
+  
+  String selected;
+  String tmp;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  Scope scope;
+  
+  String template = """
+<modal-window>
+  <div class="modal-header">
+    <h3>I'm a modal!</h3>
+  </div>
+  <div class="modal-body">
+    <ul>
+      <li ng-repeat="item in ctrl.items">
+        <a ng-click="ctrl.tmp = item">{{ item }}</a>
+      </li>
+    </ul>
+    Selected: <b>{{ctrl.tmp}}</b>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
+    <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+  </div>
+</modal-window>
+""";
+  
+  ModalCtrlTemplate(this.modal, this.scope);
+  
+  void open() {
+    modal.open(template:template, scope:scope).then((dom.Element elem) {
+      modalInstance = modal.show(elem);
+      modalInstance.result.then((value) {
+        selected = value;
+      }, onError: (reson) {
+        print('Dismiss $reson');
+      });
+    });
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
+  }
+}
+
+/**
+ * Modal controller with template from file.
+ */
+@NgController(selector: '[modal-ctrl-file-tmpl]', publishAs: 'ctrl')
+class ModalCtrlFileTemplate {
+  List<String> items = ["Sun", "Moon", "Star", "Planet"];
+  
+  String selected;
+  String tmp;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  Scope scope;
+  
+  ModalCtrlFileTemplate(this.modal, this.scope);
+  
+  void open(String templateUrl) {
+    modal.open(templateUrl:templateUrl, scope:scope).then((dom.Element elem) {
+      modalInstance = modal.show(elem);
+      modalInstance.result.then((value) {
+        selected = value;
+      }, onError: (reson) {
+        print('Dismiss $reson');
+      });
+    });
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
+  }
+}
+
+/**
+ * Modal controller with template from file.
+ */
+@NgController(selector: '[modal-ctrl-tag-tmpl]', publishAs: 'ctrl')
+class ModalCtrlTagTemplate {
+  List<String> items = ["Java", "Dart", "JavaScript", "Ruby"];
+  
+  String selected;
+  String tmp;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  Scope scope;
+  
+  ModalCtrlTagTemplate(this.modal, this.scope);
+  
+  void open(String templateUrl) {
+    modal.open(templateUrl:templateUrl, scope:scope).then((dom.Element elem) {
+      modalInstance = modal.show(elem);
+      modalInstance.result.then((value) {
+        selected = value;
+      }, onError: (reson) {
+        print('Dismiss $reson');
+      });
+    });
   }
   
   void ok(sel) {
