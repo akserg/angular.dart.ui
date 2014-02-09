@@ -10,6 +10,7 @@ Port of Angular-UI to Dart.
 - **Collapse**
 - **Alert**
 - **ProgressBar**
+- **Modal**
 
 ##Credits
 - **Sergey Akopkokhyants** (https://github.com/akserg)
