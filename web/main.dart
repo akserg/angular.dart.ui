@@ -222,36 +222,35 @@ class ModalCtrlTemplate {
   List<String> items = ["1111", "2222", "3333", "4444"];
   
   String selected;
-  String tmp;
+  String tmp = "";
   
   Modal modal;
   ModalInstance modalInstance;
   Scope scope;
   
   String template = """
-<modal-window>
-  <div class="modal-header">
-    <h3>I'm a modal!</h3>
-  </div>
-  <div class="modal-body">
-    <ul>
-      <li ng-repeat="item in ctrl.items">
-        <a ng-click="ctrl.tmp = item">{{ item }}</a>
-      </li>
-    </ul>
-    Selected: <b>{{ctrl.tmp}}</b>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
-    <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
-  </div>
-</modal-window>
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">I'm a modal!</h4>
+</div>
+<div class="modal-body">
+  <ul>
+    <li ng-repeat="item in ctrl.items">
+      <a ng-click="ctrl.tmp = item">{{ item }}</a>
+    </li>
+  </ul>
+  Selected: <b>{{ctrl.tmp}}</b>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  <button type="button" class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
+</div>
 """;
   
   ModalCtrlTemplate(this.modal, this.scope);
   
   void open() {
-    modal.open(template:template, scope:scope).then((dom.Element elem) {
+    modal.create(new ModalOptions(template:template), scope:scope).then((dom.Element elem) {
       modalInstance = modal.show(elem);
       modalInstance.result.then((value) {
         selected = value;
@@ -283,7 +282,7 @@ class ModalCtrlFileTemplate {
   ModalCtrlFileTemplate(this.modal, this.scope);
   
   void open(String templateUrl) {
-    modal.open(templateUrl:templateUrl, scope:scope).then((dom.Element elem) {
+    modal.create(new ModalOptions(templateUrl:templateUrl), scope:scope).then((dom.Element elem) {
       modalInstance = modal.show(elem);
       modalInstance.result.then((value) {
         selected = value;
@@ -315,7 +314,7 @@ class ModalCtrlTagTemplate {
   ModalCtrlTagTemplate(this.modal, this.scope);
   
   void open(String templateUrl) {
-    modal.open(templateUrl:templateUrl, scope:scope).then((dom.Element elem) {
+    modal.create(new ModalOptions(templateUrl:templateUrl), scope:scope).then((dom.Element elem) {
       modalInstance = modal.show(elem);
       modalInstance.result.then((value) {
         selected = value;

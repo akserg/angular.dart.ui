@@ -28,6 +28,7 @@ import 'package:angular_ui/position.dart';
 import 'package:angular_ui/timeout.dart';
 import 'package:angular_ui/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
+import 'package:angular_ui/modal/modal.dart';
 
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
@@ -37,6 +38,7 @@ part 'tests/position_tests.dart';
 part 'tests/progressbar_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
+part 'tests/modal_tests.dart';
 
 final _log = new logging.Logger('test');
 
@@ -55,5 +57,6 @@ void main() {
     test('Progressbar', () => porgressbarTests());
     test('Timeout', () => timeoutTests());
     test('Transition', () => transitionTests());
+    test('Modal', () => modalTests());
   });
 }

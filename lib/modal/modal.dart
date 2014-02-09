@@ -8,13 +8,13 @@ import 'dart:html' as dom;
 import "package:angular/angular.dart";
 
 import 'package:angular_ui/timeout.dart';
-import 'package:angular_ui/utils/compile.dart';
 
 /**
  * Modal Module.
  */
 class ModalModule extends Module {
   ModalModule() {
+    install(new TimeoutModule());
     type(ModalWindow);
     type(Modal);
   }
@@ -27,12 +27,12 @@ class ModalModule extends Module {
     selector: 'modal-window', 
     publishAs: 'm', 
     applyAuthorStyles: true, 
-    templateUrl: 'packages/angular_ui/modal/modal.html')
+    templateUrl: 'packages/angular_ui/modal/window.html')
 @NgComponent(
     selector: '[modal-window]', 
     publishAs: 'm', 
     applyAuthorStyles: true, 
-    templateUrl: 'packages/angular_ui/modal/modal.html')
+    templateUrl: 'packages/angular_ui/modal/window.html')
 class ModalWindow implements NgAttachAware {
   
   @NgAttr('windowClass')
@@ -62,66 +62,72 @@ class ModalWindow implements NgAttachAware {
   /** If false, clicking the backdrop closes the dialog. */
   bool staticBackdrop = false;
   
-  @NgTwoWay('shown')
-  bool shown = false;
+  bool _visible = false;
+
+  @NgTwoWay('show')
+  void set visible(bool value) {
+    _visible = value;
+    if (value) {
+      _visible = true;
+      _element.style.display = "block";
+    } else {
+      _visible = false;
+      _element.style.display = "none";
+    }
+  }
+  
+  bool get visible => _visible;
   
   dom.Element _element;
   dom.Element get element => _element;
   Modal _modal;
-  async.Completer completer;
   
   ModalWindow(this._element, this._modal) {
-    _modal.register(_element, this);
+    _modal._register(_element, this);
   }
   
   void attach() {
     if (_element != null) {
-      if (shown) {
+      if (_visible) {
         // trigger CSS transitions
         animate = true;
         // focus a freshly-opened modal
         _element.focus(); 
       } else {
-        hide();
+        visible = false;
       }
     }
   }
   
   void close(dom.MouseEvent event) {
     if(!event.defaultPrevented) {
-      final dom.Element target = event.target as dom.Element;
-      if(target != null && target.dataset['dismiss'] == 'modal') {
+      if ((backdrop && !staticBackdrop && (event.currentTarget == event.target || 
+          (event.target as dom.Element).dataset['dismiss'] == 'modal'))) {
         _modal.dismiss('backdrop click');
       }
     }
   }
   
-  void onBackdropClicked() {
+  void _onBackdropClicked() {
     if (!staticBackdrop) {
       _modal.hide();
     }
-  }
-  
-  void hide() {
-    shown = false;
-    _element.style.display = "none";
-  }
-
-  void show() {
-    shown = true;
-    _element.style.display = "block";
   }
 }
 
 /**
  * Modal Options.
  */
-class ModelOptions extends Expando {
-  String windowClass = '';
-  bool animate = false;
-  bool keyboard = true;
-  bool backdrop = true;
-  bool shown = false;
+class ModalOptions extends Expando {
+  String windowClass;
+  bool animate;
+  bool keyboard;
+  String backdrop;
+  String template;
+  String templateUrl;
+  
+  ModalOptions({this.windowClass:'', this.animate:true, 
+    this.keyboard:true, this.backdrop:'true', this.template, this.templateUrl});
 }
 
 typedef void CloseHandler(result);
@@ -147,43 +153,52 @@ class Modal {
   ModalInstance modalInstance;
   async.Completer completer;
   
-  Compile _compile;
   Timeout _timeout;
-  TemplateCache templateCache;
-  Http http;
-  Compiler compiler;
-  Injector injector;
+  TemplateCache _templateCache;
+  Http _http;
+  Compiler _compiler;
+  Injector _injector;
   
-  Modal(this.compiler, this._timeout, this.templateCache, this.http, this.injector);
+  Modal(this._compiler, this._timeout, this._templateCache, this._http, this._injector);
   
-  void register(dom.Element element, ModalWindow window) {
+  void _register(dom.Element element, ModalWindow window) {
     _windows[element] = window;
   }
   
-  async.Future<dom.Element> open({String template:null, String templateUrl:null, Scope scope:null}) {
-    async.Completer completer = new async.Completer();
-    getTemplate(template:template, templateUrl:templateUrl).then((String content){
+  async.Future<dom.Element> create(ModalOptions options, {Scope scope:null}) {
+    async.Completer createCompleter = new async.Completer();
+    _getContent(template:options.template, templateUrl:options.templateUrl).then((String content){
       
-      var injector = this.injector;
+      var injector = this._injector;
       if(scope != null) {
         injector = injector.createChild([new Module()..value(Scope, scope)]);
       }
+      // Check is content valid from modal-window perspective
+      if (content.contains('modal-window')) {
+        throw new Exception("It is not allowing to have 'modal-window' in content of modal-window" );
+      }
+      // Add ModalWindow wrapper
+      String html = "<modal-window";
+      if (options.animate != null) html += " animate=\"${options.animate}\"";
+      if (options.backdrop != null) html += " backdrop=\"${options.backdrop}\"";
+      if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
+      html += ">$content</modal-window>";
       //
-      List<dom.Element> rootElements = toNodeList(content);
+      List<dom.Element> rootElements = _toNodeList(html);
 
       dom.Element rootElement = rootElements.firstWhere((el) { 
         return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
       });
       //
-      compiler(rootElements)(injector, rootElements);
+      _compiler(rootElements)(injector, rootElements);
       //
       dom.document.body.append(rootElement);
       //
-      completer.complete(rootElement);
+      createCompleter.complete(rootElement);
     }, onError:(error) {
-      completer.completeError(error);
+      createCompleter.completeError(error);
     });
-    return completer.future;
+    return createCompleter.future;
   }
   
   ModalInstance show(dom.Element element) {
@@ -197,9 +212,9 @@ class Modal {
         
       final backDropElement = _getBackdrop(element.ownerDocument, modalInstance.window.backdrop);
       
-      modalInstance.window.show();
+      modalInstance.window.visible = true;
       
-      dom.document.onKeyUp.listen((dom.KeyboardEvent evt) {
+      dom.document.onKeyDown.listen((dom.KeyboardEvent evt) {
         if (evt.keyCode == 27 && modalInstance != null && modalInstance.window.keyboard) {
           dismiss("by escape");
         }
@@ -218,12 +233,14 @@ class Modal {
             ..add("in");
         }, delay:250);
         
-        if (modalInstance.window.onBackdropClicked != null) {
-          backDropElement.onClick.listen((args) => modalInstance.window.onBackdropClicked());
+        if (modalInstance.window._onBackdropClicked != null) {
+          backDropElement.onClick.listen((args) => modalInstance.window._onBackdropClicked());
         }
       }
+      // Cath exception in safe manner
+      completer.future.catchError((error){});
     } else if (modalInstance.window != null && modalInstance.window.element != element) {
-      throw new Exception("Only one instance of ModalWindow can be shown");
+      throw "Only one instance of ModalWindow can be shown";
     }
     return modalInstance;
   }
@@ -231,11 +248,11 @@ class Modal {
   void hide() {
     if (modalInstance != null) {
   
-      if (modalInstance.window.shown) {
+      if (modalInstance.window.visible) {
         
         final backDropElement = _getBackdrop(modalInstance.window.element.ownerDocument, false);
   
-        modalInstance.window.hide();
+        modalInstance.window.visible = false;
   
         if(backDropElement != null) {
           backDropElement.classes.remove('in');
@@ -269,20 +286,20 @@ class Modal {
   }
   
   void close(result) {
-    if (modalInstance != null && modalInstance.window.shown) {
+    if (modalInstance != null && modalInstance.window.visible) {
       completer.complete(result);
       hide();
     }
   }
   
   void dismiss([reason = '']) {
-    if (modalInstance != null && modalInstance.window.shown) {
+    if (modalInstance != null && modalInstance.window.visible) {
       completer.completeError(reason);
       hide();
     }
   }
   
-  async.Future getTemplate({String template:null, String templateUrl:null}) {
+  async.Future _getContent({String template:null, String templateUrl:null}) {
     if (template == null && templateUrl == null) {
       throw new Exception('One of template or templateUrl options is required.');
     }
@@ -290,14 +307,14 @@ class Modal {
       async.Completer def = new async.Completer()..complete(template);
       return def.future;
     } else {
-      return http.get(templateUrl, cache: templateCache).then((result) => result.data);
+      return _http.get(templateUrl, cache: _templateCache).then((result) => result.data);
     }
   }
   
   /**
    * Convert an [html] String to a [List] of [Element]s.
    */
-  List<dom.Element> toNodeList(html) {
+  List<dom.Element> _toNodeList(html) {
     var div = new dom.DivElement();
     div.setInnerHtml(html, treeSanitizer: new NullTreeSanitizer());
     var nodes = [];
