@@ -49,14 +49,14 @@ void main() {
 
   useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-    test('Alert', () => alertTests());
-    test('Buttons', () => buttonsTests());
-    test('Collapse', () => collapseTests());
-    test('DropdownToggle', () => dropdownToggleTests());
-    test('Position', () => positionTests());
-    test('Progressbar', () => porgressbarTests());
-    test('Timeout', () => timeoutTests());
-    test('Transition', () => transitionTests());
-    test('Modal', () => modalTests());
+    group('Alert', () => alertTests());
+    group('Buttons', () => buttonsTests());
+    group('Collapse', () => collapseTests());
+    group('DropdownToggle', () => dropdownToggleTests());
+    group('Position', () => positionTests());
+    group('Progressbar', () => porgressbarTests());
+    group('Timeout', () => timeoutTests());
+    group('Transition', () => transitionTests());
+    group('Modal', () => modalTests());
   });
 }
