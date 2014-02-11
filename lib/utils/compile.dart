@@ -5,6 +5,7 @@ library angular.ui.compile;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
+import 'package:angular_ui/utils/injectable_service.dart';
 
 /**
  * Compile Module.
@@ -19,19 +20,20 @@ class CompileModule extends Module {
 /**
  * This is copy of TestBed class without some methods.
  */
+@InjectableService()
 class Compile {
 
   final Injector injector;
   final Scope rootScope;
   final Compiler compiler;
   final Parser parser;
-  
+
   dom.Element rootElement;
   List<dom.Node> rootElements;
   Block rootBlock;
 
   Compile(this.injector, this.rootScope, this.compiler, this.parser);
-  
+
   /**
    * Use to compile HTML and activate its directives.
    *
@@ -64,7 +66,7 @@ class Compile {
     rootBlock = compiler(rootElements)(injector, rootElements);
     return rootElement;
   }
-  
+
   /**
    * Convert an [html] String to a [List] of [Element]s.
    */
