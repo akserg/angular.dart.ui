@@ -24,26 +24,26 @@ class ModalModule extends Module {
  * Modal Window component.
  */
 @NgComponent(
-    selector: 'modal-window', 
-    publishAs: 'm', 
-    applyAuthorStyles: true, 
+    selector: 'modal-window',
+    publishAs: 'm',
+    applyAuthorStyles: true,
     templateUrl: 'packages/angular_ui/modal/window.html')
 @NgComponent(
-    selector: '[modal-window]', 
-    publishAs: 'm', 
-    applyAuthorStyles: true, 
+    selector: '[modal-window]',
+    publishAs: 'm',
+    applyAuthorStyles: true,
     templateUrl: 'packages/angular_ui/modal/window.html')
 class ModalWindow implements NgAttachAware {
-  
+
   @NgAttr('windowClass')
   String windowClass = '';
-  
+
   @NgOneWay('animate')
   bool animate = false;
-  
+
   @NgOneWay('keyboard')
   bool keyboard = true;
-  
+
   @NgAttr('backdrop')
   void set backdropAsString(String value) {
     if (value != null) {
@@ -56,12 +56,12 @@ class ModalWindow implements NgAttachAware {
       }
     }
   }
-  
+
   bool backdrop = true;
-  
+
   /** If false, clicking the backdrop closes the dialog. */
   bool staticBackdrop = false;
-  
+
   bool _visible = false;
 
   @NgTwoWay('show')
@@ -75,39 +75,39 @@ class ModalWindow implements NgAttachAware {
       _element.style.display = "none";
     }
   }
-  
+
   bool get visible => _visible;
-  
+
   dom.Element _element;
   dom.Element get element => _element;
   Modal _modal;
-  
+
   ModalWindow(this._element, this._modal) {
     _modal._register(_element, this);
   }
-  
+
   void attach() {
     if (_element != null) {
       if (_visible) {
         // trigger CSS transitions
         animate = true;
         // focus a freshly-opened modal
-        _element.focus(); 
+        _element.focus();
       } else {
         visible = false;
       }
     }
   }
-  
+
   void close(dom.MouseEvent event) {
     if(!event.defaultPrevented) {
-      if ((backdrop && !staticBackdrop && (event.currentTarget == event.target || 
+      if ((backdrop && !staticBackdrop && (event.currentTarget == event.target ||
           (event.target as dom.Element).dataset['dismiss'] == 'modal'))) {
         _modal.dismiss('backdrop click');
       }
     }
   }
-  
+
   void _onBackdropClicked() {
     if (!staticBackdrop) {
       _modal.hide();
@@ -125,8 +125,8 @@ class ModalOptions extends Expando {
   String backdrop;
   String template;
   String templateUrl;
-  
-  ModalOptions({this.windowClass:'', this.animate:true, 
+
+  ModalOptions({this.windowClass:'', this.animate:true,
     this.keyboard:true, this.backdrop:'true', this.template, this.templateUrl});
 }
 
@@ -138,7 +138,7 @@ class ModalInstance {
   async.Future result;
   CloseHandler close;
   DismissHandler dismiss;
-  
+
   ModalInstance(this.window);
 }
 
@@ -149,26 +149,27 @@ class ModalInstance {
 class Modal {
   static const _backdropClass = 'modal-backdrop';
   static Map<dom.Element, ModalWindow> _windows = {};
-  
+
   ModalInstance modalInstance;
   async.Completer completer;
-  
+
   Timeout _timeout;
   TemplateCache _templateCache;
   Http _http;
   Compiler _compiler;
   Injector _injector;
-  
-  Modal(this._compiler, this._timeout, this._templateCache, this._http, this._injector);
-  
+  DirectiveMap _directiveMap;
+
+  Modal(this._compiler, this._timeout, this._templateCache, this._http, this._injector, this._directiveMap);
+
   void _register(dom.Element element, ModalWindow window) {
     _windows[element] = window;
   }
-  
+
   async.Future<dom.Element> create(ModalOptions options, {Scope scope:null}) {
     async.Completer createCompleter = new async.Completer();
     _getContent(template:options.template, templateUrl:options.templateUrl).then((String content){
-      
+
       var injector = this._injector;
       if(scope != null) {
         injector = injector.createChild([new Module()..value(Scope, scope)]);
@@ -186,11 +187,11 @@ class Modal {
       //
       List<dom.Element> rootElements = _toNodeList(html);
 
-      dom.Element rootElement = rootElements.firstWhere((el) { 
+      dom.Element rootElement = rootElements.firstWhere((el) {
         return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
       });
       //
-      _compiler(rootElements)(injector, rootElements);
+      _compiler(rootElements, _directiveMap)(injector, rootElements);
       //
       dom.document.body.append(rootElement);
       //
@@ -200,7 +201,7 @@ class Modal {
     });
     return createCompleter.future;
   }
-  
+
   ModalInstance show(dom.Element element) {
     assert(element != null);
     if (modalInstance == null) {
@@ -209,30 +210,30 @@ class Modal {
         ..result = completer.future
         ..close = (result) { close(result); }
         ..dismiss = (String reason) { dismiss(reason); };
-        
+
       final backDropElement = _getBackdrop(element.ownerDocument, modalInstance.window.backdrop);
-      
+
       modalInstance.window.visible = true;
-      
+
       dom.document.onKeyDown.listen((dom.KeyboardEvent evt) {
         if (evt.keyCode == 27 && modalInstance != null && modalInstance.window.keyboard) {
           dismiss("by escape");
         }
       });
-      
+
       if(backDropElement != null) {
         // Go backdrop to opaque
         backDropElement.classes
           ..remove("in")
           ..add("fade");
-    
+
         _timeout.call((){
           // Add transparancy to backdrop
           backDropElement.classes
             ..remove("fade")
             ..add("in");
         }, delay:250);
-        
+
         if (modalInstance.window._onBackdropClicked != null) {
           backDropElement.onClick.listen((args) => modalInstance.window._onBackdropClicked());
         }
@@ -244,30 +245,30 @@ class Modal {
     }
     return modalInstance;
   }
-  
+
   void hide() {
     if (modalInstance != null) {
-  
+
       if (modalInstance.window.visible) {
-        
+
         final backDropElement = _getBackdrop(modalInstance.window.element.ownerDocument, false);
-  
+
         modalInstance.window.visible = false;
-  
+
         if(backDropElement != null) {
           backDropElement.classes.remove('in');
         }
-  
+
         _clearOutBackdrop(modalInstance.window.element.ownerDocument);
-        
+
         modalInstance = null;
       }
     }
   }
-  
+
   void _clearOutBackdrop(dom.HtmlDocument doc) {
     final backdrop = _getBackdrop(doc, false);
-    
+
     if(backdrop != null) {
       backdrop.remove();
     }
@@ -284,21 +285,21 @@ class Modal {
     }
     return element;
   }
-  
+
   void close(result) {
     if (modalInstance != null && modalInstance.window.visible) {
       completer.complete(result);
       hide();
     }
   }
-  
+
   void dismiss([reason = '']) {
     if (modalInstance != null && modalInstance.window.visible) {
       completer.completeError(reason);
       hide();
     }
   }
-  
+
   async.Future _getContent({String template:null, String templateUrl:null}) {
     if (template == null && templateUrl == null) {
       throw new Exception('One of template or templateUrl options is required.');
@@ -310,7 +311,7 @@ class Modal {
       return _http.get(templateUrl, cache: _templateCache).then((result) => result.data);
     }
   }
-  
+
   /**
    * Convert an [html] String to a [List] of [Element]s.
    */

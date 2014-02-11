@@ -63,7 +63,7 @@ class Compile {
       throw 'Expecting: String, Node, or List<Node> got $html.';
     }
     rootElement = rootElements[0];
-    rootBlock = compiler(rootElements)(injector, rootElements);
+    rootBlock = compiler(rootElements, injector.get(DirectiveMap))(injector, rootElements);
     return rootElement;
   }
 
