@@ -34,7 +34,10 @@ void modalTests() {
     
     afterEach(tearDownInjector);
     
-    // Trigger / listen for event on document.body
+    /**
+     * Trigger / listen for event on document.body.
+     * Seems doesn't work at all. Need to find the way how fire keyboard events.
+     */
     void triggerKeyDown(dom.EventTarget element, int keyCode) {
       var streamDown = KeyEvent.keyUpEvent.forTarget(element);
       var subscription4 = streamDown.listen(
@@ -43,25 +46,37 @@ void modalTests() {
     };
     
     void houskeepking() {
-      var el = document.body.querySelector("modal-window");
-      if (el != null) {
+      document.body.querySelectorAll("modal-window").forEach((el) {
+        modal.hide();
         el.remove();
-      };
+      });
     }
     
-    bool toHaveModalOpen() {
-      var el = document.body.querySelector("modal-window");
-      return el.style.display == 'block';
-    }
-    
-    bool toHaveModalOpenWithContent(dom.Element el, {String content:'', String selector:null}) {
-      if (selector != null) {
-        el = el.querySelector(selector);
-      }
-      return el.innerHtml == content;
+    bool toHaveModalOpenWithContent({String content:'', String selector:null}) {
+      return document.body.querySelectorAll("modal-window").any((el) {
+        if (el.style.display == 'block') {
+          if (selector != null) {
+            el = el.querySelector(selector);
+          }
+          if (el.innerHtml == content) {
+            return true;
+          }
+        }
+        return false;
+      });
     }
     
     bool toHaveBackdrop() => document.body.querySelector('.modal-backdrop') != null;
+    
+    int toHaveModalOpen() {
+      int res = 0;
+      document.body.querySelectorAll("modal-window").forEach((dom.Element el){
+        if (el.style.display == 'block') {
+          res++;
+        }
+      });
+      return res;
+    }
     
     void close(result) {
       modal.close(result);
@@ -74,122 +89,189 @@ void modalTests() {
       rootScope.$digest();
     }
     
+    void clickOnBackdrop() {
+      // Find last backdrop
+      dom.Element el = document.body.querySelectorAll('.modal-backdrop').last;
+      if (el != null) {
+        _.triggerEvent(el, 'click');
+        timeout.flush();
+        rootScope.$digest();
+      }
+    }
+    
     it('should open and dismiss a modal with a minimal set of options', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>Content</div>'));
-      f.then((el) {
-        modal.show(el);
+      ModalInstance inst = modal.open(new ModalOptions(template:"<div>Content</div>"), scope);
+      inst.opened.then((value) {
         //
-        expect(toHaveModalOpen()).toBeTruthy();
-        expect(toHaveModalOpenWithContent(el, content:'Content', selector:'div')).toBeTruthy();
+        expect(toHaveModalOpen()).toEqual(1);
+        expect(toHaveModalOpenWithContent(content:'Content', selector:'div')).toBeTruthy();
         expect(toHaveBackdrop()).toBeTruthy();
         //
         dismiss('closing in test');
         //
-        expect(toHaveModalOpen()).toBeFalsy();
+        expect(toHaveModalOpen()).toEqual(0);
         expect(toHaveBackdrop()).toBeFalsy();
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should open a modal from templateUrl', () {
       cache.put('content.html', new HttpResponse(200, '<div>URL Content</div>'));
       
-      Future<dom.Element> f = modal.create(new ModalOptions(templateUrl: 'content.html'));
-      f.then((el) {
-        modal.show(el);
+      ModalInstance inst = modal.open(new ModalOptions(templateUrl: 'content.html'), scope);
+      inst.opened.then((value) {
         //
-        expect(toHaveModalOpen()).toBeTruthy();
-        expect(toHaveModalOpenWithContent(el, content:'URL Content', selector:'div')).toBeTruthy();
+        expect(toHaveModalOpen()).toEqual(1);
+        expect(toHaveModalOpenWithContent(content:'URL Content', selector:'div')).toBeTruthy();
         expect(toHaveBackdrop()).toBeTruthy();
         //
         dismiss('closing in test');
         //
-        expect(toHaveModalOpen()).toBeFalsy();
+        expect(toHaveModalOpen()).toEqual(0);
         expect(toHaveBackdrop()).toBeFalsy();
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should support closing on backdrop click', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>Content</div>'));
-      f.then((el) {
-        modal.show(el);
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content</div>'), scope);
+      inst.opened.then((value) {
         //
-        expect(toHaveModalOpen()).toBeTruthy();
+        expect(toHaveModalOpen()).toEqual(1);
         // Trigger click event on backdrop
         _.triggerEvent(document.body.querySelector('.modal-backdrop'), 'click');
         timeout.flush();
         rootScope.$digest();
         //
-        expect(toHaveModalOpen()).toBeFalsy();
+        expect(toHaveModalOpen()).toEqual(0);
         expect(toHaveBackdrop()).toBeFalsy();
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should resolve returned promise on close', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>Content</div>'));
-      f.then((el) {
-        ModalInstance inst = modal.show(el);
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content</div>'), scope);
+      inst.opened.then((value) {
         expect(inst.result, completion(equals('closed ok')));
         //
         close('closed ok');
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should reject returned promise on dismiss', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>Content</div>'));
-      f.then((el) {
-        ModalInstance inst = modal.show(el);
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content</div>'), scope);
+      inst.opened.then((value) {
         expect(inst.result, throwsA(equals('esc')));
         //
         dismiss('esc');
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should not have any backdrop element if backdrop set to false', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>No backdrop</div>', backdrop: 'false'));
-      f.then((el) {
-        modal.show(el);
-        
-        expect(toHaveModalOpen()).toBeTruthy();
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>No backdrop</div>', backdrop: 'false'), scope);
+      inst.opened.then((value) {
+        expect(toHaveModalOpen()).toEqual(1);
         expect(toHaveBackdrop()).toBeFalsy();
         //
         houskeepking();
       });
-      expect(f, completes);
+      expect(inst.opened, completes);
     });
     
     it('should not close modal on backdrop click if backdrop is specified as "static"', () {
-      Future<dom.Element> f = modal.create(new ModalOptions(template: '<div>Content</div>', backdrop: 'static'));
-      f.then((el) {
-        modal.show(el);
-        
-        expect(toHaveModalOpen()).toBeTruthy();
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content</div>', backdrop: 'static'), scope);
+      inst.opened.then((value) {
+        expect(toHaveModalOpen()).toEqual(1);
         // Trigger click event on backdrop
-        _.triggerEvent(document.body.querySelector('.modal-backdrop'), 'click');
-        timeout.flush();
-        rootScope.$digest();
+        clickOnBackdrop();
         //
-        expect(toHaveModalOpen()).toBeTruthy();
+        expect(toHaveModalOpen()).toEqual(1);
         expect(toHaveBackdrop()).toBeTruthy();
         //
         houskeepking();
       });
+      expect(inst.opened, completes);
+    });
+    
+    it('it should allow opening of multiple modals', () {
+
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content1</div>'), scope);
+      ModalInstance inst2 = modal.open(new ModalOptions(template: '<div>Content2</div>'), scope);
+      Future f = Future.wait([inst.opened, inst2.opened])..then((values) {
+        expect(toHaveModalOpen()).toEqual(2);
+        
+        dismiss("second");
+        
+        expect(toHaveModalOpen()).toEqual(1);
+        expect(toHaveModalOpenWithContent(content:'Content1', selector:'div')).toBeTruthy();
+        
+        dismiss("first");
+        expect(toHaveModalOpen()).toEqual(0);
+        
+        houskeepking();
+      });
+      
       expect(f, completes);
     });
     
+    it('should not close any modals on ESC if the topmost one does not allow it', () {
+
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Modal1</div>'), scope);
+      ModalInstance inst2 = modal.open(new ModalOptions(template: '<div>Modal2</div>', keyboard: false), scope);
+      Future f = Future.wait([inst.opened, inst2.opened])..then((values) {
+        expect(toHaveModalOpen()).toEqual(2);
+        
+        triggerKeyDown(document, 27);
+        rootScope.$digest();
+        
+        expect(toHaveModalOpen()).toEqual(2);
+        
+        houskeepking();
+      });
+      
+      expect(f, completes);
+    });
+    
+    it('should not close any modals on click if a topmost modal does not have backdrop', () {
+
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Modal1</div>'), scope);
+      ModalInstance inst2 = modal.open(new ModalOptions(template: '<div>Modal2</div>', backdrop: 'false'), scope);
+      Future f = Future.wait([inst.opened, inst2.opened])..then((values) {
+        expect(toHaveModalOpen()).toEqual(2);
+        
+        clickOnBackdrop();
+        
+        expect(toHaveModalOpen()).toEqual(2);
+        
+        houskeepking();
+      });
+      
+      expect(f, completes);
+    });
+    
+    it('multiple modals should not interfere with default options', () {
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Modal1</div>', backdrop: 'false'), scope);
+      ModalInstance inst2 = modal.open(new ModalOptions(template: '<div>Modal2</div>'), scope);
+      Future f = Future.wait([inst.opened, inst2.opened])..then((values) {
+        expect(toHaveModalOpen()).toEqual(2);
+        expect(toHaveBackdrop()).toBeTruthy();
+        
+        houskeepking();
+      });
+      
+      expect(inst.opened, completes);
+    });
   });
 }

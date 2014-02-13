@@ -18,7 +18,7 @@ class AlertModule extends Module {
  * Alert component.
  */
 @NgComponent(selector: 'alert', publishAs: 't', applyAuthorStyles: true, 
-    templateUrl: 'packages/angular_ui/alert.html')
+    templateUrl: 'packages/angular_ui/alert/alert.html')
 class Alert {
   @NgOneWay('type')
   String type;

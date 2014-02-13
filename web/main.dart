@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
-import 'dart:html' as dom;
+//import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular_ui/angular_ui.dart';
@@ -28,10 +28,10 @@ class DemoModule extends Module {
     type(AlertCtrl);
     type(ProgressCtrl);
     type(CarouselDemoController);
-    type(ModalCtrl);
     type(ModalCtrlTemplate);
     type(ModalCtrlTagTemplate);
     type(ModalCtrlFileTemplate);
+    type(ModalCtrlOtherTemplate);
   }
 }
 
@@ -186,43 +186,13 @@ class CarouselDemoController {
 }
 
 /**
- * Modal controller.
- */
-@NgController(selector: '[modal-ctrl]', publishAs: 'ctrl')
-class ModalCtrl {
-  List<String> items = ["One", "Two", "Three", "Four"];
-  
-  String selected;
-  String tmp;
-  
-  Modal modal;
-  ModalInstance modalInstance;
-  
-  ModalCtrl(this.modal);
-  
-  void open(id) {
-    modalInstance = modal.show(dom.querySelector(id));
-    modalInstance.result.then((value) {
-        selected = value;
-      }, onError: (reson) {
-        print('Dismiss $reson');
-      });
-  }
-  
-  void ok(sel) {
-    modalInstance.close(sel);
-  }
-}
-
-/**
  * Modal controller with template.
  */
 @NgController(selector: '[modal-ctrl-tmpl]', publishAs: 'ctrl')
 class ModalCtrlTemplate {
   List<String> items = ["1111", "2222", "3333", "4444"];
-  
   String selected;
-  String tmp = "";
+  String tmp;
   
   Modal modal;
   ModalInstance modalInstance;
@@ -250,14 +220,56 @@ class ModalCtrlTemplate {
   ModalCtrlTemplate(this.modal, this.scope);
   
   void open() {
-    modal.create(new ModalOptions(template:template), scope:scope).then((dom.Element elem) {
-      modalInstance = modal.show(elem);
-      modalInstance.result.then((value) {
-        selected = value;
-      }, onError: (reson) {
-        print('Dismiss $reson');
+    modalInstance = modal.open(new ModalOptions(template:template), scope);
+    
+    modalInstance.opened
+      ..then((v) {
+        print('Opened');
+      }, onError: (e) {
+        print('Open error is $e');
       });
-    });
+    
+    modalInstance.result
+      ..then((value) {
+        selected = value;
+        print('Closed with selection $value');
+      }, onError:(e) {
+        print('Dismissed with $e');
+      });
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
+  }
+}
+
+/**
+ * Modal controller with template from file.
+ */
+@NgController(selector: '[modal-ctrl-tag-tmpl]', publishAs: 'ctrl')
+class ModalCtrlTagTemplate {
+  List<String> items = ["Java", "Dart", "JavaScript", "Ruby"];
+  
+  String selected;
+  String tmp;
+  String other;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  Scope scope;
+  
+  ModalCtrlTagTemplate(this.modal, this.scope);
+  
+  void open(String templateUrl) {
+    modalInstance = modal.open(new ModalOptions(templateUrl:templateUrl), scope);
+    
+    modalInstance.result
+      ..then((value) {
+        selected = value;
+        print('Closed with selection $value');
+      }, onError:(e) {
+        print('Dismissed with $e');
+      });
   }
   
   void ok(sel) {
@@ -282,14 +294,15 @@ class ModalCtrlFileTemplate {
   ModalCtrlFileTemplate(this.modal, this.scope);
   
   void open(String templateUrl) {
-    modal.create(new ModalOptions(templateUrl:templateUrl), scope:scope).then((dom.Element elem) {
-      modalInstance = modal.show(elem);
-      modalInstance.result.then((value) {
+    modalInstance = modal.open(new ModalOptions(templateUrl:templateUrl), scope);
+    
+    modalInstance.result
+      ..then((value) {
         selected = value;
-      }, onError: (reson) {
-        print('Dismiss $reson');
+        print('Closed with selection $value');
+      }, onError:(e) {
+        print('Dismissed with $e');
       });
-    });
   }
   
   void ok(sel) {
@@ -298,11 +311,11 @@ class ModalCtrlFileTemplate {
 }
 
 /**
- * Modal controller with template from file.
+ * Modal controller with template from file for other.
  */
-@NgController(selector: '[modal-ctrl-tag-tmpl]', publishAs: 'ctrl')
-class ModalCtrlTagTemplate {
-  List<String> items = ["Java", "Dart", "JavaScript", "Ruby"];
+@NgController(selector: '[modal-ctrl-other-tmpl]', publishAs: 'ctrl2')
+class ModalCtrlOtherTemplate {
+  List<String> items = ["Hydrogen", "Lithium", "Oxygen", "Chromium"];
   
   String selected;
   String tmp;
@@ -310,18 +323,31 @@ class ModalCtrlTagTemplate {
   Modal modal;
   ModalInstance modalInstance;
   Scope scope;
+  NgModel ngModel;
   
-  ModalCtrlTagTemplate(this.modal, this.scope);
-  
-  void open(String templateUrl) {
-    modal.create(new ModalOptions(templateUrl:templateUrl), scope:scope).then((dom.Element elem) {
-      modalInstance = modal.show(elem);
-      modalInstance.result.then((value) {
-        selected = value;
-      }, onError: (reson) {
-        print('Dismiss $reson');
+  ModalCtrlOtherTemplate(this.modal, this.scope, this.ngModel) {
+    // Update local variables from outside
+    ngModel.render = (value) {
+      selected = value;
+    };
+    // Update model from inside
+    scope.$watch('ctrl2.selected', (newValue, oldValue) {
+      scope.$apply(() {
+        ngModel.viewValue = newValue;
       });
     });
+  }
+  
+  void open(String templateUrl) {
+    modalInstance = modal.open(new ModalOptions(templateUrl:templateUrl), scope);
+    
+    modalInstance.result
+      ..then((value) {
+        selected = value;
+        print('Closed with selection $value');
+      }, onError:(e) {
+        print('Dismissed with $e');
+      });
   }
   
   void ok(sel) {

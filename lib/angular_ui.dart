@@ -5,7 +5,7 @@ library angular.ui;
 
 import "package:angular/angular.dart";
 
-import 'package:angular_ui/alert.dart';
+import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/accordion/accordion.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/carousel.dart';
@@ -16,7 +16,6 @@ import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/timeout.dart';
 import 'package:angular_ui/transition.dart';
 import 'package:angular_ui/modal/modal.dart';
-import 'package:angular_ui/utils/compile.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -36,7 +35,6 @@ class AngularUIModule extends Module {
     install(new TimeoutModule());
     install(new TransitionModule());
     install(new ModalModule());
-    install(new CompileModule());
   }
 }
 

@@ -20,7 +20,7 @@ import 'package:angular/core_dom/module.dart';
 
 import 'package:angular_ui/utils/utils.dart';
 
-import 'package:angular_ui/alert.dart';
+import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/buttons.dart';
 import 'package:angular_ui/collapse.dart';
 import 'package:angular_ui/dropdown_toggle.dart';

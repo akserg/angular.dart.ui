@@ -20,50 +20,23 @@ All rights reserved.  Please see the LICENSE.md file.
     
     <h3>Modal Window</h3>
     <div class="panel panel-default">
-      <div class="panel-heading">Modal embedded in parent container</div>
-      <div class="panel-body">
-        <div modal-ctrl>
-          <button class="btn btn-default" ng-click="ctrl.open('#modal_1')">Open me!</button>
-          <div ng-show="selected">Selected: : {{ ctrl.selected }}</div>
-          
-          <modal-window id="modal_1" backdrop="static">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">I'm a modal!</h4>
-            </div>
-            <div class="modal-body">
-              <ul>
-                <li ng-repeat="item in ctrl.items">
-                  <a ng-click="ctrl.tmp = item">{{ item }}</a>
-                </li>
-              </ul>
-              Selected: <b>{{ctrl.tmp}}</b>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
-            </div>
-          </modal-window>
-        </div>
-      </div>
-    </div>
-    
-    <div class="panel panel-default">
-      <div class="panel-heading">Modal from template</div>
+      <div class="panel-heading">Modal from template string</div>
       <div class="panel-body">
         <div modal-ctrl-tmpl>
           <button class="btn btn-default" ng-click="ctrl.open()">Open me!</button>
-          <div ng-show="selected">Selected: : {{ ctrl.selected }}</div>
+          <div ng-show="selected">Selected: {{ ctrl.selected }}</div>
         </div>
       </div>
     </div>
     
     <div class="panel panel-default">
-      <div class="panel-heading">Modal from template element</div>
+      <div class="panel-heading">Multi Modal from template element and template URL</div>
       <div class="panel-body">
         <div modal-ctrl-tag-tmpl>
           <button class="btn btn-default" ng-click="ctrl.open('template_2.html')">Open me!</button>
-          <div ng-show="selected">Selected: : {{ ctrl.selected }}</div>
+          <div ng-show="selected">Selected: {{ ctrl.selected + ' - ' + ctrl.other }}</div>
+          
+          <!-- Modal Window template -->
           
           <template id="template_2.html" type="text/ng-template">
             <div class="modal-header">
@@ -76,7 +49,12 @@ All rights reserved.  Please see the LICENSE.md file.
                   <a ng-click="ctrl.tmp = item">{{ item }}</a>
                 </li>
               </ul>
-              Selected: <b>{{ctrl.tmp}}</b>
+              Selected: <b>{{ctrl.tmp}}</b><br>
+              Other Selected: <b>{{ctrl.other}}</b>
+              <hr>
+              <div modal-ctrl-other-tmpl ng-model="ctrl.other">
+                <a ng-click="ctrl2.open('modal_window2.html')">Open other Modal Window</a>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -92,7 +70,7 @@ All rights reserved.  Please see the LICENSE.md file.
       <div class="panel-body">
         <div modal-ctrl-file-tmpl>
           <button class="btn btn-default" ng-click="ctrl.open('modal_window.html')">Open me!</button>
-          <div ng-show="selected">Selected: : {{ ctrl.selected }}</div>
+          <div ng-show="selected">Selected: {{ ctrl.selected }}</div>
         </div>
       </div>
     </div>
