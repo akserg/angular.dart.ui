@@ -1,4 +1,4 @@
-angular.dart.ui [![Build Status](https://drone.io/github.com/akserg/angular.dart.ui/status.png)](https://drone.io/github.com/akserg/angular.dart.ui/latest)
+ï»¿Angular UI [![Build Status](https://drone.io/github.com/akserg/angular.dart.ui/status.png)](https://drone.io/github.com/akserg/angular.dart.ui/latest)
 ===============
 
 Port of Angular-UI to Dart.
@@ -14,6 +14,6 @@ Port of Angular-UI to Dart.
 
 ##Credits
 - **Sergey Akopkokhyants** (https://github.com/akserg)
-- **Tõnis Pool** (https://github.com/poolik).
-- **Günter Zöchbauer** (https://github.com/zoechi)
+- **TÃµnis Pool** (https://github.com/poolik).
+- **GÃ¼nter ZÃ¶chbauer** (https://github.com/zoechi)
 - **AngularDart project** (https://github.com/angular/angular.dart)
