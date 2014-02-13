@@ -6,8 +6,7 @@ library angular.ui.modal;
 import 'dart:async' as async;
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
-
-import 'package:angular_ui/timeout.dart';
+import 'package:angular_ui/utils/timeout.dart';
 
 /**
  * Modal Module.

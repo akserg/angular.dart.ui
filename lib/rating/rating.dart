@@ -28,12 +28,7 @@ class RatingConfig {
 @NgComponent(
     selector: 'rating',
     publishAs: 'ctrl',
-    //templateUrl: 'packages/angular_ui/rating/rating.html',
-    template: r'''
-<span ng-mouseleave="ctrl.reset()">
-  <i ng-repeat="r in ctrl.range" ng-mouseenter="ctrl.enter($index + 1)" ng-click="ctrl.rate($index + 1)" class="glyphicon" ng-class="ctrl.stateClass($index, r)"></i>
-</span>
-''',
+    templateUrl: 'packages/angular_ui/rating/rating.html',
     applyAuthorStyles: true
 )
 class RatingComponent implements NgAttachAware {

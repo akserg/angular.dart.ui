@@ -3,7 +3,6 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
-//import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular_ui/angular_ui.dart';
@@ -331,10 +330,8 @@ class ModalCtrlOtherTemplate {
       selected = value;
     };
     // Update model from inside
-    scope.$watch('ctrl2.selected', (newValue, oldValue) {
-      scope.$apply(() {
+    scope.$watch('ctrl2.selected', (newValue) {
         ngModel.viewValue = newValue;
-      });
     });
   }
   

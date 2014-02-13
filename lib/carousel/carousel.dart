@@ -8,8 +8,8 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'package:angular/angular.dart';
 
-import 'transition.dart';
-import 'timeout.dart';
+import 'package:angular_ui/utils/transition.dart';
+import 'package:angular_ui/utils/timeout.dart';
 
 import 'package:logging/logging.dart' show Logger;
 final _log = new Logger('angular.ui.carousel');
@@ -35,15 +35,7 @@ class CarouselModule extends Module {
     applyAuthorStyles: true,
     visibility: NgDirective.CHILDREN_VISIBILITY,
 //    cssUrls: const ["packages/angular_ui/css/carousel.css"],
-    template: """ 
-<div ng-mouseenter='c.pause()' ng-mouseleave='c.play()' class='carousel'>
-  <ol class='carousel-indicators' ng-show='c.slides.length > 1'>
-    <li ng-repeat='slide in c.slides' ng-class='{active: c.isActive(slide)}' ng-click='c.select(slide)'></li>
-  </ol>
-  <div class='carousel-inner'><content></content></div>
-  <a class='left carousel-control' ng-click='c.prev()' ng-show='c.slides.length > 1'><span class='icon-prev'></span></a>
-  <a class='right carousel-control' ng-click='c.next()' ng-show='c.slides.length > 1'><span class='icon-next'></span></a>
-</div>""")
+    templateUrl: 'packages/angular_ui/carousel/carousel.html')
 class Carousel implements NgDetachAware {
 
   @NgOneWay('no-transition') bool noTransition = false;
@@ -271,16 +263,7 @@ class Carousel implements NgDetachAware {
     selector: 'slide',
     publishAs: 's',
     applyAuthorStyles: true,
-    template:'''
-<div ng-class="{
-    'active': s.leaving || (s.active && !s.entering),
-    'prev': (s.next || s.active) && s.direction=='prev',
-    'next': (s.next || s.active) && s.direction=='next',
-    'right': s.direction=='prev',
-    'left': s.direction=='next'
-  }" class="item text-center"><content></content>
-</div>
-''')
+    templateUrl: 'packages/angular_ui/slide/slide.html')
 class Slide implements NgShadowRootAware, NgDetachAware {
   bool _active = false;
   @NgTwoWay('active')

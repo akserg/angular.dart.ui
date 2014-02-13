@@ -5,9 +5,9 @@ library angular.ui.collapse;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
-import "package:angular/angular.dart";
-import "package:angular/utils.dart";
-import 'transition.dart';
+import 'package:angular/angular.dart';
+import 'package:angular/utils.dart';
+import 'package:angular_ui/utils/transition.dart';
 
 import 'package:logging/logging.dart' show Logger;
 final _log = new Logger('angular.ui.collapse');

@@ -6,7 +6,7 @@ library angular.ui.progressbar;
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
 import 'package:angular_ui/utils/utils.dart';
-import 'package:angular_ui/transition.dart';
+import 'package:angular_ui/utils/transition.dart';
 
 /**
  * Progressbar Module.

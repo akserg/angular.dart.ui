@@ -21,12 +21,12 @@ import 'package:angular/core_dom/module.dart';
 import 'package:angular_ui/utils/utils.dart';
 
 import 'package:angular_ui/alert/alert.dart';
-import 'package:angular_ui/buttons.dart';
-import 'package:angular_ui/collapse.dart';
-import 'package:angular_ui/dropdown_toggle.dart';
-import 'package:angular_ui/position.dart';
-import 'package:angular_ui/timeout.dart';
-import 'package:angular_ui/transition.dart';
+import 'package:angular_ui/buttons/buttons.dart';
+import 'package:angular_ui/collapse/collapse.dart';
+import 'package:angular_ui/dropdown/dropdown_toggle.dart';
+import 'package:angular_ui/utils/position.dart';
+import 'package:angular_ui/utils/timeout.dart';
+import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 
