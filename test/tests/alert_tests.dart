@@ -24,7 +24,7 @@ void alertTests() {
     afterEach(tearDownInjector);
     
     List<dom.Element> createAlerts() {
-      cache.put('packages/angular_ui/alert.html', new HttpResponse(200, '<div class=\'alert\' ng-class=\'"alert-" + (t.type != null ? t.type : "warning")\'><button type=\'button\' class=\'close\' data-dismiss=\'alert\' ng-hide=\'t.showable\' ng-click=\'t.closeHandler()\'>&times;</button><content/></div>'));
+      cache.put('packages/angular_ui/alert/alert.html', new HttpResponse(200, '<div class=\'alert\' ng-class=\'"alert-" + (t.type != null ? t.type : "warning")\'><button type=\'button\' class=\'close\' data-dismiss=\'alert\' ng-hide=\'t.showable\' ng-click=\'t.closeHandler()\'>&times;</button><content/></div>'));
       element = _.compile("<div>" + 
           "<alert ng-repeat='alert in alerts' type='alert.type'" +
             "close='removeAlert(\$index)'>{{alert.msg}}" +
