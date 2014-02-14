@@ -7,6 +7,7 @@ import 'dart:async' as async;
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
 import 'package:angular_ui/utils/timeout.dart';
+import 'package:angular_ui/utils/utils.dart';
 
 /**
  * Modal Module.
@@ -194,7 +195,7 @@ class Modal {
         if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
         html += ">$content</modal-window>";
         //
-        List<dom.Element> rootElements = _toNodeList(html);
+        List<dom.Element> rootElements = toNodeList(html);
   
         instance._element = rootElements.firstWhere((el) {
           return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
@@ -354,18 +355,5 @@ class Modal {
     } else {
       return _http.get(templateUrl, cache: _templateCache).then((result) => result.data);
     }
-  }
-  
-  /**
-   * Convert an [html] String to a [List] of [Element]s.
-   */
-  List<dom.Element> _toNodeList(html) {
-    var div = new dom.DivElement();
-    div.setInnerHtml(html, treeSanitizer: new NullTreeSanitizer());
-    var nodes = [];
-    for(var node in div.nodes) {
-      nodes.add(node);
-    }
-    return nodes;
   }
 }

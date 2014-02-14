@@ -6,6 +6,7 @@ library angular.ui.datepicker;
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
 import "package:angular_ui/utils/position.dart";
+import 'package:angular_ui/utils/utils.dart';
 
 /**
  * Alert Module.
@@ -141,6 +142,7 @@ class DatepickerPopup {
     });
     
     // popup element used to display calendar
+    String html = '<div datepicker-popup-wrap><div datepicker></div></div>';
 //    var popupEl = angular.element('<div datepicker-popup-wrap><div datepicker></div></div>');
 //    popupEl.attr({
 //      'ng-model': 'date',
@@ -217,11 +219,13 @@ class DatepickerPopup {
         scope.dateSelection(new DateTime.now());
       };
       
-      scope.clear = () {
+      scope.clearDate = () {
         scope.dateSelection(null);
       };
 
-      dom.Element popup = compiler(popupEl)(scope);
+      List<dom.Element> rootElements = toNodeList(html);
+      
+      dom.Element popup = compiler(html)(scope);
       if (_appendToBody ) {
         dom.document.body.append(popup);
       } else {

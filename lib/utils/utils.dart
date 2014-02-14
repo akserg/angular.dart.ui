@@ -24,3 +24,16 @@ int toInt(x) {
 dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isDiv);
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
+
+/**
+ * Convert an [html] String to a [List] of [Element]s.
+ */
+List<dom.Element> toNodeList(html) {
+  var div = new dom.DivElement();
+  div.setInnerHtml(html, treeSanitizer: new NullTreeSanitizer());
+  var nodes = [];
+  for(var node in div.nodes) {
+    nodes.add(node);
+  }
+  return nodes;
+}
