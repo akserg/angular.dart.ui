@@ -33,8 +33,8 @@ class CarouselModule extends Module {
     selector: 'carousel',
     publishAs: 'c',
     applyAuthorStyles: true,
-    visibility: NgDirective.CHILDREN_VISIBILITY,
-//    cssUrls: const ["packages/angular_ui/css/carousel.css"],
+    visibility: NgDirective.CHILDREN_VISIBILITY, /*
+    cssUrl: 'packages/angular_ui/carousel/carousel.css', */
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
 class Carousel implements NgDetachAware {
 
@@ -263,7 +263,8 @@ class Carousel implements NgDetachAware {
     selector: 'slide',
     publishAs: 's',
     applyAuthorStyles: true,
-    templateUrl: 'packages/angular_ui/slide/slide.html')
+    templateUrl: 'packages/angular_ui/carousel/slide.html',
+    cssUrl: 'packages/angular_ui/carousel/slide.css')
 class Slide implements NgShadowRootAware, NgDetachAware {
   bool _active = false;
   @NgTwoWay('active')
