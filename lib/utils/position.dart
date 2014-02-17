@@ -1,7 +1,7 @@
 // Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
-library angular.ui.position;
+library angular.ui.utils.position;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
@@ -29,10 +29,10 @@ class Position {
 
 //  dom.Document document;
 //  dom.Window window;
-  
+
 //  Position(this.document, this.window);
   Position();
-  
+
   dynamic _getStyle(dom.Element el, String cssprop) {
 //    if (el.currentStyle) { //IE
 //      return el.currentStyle[cssprop];
@@ -43,7 +43,7 @@ class Position {
 //    return el.style[cssprop];
     return el.style.getPropertyValue(cssprop);
   }
-  
+
   /**
    * Checks if a given element is statically positioned
    * @param element - raw DOM element
@@ -53,7 +53,7 @@ class Position {
     String pos = _getStyle(element, "position");
     return pos != null && pos == 'static';
   }
-  
+
   /**
    * returns the closest, non-statically positioned parentOffset of a given element
    * @param element
@@ -72,7 +72,7 @@ class Position {
     }
     return offsetParent == null ? docDomEl : offsetParent;
   }
-  
+
   /**
    * Provides read-only equivalent of jQuery's position function:
    * http://api.jquery.com/position/
@@ -102,7 +102,7 @@ class Position {
       offsetParentBCR.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
       offsetParentBCR.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
     }
-    
+
     var boundingClientRect = element.getBoundingClientRect();
     return new Rect(
         width: boundingClientRect.width != null ? boundingClientRect.width : element.offsetWidth,
@@ -110,7 +110,7 @@ class Position {
         top: elBCR.top - offsetParentBCR.top,
         left: elBCR.left - offsetParentBCR.left);
   }
-  
+
   /**
    * Provides read-only equivalent of jQuery's offset function:
    * http://api.jquery.com/offset/
@@ -138,6 +138,6 @@ class Position {
  */
 class Rect {
   var left, top, width, height;
-  
+
   Rect({this.left:0, this.top:0, this.width:0, this.height:0});
 }
