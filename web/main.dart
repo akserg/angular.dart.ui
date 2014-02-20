@@ -6,6 +6,9 @@ library angular.ui.demo;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular_ui/angular_ui.dart';
+import 'dart:html' as html;
+
+part 'tabs/tabsDemo.dart';
 
 /**
  * Entry point into app.
@@ -26,6 +29,7 @@ class DemoModule extends Module {
     type(DropdownCtrl);
     type(AlertCtrl);
     type(ProgressCtrl);
+    type(TabsCtrl);
     type(CarouselDemoController);
     type(ModalCtrlTemplate);
     type(ModalCtrlTagTemplate);
