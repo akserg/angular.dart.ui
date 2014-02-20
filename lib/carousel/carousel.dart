@@ -36,6 +36,13 @@ class CarouselModule extends Module {
     visibility: NgDirective.CHILDREN_VISIBILITY, /*
     cssUrl: 'packages/angular_ui/carousel/carousel.css', */
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
+@NgComponent(
+    selector: '[carousel]',
+    publishAs: 'c',
+    applyAuthorStyles: true,
+    visibility: NgDirective.CHILDREN_VISIBILITY, /*
+    cssUrl: 'packages/angular_ui/carousel/carousel.css', */
+    templateUrl: 'packages/angular_ui/carousel/carousel.html')
 class Carousel implements NgDetachAware {
 
   @NgOneWay('no-transition') bool noTransition = false;

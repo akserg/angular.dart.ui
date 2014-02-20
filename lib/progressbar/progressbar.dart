@@ -40,6 +40,14 @@ class ProgressbarConfig {
       'value': '=>value',
       'type': '@type'
     })
+@NgComponent(
+    selector: '[progressbar]',
+    templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
+    publishAs: 'ctrl',
+    map: const {
+      'value': '=>value',
+      'type': '@type'
+    })
 class ProgressBar extends _ProgressbarBase {
   ProgressbarConfig _config;
   NodeAttrs _attrs;
@@ -64,6 +72,9 @@ class ProgressBar extends _ProgressbarBase {
 @NgComponent(
     selector: 'stackedProgress',
     templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
+@NgComponent(
+    selector: '[stackedProgress]',
+    templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
 class Progress implements NgShadowRootAware, NgAttachAware {
   Scope _scope;
   dom.Element _element;
@@ -80,6 +91,14 @@ class Progress implements NgShadowRootAware, NgAttachAware {
 
 @NgComponent(
     selector: 'bar',
+    templateUrl: 'packages/angular_ui/progressbar/bar.html',
+    publishAs: 'ctrl',
+    map: const {
+      'value': '=>value',
+      'type': '@type'
+    })
+@NgComponent(
+    selector: '[bar]',
     templateUrl: 'packages/angular_ui/progressbar/bar.html',
     publishAs: 'ctrl',
     map: const {
