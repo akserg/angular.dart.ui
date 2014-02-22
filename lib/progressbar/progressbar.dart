@@ -57,6 +57,14 @@ class ProgressBar extends _ProgressbarBase {
 
   @NgOneWay("animate")
   bool animate;
+  
+  String get type => _type;
+  set type(value) { _type = value; }
+  String get classes => _classes;
+  
+  set value(int val) {
+    super.value = val;
+  }
 
   ProgressBar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element);
 
@@ -113,6 +121,13 @@ class Bar extends _ProgressbarBase {
 
   int _max;
   bool _animate;
+  
+  String get type => _type;
+  set type(value) { _type = value; }
+  String get classes => _classes;
+  set value(int val) {
+    super.value = val;
+  }
 
   Bar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element) {
     _element = element;
@@ -150,8 +165,8 @@ abstract class _ProgressbarBase implements NgShadowRootAware, NgAttachAware {
   int _value;
   int _oldValue = 0;
 
-  String type;
-  String classes;
+  String _type;
+  String _classes;
 
   _ProgressbarBase(this._transistion, this._scope, this._element);
 
@@ -169,7 +184,7 @@ abstract class _ProgressbarBase implements NgShadowRootAware, NgAttachAware {
   evalAnimateOrDefault(Scope scope);
 
   void attach() {
-    classes = _element.classes.toString();
+    _classes = _element.classes.toString();
     if (_shadowRoot != null) _update(getShadowElement(_shadowRoot));
   }
 
