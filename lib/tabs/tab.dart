@@ -4,16 +4,10 @@
 part of angular.ui.tabs;
 
 //TODO add selector [tab]
-//TODO move html to external file
 @NgComponent(
     selector: 'tab',
     visibility: NgDirective.CHILDREN_VISIBILITY,
-    template:
-'''
-<div ng-if="tabCtrl.active" class="tab-pane" ng-class="{active: tabCtrl.active}">
-  <content></content>
-</div>
-''',
+    templateUrl: 'packages/angular_ui/tabs/tab.html',
     publishAs: 'tabCtrl',
     applyAuthorStyles: true
 )

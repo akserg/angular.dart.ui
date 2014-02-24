@@ -29,6 +29,7 @@ import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/tabs/tabset.dart';
 
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';

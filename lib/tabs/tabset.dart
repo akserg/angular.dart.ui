@@ -21,23 +21,10 @@ class TabsModule extends Module {
 }
 
 //TODO add selector [tabset]
-//TODO move html to external file
 @NgComponent(
     selector: 'tabset',
     visibility: NgDirective.CHILDREN_VISIBILITY,
-    template:
-'''
-<div class="tabbable">
-  <ul class="nav nav-tabs" ng-class="{'nav-stacked': tabsetCtrl.vertical, 'nav-justified': tabsetCtrl.justified}">
-    <li ng-repeat="tab in tabsetCtrl.tabs" ng-class="{active: tab.active, disabled: tab.disabled}">
-      <a ng-click="tabsetCtrl.select(tab)"><tab-heading-transclude tab="tab"></tab-heading-transclude></a>
-    </li>
-  </ul>
-  <div class="tab-content">
-    <content></content>
-  </div>
-</div>
-''',
+    templateUrl: 'packages/angular_ui/tabs/tabset.html',
     publishAs: 'tabsetCtrl',
     applyAuthorStyles: true
 )
