@@ -31,6 +31,12 @@ class RatingConfig {
     templateUrl: 'packages/angular_ui/rating/rating.html',
     applyAuthorStyles: true
 )
+@NgComponent(
+    selector: '[rating]',
+    publishAs: 'ctrl',
+    templateUrl: 'packages/angular_ui/rating/rating.html',
+    applyAuthorStyles: true
+)
 class RatingComponent implements NgAttachAware {
   final Scope _scope;
   final RatingConfig _config;

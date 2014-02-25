@@ -19,6 +19,9 @@ class DropdownToggleModule extends Module {
 @NgDirective(
     selector: '[dropdown-toggle]'
 )
+@NgDirective(
+    selector: '.dropdown-toggle'
+)
 class DropdownToggle {
   static dom.Element _openElement;
   static var _closeMenu = (dom.MouseEvent evt) => {};
