@@ -34,6 +34,8 @@ class TabsetComponent {
   bool justified = false;
   @NgOneWay('vertical')
   bool vertical = false;
+  @NgOneWay('type')
+  String type = "tabs";
   List<TabComponent> tabs = [];
   
   TabsetComponent() {
