@@ -16,4 +16,5 @@ Port of Angular-UI to Dart.
 - Sergey Akopkokhyants (https://github.com/akserg)
 - Tõnis Pool (https://github.com/poolik).
 - Günter Zöchbauer (https://github.com/zoechi)
+- Francesco Cina (https://github.com/ufoscout)
 - AngularDart project (https://github.com/angular/angular.dart)

@@ -14,7 +14,7 @@ class TabsCtrl {
             ];
     
     void alertMe() {
-      html.window.alert('You\'ve selected the alert tab!');
+      dom.window.alert('You\'ve selected the alert tab!');
     }
   
 }
