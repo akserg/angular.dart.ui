@@ -83,7 +83,7 @@ class AccordionComponent {
   /*
    *  This is called from the accordion-group directive when to remove itself
    */
-  Scope removeGroup(AccordionGroupComponent groupScope) {
+  void removeGroup(AccordionGroupComponent groupScope) {
     _groups.remove(groupScope);
   }
 }

@@ -39,6 +39,7 @@ class DemoModule extends Module {
   DemoModule() {
     install(new AngularUIModule());
     //
+    type(DatepickerCtrl);
     type(ModalCtrlTemplate);
     type(ModalCtrlTagTemplate);
     type(ModalCtrlFileTemplate);
@@ -49,6 +50,56 @@ class DemoModule extends Module {
     type(ProgressCtrl);
     type(ButtonsCtrl);
     type(CarouselDemoController);
+  }
+}
+
+/**
+ * Datepicker controller.
+ */
+@NgController(selector: '[date-picker-ctrl]', publishAs: 'ctrl')
+class DatepickerCtrl {
+  
+  var dt;
+  bool showWeeks = true;
+  DateTime minDate;
+  bool opened = false;
+  Map dateOptions = {
+   'year-format': '\'yy\'',
+   'starting-day': 1
+  };
+  List formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
+  String format;
+  
+  DatepickerCtrl() {
+    toggleMin();
+    format = formats[0];
+  }
+  
+  void today() {
+    dt = new DateTime.now();
+  }
+  
+  void toggleWeeks() {
+    showWeeks = !showWeeks;
+  }
+  
+  void clear() {
+    dt = null;
+  }
+  
+  bool disabled(DateTime date, mode) {
+    return ( mode == 'day' && ( date.day == 0 || date.day == 6 ) );
+  }
+  
+  void toggleMin() {
+    minDate = minDate == null ? new DateTime.now() : null;
+  }
+  
+  void open(dom.Event event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    opened = true;
   }
 }
 
