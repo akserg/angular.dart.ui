@@ -70,7 +70,9 @@ class DatepickerCtrl {
   List formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
   String format;
   
-  DatepickerCtrl() {
+  DateFilter filter;
+  
+  DatepickerCtrl(this.filter ) {
     toggleMin();
     format = formats[0];
   }
@@ -100,6 +102,10 @@ class DatepickerCtrl {
     event.stopPropagation();
 
     opened = true;
+  }
+  
+  String translate(DateTime date) {
+    return filter.call(date, format);
   }
 }
 

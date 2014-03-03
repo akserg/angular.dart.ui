@@ -299,31 +299,32 @@ class Datepicker {
     maxDate = _datepickerConfig.maxDate != null ? DateTime.parse(
         _datepickerConfig.maxDate) : null;
 
-    modes = [new Mode()
+    modes = [
+        new Mode()
           ..name = 'day'
           ..getVisibleDates = (DateTime date, DateTime selected) {
-            var year = date.year, month = date.month, firstDayOfMonth =
-                new DateTime(year, month, 1);
+            var year = date.year, 
+                month = date.month, 
+                firstDayOfMonth = new DateTime(year, month, 1);
             var difference = startingDay - firstDayOfMonth.day,
                 numDisplayedFromPreviousMonth = (difference > 0) ? 7 - difference : -difference,
-                firstDate = new DateTime.fromMillisecondsSinceEpoch(
-                firstDayOfMonth.millisecondsSinceEpoch), numDates = 0;
+                firstDate = new DateTime.fromMillisecondsSinceEpoch(firstDayOfMonth.millisecondsSinceEpoch), 
+                numDates = 0;
 
             if (numDisplayedFromPreviousMonth > 0) {
-              firstDate = firstDate.add(new Duration(days:
-                  -numDisplayedFromPreviousMonth + 1));
-                  // firstDate.setDate( - numDisplayedFromPreviousMonth + 1 );
+              firstDate = firstDate.add(new Duration(days: -numDisplayedFromPreviousMonth + 1));
               numDates += numDisplayedFromPreviousMonth; // Previous
             }
             numDates += getDaysInMonth(year, month + 1); // Current
             numDates += (7 - numDates % 7) % 7; // Next
 
-            var days = getDates(firstDate, numDates), labels = new List(7);
+            var days = getDates(firstDate, numDates), 
+                labels = new List(7);
             for (var i = 0; i < numDates; i++) {
               DateTime dt = days[i];
               days[i] = makeDate(dt, format.day, selected != null &&
-                  selected.day == dt.day && selected.month == dt.month && selected.year ==
-                  dt.year, dt.month != month);
+                  selected.day == dt.day && selected.month == dt.month && 
+                  selected.year == dt.year, dt.month != month);
             }
             for (var j = 0; j < 7; j++) {
               labels[j] = _dateFilter(days[j].date, format.dayHeader);
@@ -340,14 +341,16 @@ class Datepicker {
           ..split = 7
           ..step = {
             'months': 1
-          }, new Mode()
+          }, 
+        new Mode()
           ..name = 'month'
           ..getVisibleDates = (DateTime date, DateTime selected) {
-            var months = new List(12), year = date.year; //getFullYear();
-            for (var i = 0; i < 12; i++) {
+            var months = new List(), 
+                year = date.year;
+            for (var i = 1; i <= 12; i++) {
               var dt = new DateTime(year, i, 1);
-              months[i] = makeDate(dt, format.month, (selected != null &&
-                  selected.month == i && selected.year == year));
+              months.add(makeDate(dt, format.month, 
+                  (selected != null && selected.month == i && selected.year == year)));
             }
             return new VisibleDates()
                 ..objects = months
@@ -363,17 +366,17 @@ class Datepicker {
           }, new Mode()
           ..name = 'year'
           ..getVisibleDates = (DateTime date, DateTime selected) {
-            var years = new List(yearRange), year = date.year, startYear =
-                ((year - 1) / yearRange) * yearRange + 1;
+            var years = new List(), 
+                year = date.year, 
+                startYear = (((year - 1) / yearRange) * yearRange + 1).toInt();
             for (var i = 0; i < yearRange; i++) {
-              var dt = new DateTime(startYear + i, 0, 1);
-              years[i] = makeDate(dt, format.year, (selected != null &&
-                  selected.year == dt.year));
+              var dt = new DateTime(startYear + i, 1, 1);
+              years.add(makeDate(dt, format.year, 
+                  (selected != null && selected.year == dt.year)));
             }
             return new VisibleDates()
                 ..objects = years
-                ..title = [years[0].label, years[yearRange - 1].label].join(
-                    ' - ');
+                ..title = [years[0].label, years[yearRange - 1].label].join(' - ');
           }
           ..compare = (DateTime date1, DateTime date2) {
             return date1.year - date2.year;
@@ -450,7 +453,7 @@ class DatepickerPopupConfig {
     templateUrl: 'packages/angular_ui/datepicker/popup.html')
 class DatepickerPopupWrap {
   
-  @NgOneWay('is-open')
+  @NgTwoWay('is-open')
   bool isOpen = false;
   
   @NgOneWay('position')
@@ -462,7 +465,7 @@ class DatepickerPopupWrap {
   @NgCallback('today')
   var today;
   
-  @NgOneWay('show-weeks')
+  @NgTwoWay('show-weeks')
   bool showWeeks = false;
   
   @NgOneWay('current-text')
@@ -501,11 +504,11 @@ class DatepickerPopupWrap {
  * Datapicker  component.
  */
 @NgComponent(selector: 'datepicker-popup[ng-model]', publishAs: 'dp',
-    applyAuthorStyles: true, templateUrl:
-    'packages/angular_ui/datepicker/datepicker-popup.html')
+    applyAuthorStyles: true, 
+    templateUrl: 'packages/angular_ui/datepicker/datepicker-popup.html')
 @NgComponent(selector: '[datepicker-popup][ng-model]', publishAs: 'dp',
-    applyAuthorStyles: true, templateUrl:
-    'packages/angular_ui/datepicker/datepicker-popup.html')
+    applyAuthorStyles: true, 
+    templateUrl: 'packages/angular_ui/datepicker/datepicker-popup.html')
 class DatepickerPopup implements NgShadowRootAware  {
 
   String _dateFormat;
@@ -514,6 +517,7 @@ class DatepickerPopup implements NgShadowRootAware  {
     _dateFormat = value != null ? value : _datepickerPopupConfig.dateFormat;
     _ngModel.dirty = true;
   }
+  String get datepickerPopup => _dateFormat;
 
   bool _showButtonBar = false;
   @NgOneWay('show-button-bar')
@@ -553,7 +557,7 @@ class DatepickerPopup implements NgShadowRootAware  {
   String get closeText => _closeText;
 
   bool isOpen = false;
-  @NgOneWay('is-open')
+  @NgTwoWay('is-open')
   set setIsOpen(bool value) {
     if (value) {
       _updatePosition();
@@ -573,9 +577,11 @@ class DatepickerPopup implements NgShadowRootAware  {
       isOpen = false;
     }
   }
+  bool get setIsOpen => isOpen;
+  
 
   @NgOneWay('datepicker-options')
-  Map _datepickerOptions = {};
+  Map datepickerOptions = {};
 
   DateTime minDate;
   @NgOneWay('min')
@@ -647,20 +653,34 @@ class DatepickerPopup implements NgShadowRootAware  {
       _popup.remove();
     });
 
-    _element.onInput.listen((dom.Event event) { date = _ngModel.modelValue; });
-    _element.onChange.listen((dom.Event event) { date = _ngModel.modelValue; });
-    _element.onKeyUp.listen((dom.Event event) { date = _ngModel.modelValue; });
+    _element.onInput.listen(_inputChanged);
+    _element.onChange.listen(_inputChanged);
+    _element.onKeyUp.listen(_inputChanged);
     
     // Outter change
     _ngModel.render = (value) {
       String d = _ngModel.viewValue != null ? _dateFilter(_ngModel.viewValue, _dateFormat) : '';
-      dom.InputElement input = _element as dom.InputElement;
-//        input.value = '111'; //d;
+      //
+      var currentValue = typedValue;
+      if (d != currentValue) {
+        typedValue =  value;
+      }
       date = _ngModel.modelValue;
     };
-    showWeeks = _datepickerOptions.containsKey('show-weeks') ? _datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
+    showWeeks = datepickerOptions.containsKey('show-weeks') ? datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
   }
 
+  void _inputChanged(dom.Event event) {
+    date = _ngModel.modelValue;
+  }
+  
+  get typedValue {
+    return (_element as dynamic).value;
+  }
+  set typedValue(value) {
+    (_element as dynamic).value = (value == null) ? '' : value.toString(); 
+  }
+  
   void documentClickBind(dom.Event event) {
     if (isOpen && event.target != _element) {
       isOpen = false;
