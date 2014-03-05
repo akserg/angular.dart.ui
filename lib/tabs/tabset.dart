@@ -20,7 +20,6 @@ class TabsModule extends Module {
   }
 }
 
-//TODO add selector [tabset]
 @NgComponent(
     selector: 'tabset',
     visibility: NgDirective.CHILDREN_VISIBILITY,

@@ -3,7 +3,6 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.tabs;
 
-//TODO add selector [tab]
 @NgComponent(
     selector: 'tab',
     visibility: NgDirective.CHILDREN_VISIBILITY,
