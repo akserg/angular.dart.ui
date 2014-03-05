@@ -6,13 +6,6 @@ part of angular.ui.test;
 
 void tabsTests() {
   
-  void putInTemplateCache(TemplateCache cache, String path) {
-    HttpRequest request = new HttpRequest();
-    request.open("GET", path, async : false);
-    request.send();
-    cache.put(path, new HttpResponse(200, request.responseText));
-  }
-  
   List<Element> titles(Element elm) {
     return elm.children[0].shadowRoot.querySelectorAll('ul.nav-tabs li');
     //return ngQuery(elm, 'ul.nav-tabs li');
@@ -41,8 +34,8 @@ void tabsTests() {
     beforeEach(inject((TestBed tb) => _ = tb));
     beforeEach(inject((Scope s) => scope = s));
     beforeEach(inject((TemplateCache cache) {
-      putInTemplateCache(cache, 'packages/angular_ui/tabs/tab.html');
-      putInTemplateCache(cache, 'packages/angular_ui/tabs/tabset.html');
+      addToTemplateCache(cache, 'packages/angular_ui/tabs/tab.html');
+      addToTemplateCache(cache, 'packages/angular_ui/tabs/tabset.html');
     }));
     
     afterEach(tearDownInjector);

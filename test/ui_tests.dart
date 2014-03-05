@@ -63,3 +63,13 @@ void main() {
     group('Modal', () => modalTests());
   });
 }
+
+/**
+ * It adds an html template into the TemplateCache.
+ */
+void addToTemplateCache(TemplateCache cache, String path) {
+  HttpRequest request = new HttpRequest();
+  request.open("GET", path, async : false);
+  request.send();
+  cache.put(path, new HttpResponse(200, request.responseText));
+}
