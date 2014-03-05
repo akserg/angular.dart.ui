@@ -29,6 +29,7 @@ import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/tabs/tabset.dart';
 
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
@@ -36,6 +37,7 @@ part 'tests/collapse_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
 part 'tests/position_tests.dart';
 part 'tests/progressbar_tests.dart';
+part 'tests/tabs_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
@@ -55,6 +57,7 @@ void main() {
     group('DropdownToggle', () => dropdownToggleTests());
     group('Position', () => positionTests());
     group('Progressbar', () => porgressbarTests());
+    group('Tabs', () => tabsTests());
     group('Timeout', () => timeoutTests());
     group('Transition', () => transitionTests());
     group('Modal', () => modalTests());
