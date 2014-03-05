@@ -28,7 +28,7 @@ void modalTests() {
     beforeEach(inject((Timeout t) => timeout = t));
     beforeEach(inject((TemplateCache c) {
       cache = c;
-      cache.put('packages/angular_ui/modal/window.html', new HttpResponse(200, '<div tabindex="-1" class="modal {{ m.windowClass }}" ng-class="{in: m.animate.toString()}" ng-style="{\'z-index\': \'1050\', \'display\': \'block\'}" ng-click="m.close(\$event)"> <div class="modal-dialog"> <div class="modal-content"> <content></content> </div> </div> </div>'));
+      addToTemplateCache(cache, 'packages/angular_ui/modal/window.html');
     }));
     beforeEach(inject((Modal m) => modal = m));
     

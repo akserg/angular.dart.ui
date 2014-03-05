@@ -23,20 +23,9 @@ void porgressbarTests() {
     }
 
     void loadTemplatesToCache() {
-      cache.put('packages/angular_ui/progressbar/progressbar.html', new HttpResponse(200,
-        '<div class="progress" ng-class="ctrl.classes">'+
-        '  <div class="progress-bar" ng-class="[ctrl.type, \'progress-bar-\' + ctrl.type]">'+
-        '    <content></content>'+
-        '  </div>'+
-        '</div>'));
-      cache.put('packages/angular_ui/progressbar/stackedProgress.html', new HttpResponse(200,
-        '<div class="progress" ng-class="classes">'+
-        '  <content></content>'+
-        '</div><br>'));
-      cache.put('packages/angular_ui/progressbar/bar.html', new HttpResponse(200,
-        '<div class="progress-bar" ng-class="[ctrl.type, \'progress-bar-\' + ctrl.type,  ctrl.classes]" ng-pseudo="x-bar">'+
-        '  <content></content>'+
-        '</div>'));
+      addToTemplateCache(cache, 'packages/angular_ui/progressbar/progressbar.html');
+      addToTemplateCache(cache, 'packages/angular_ui/progressbar/stackedProgress.html');
+      addToTemplateCache(cache, 'packages/angular_ui/progressbar/bar.html');
     }
 
     beforeEach(module((Module module) {
