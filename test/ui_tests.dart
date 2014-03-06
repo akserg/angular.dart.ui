@@ -30,6 +30,7 @@ import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
+import 'package:angular_ui/tabs/tabset.dart';
 
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
@@ -37,10 +38,11 @@ part 'tests/collapse_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
 part 'tests/position_tests.dart';
 part 'tests/progressbar_tests.dart';
+part 'tests/tabs_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
-part 'tests/datepicker_tests.dart';
+//part 'tests/datepicker_tests.dart';
 
 final _log = new logging.Logger('test');
 
@@ -51,15 +53,26 @@ void main() {
 
 //  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-//    group('Alert', () => alertTests());
-//    group('Buttons', () => buttonsTests());
-//    group('Collapse', () => collapseTests());
-//    group('DropdownToggle', () => dropdownToggleTests());
-//    group('Position', () => positionTests());
-//    group('Progressbar', () => porgressbarTests());
-//    group('Timeout', () => timeoutTests());
-//    group('Transition', () => transitionTests());
-//    group('Modal', () => modalTests());
-    group('Datepicker', () => datepickerTests());
+    group('Alert', () => alertTests());
+    group('Buttons', () => buttonsTests());
+    group('Collapse', () => collapseTests());
+    group('DropdownToggle', () => dropdownToggleTests());
+    group('Position', () => positionTests());
+    group('Progressbar', () => porgressbarTests());
+    group('Tabs', () => tabsTests());
+    group('Timeout', () => timeoutTests());
+    group('Transition', () => transitionTests());
+    group('Modal', () => modalTests());
+//    group('Datepicker', () => datepickerTests());
   });
+}
+
+/**
+ * It adds an html template into the TemplateCache.
+ */
+void addToTemplateCache(TemplateCache cache, String path) {
+  HttpRequest request = new HttpRequest();
+  request.open("GET", path, async : false);
+  request.send();
+  cache.put(path, new HttpResponse(200, request.responseText));
 }

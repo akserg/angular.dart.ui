@@ -13,6 +13,7 @@ import 'package:angular_ui/collapse/collapse.dart';
 import 'package:angular_ui/dropdown/dropdown_toggle.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/rating/rating.dart';
+import 'package:angular_ui/tabs/tabset.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/modal/modal.dart';
@@ -33,6 +34,7 @@ class AngularUIModule extends Module {
     install(new DropdownToggleModule());
     install(new ProgressbarModule());
     install(new RatingModule());
+    install(new TabsModule());
     install(new TimeoutModule());
     install(new TransitionModule());
     install(new ModalModule());

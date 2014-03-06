@@ -24,6 +24,7 @@ import 'package:angular_ui/angular_ui.dart';
   override: '*')
 import 'dart:mirrors';
 
+part 'tabs/tabsDemo.dart';
 
 /**
  * Entry point into app.
@@ -50,6 +51,7 @@ class DemoModule extends Module {
     type(ProgressCtrl);
     type(ButtonsCtrl);
     type(CarouselDemoController);
+    type(TabsCtrl);
   }
 }
 

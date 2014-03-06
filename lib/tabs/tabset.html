@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+https://github.com/akserg/angular.dart.ui
+All rights reserved.  Please see the LICENSE.md file.
+-->
+<div class="tabbable">
+  <ul class="nav nav-{{tabsetCtrl.type}}" ng-class="{'nav-stacked': tabsetCtrl.vertical, 'nav-justified': tabsetCtrl.justified}">
+    <li ng-repeat="tab in tabsetCtrl.tabs" ng-class="{active: tab.active, disabled: tab.disabled}">
+      <a ng-click="tabsetCtrl.select(tab)"><tab-heading-transclude tab="tab"></tab-heading-transclude></a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <content></content>
+  </div>
+</div>
