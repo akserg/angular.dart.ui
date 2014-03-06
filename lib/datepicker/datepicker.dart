@@ -6,6 +6,7 @@ library angular.ui.datepicker;
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
 import "package:angular_ui/utils/position.dart";
+import 'package:angular_ui/utils/utils.dart';
 
 /**
  * Datepicker Module.
@@ -103,8 +104,8 @@ class Datepicker {
   var format, startingDay, yearRange;
   List<Mode> modes;
 
-  @NgOneWay('date-disabled')
-  bool dateDisabled = false;
+//  @NgOneWay('date-disabled')
+//  bool dateDisabled = false;
 
   bool _showWeeks = false;
   @NgOneWay('show-weeks')
@@ -172,23 +173,26 @@ class Datepicker {
   void refill([bool updateSelected = false]) {
     DateTime date;
     bool valid = true;
-
-    if (_ngModel.modelValue != null) {
-      if (_ngModel.modelValue is String) {
-        date = DateTime.parse(_ngModel.modelValue);
-      } else if (_ngModel.modelValue is int) {
-        date = new DateTime.fromMillisecondsSinceEpoch(_ngModel.modelValue);
-      } else {
-        date = _ngModel.modelValue as DateTime;
+    
+      if (_ngModel.modelValue != null) {
+        try {
+          if (_ngModel.modelValue is String) {
+            date = DateTime.parse(_ngModel.modelValue);
+          } else if (_ngModel.modelValue is int) {
+            date = new DateTime.fromMillisecondsSinceEpoch(_ngModel.modelValue);
+          } else {
+            date = _ngModel.modelValue as DateTime;
+          }
+        } on Exception catch(e) {
+          print(e);
+        }
+  
+        if (date == null) {
+          valid = false;
+        } else if (updateSelected) {
+          selected = date;
+        }
       }
-
-      if (date == null) {
-        valid = false;
-        //$log.error('Datepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
-      } else if (updateSelected) {
-        selected = date;
-      }
-    }
     _ngModel.setValidity('date', valid);
 
     var currentMode = modes[mode];
@@ -225,7 +229,7 @@ class Datepicker {
       DateTime dt;
 
       if (_ngModel.modelValue == null) {
-        dt = new DateTime(0, 0, 0, 0, 0, 0, 0);
+        dt = new DateTime(0, 0, 0);
       } else {
         if (_ngModel.modelValue is String) {
           dt = DateTime.parse(_ngModel.modelValue);
@@ -236,8 +240,7 @@ class Datepicker {
         }
       }
 
-      dt = new DateTime(date.year, date.month, date.day, dt.hour, dt.minute,
-          dt.second, dt.millisecond);
+      //dt = new DateTime(date.year, date.month, date.day);
       _ngModel.viewValue = dt;
       refill(true);
     } else {
@@ -423,8 +426,8 @@ class Datepicker {
   bool isDisabled(DateTime date, [int mode = 0]) {
     var currentMode = modes[mode];
     return ((minDate != null && currentMode.compare(date, minDate) < 0) ||
-        (maxDate != null && currentMode.compare(date, this.maxDate) > 0) ||
-        dateDisabled);
+        (maxDate != null && currentMode.compare(date, this.maxDate) > 0));
+        //|| dateDisabled);
         //(dateDisabled && dateDisabled({'date': date, 'mode': currentMode.name})));
   }
 }
@@ -501,15 +504,12 @@ class DatepickerPopupWrap {
 
 
 /**
- * Datapicker  component.
+ * Datapicker Popup directive.
  */
-@NgComponent(selector: 'datepicker-popup[ng-model]', publishAs: 'dp',
-    applyAuthorStyles: true, 
-    templateUrl: 'packages/angular_ui/datepicker/datepicker-popup.html')
-@NgComponent(selector: '[datepicker-popup][ng-model]', publishAs: 'dp',
-    applyAuthorStyles: true, 
-    templateUrl: 'packages/angular_ui/datepicker/datepicker-popup.html')
-class DatepickerPopup implements NgShadowRootAware  {
+
+@NgDirective(selector: 'datepicker-popup[ng-model]')
+@NgDirective(selector: '[datepicker-popup][ng-model]')
+class DatepickerPopup  {
 
   String _dateFormat;
   @NgAttr('datepicker-popup')
@@ -522,39 +522,41 @@ class DatepickerPopup implements NgShadowRootAware  {
   bool _showButtonBar = false;
   @NgOneWay('show-button-bar')
   void set showButtonBar(bool value) {
-    _showButtonBar = value != null ? value :
+    _scope.showButtonBar = _showButtonBar = value != null ? value :
         _datepickerPopupConfig.showButtonBar;
   }
-  bool get showButtonBar => _showButtonBar;
+//  bool get showButtonBar => _showButtonBar;
 
-  String _currentText;
+//  String _currentText;
+//  @NgAttr('current-text')
+//  void set currentText(String value) {
+//    _currentText = value != null ? value : _datepickerPopupConfig.currentText;
+//  }
+//  String get currentText => _currentText;
   @NgAttr('current-text')
-  void set currentText(String value) {
-    _currentText = value != null ? value : _datepickerPopupConfig.currentText;
-  }
-  String get currentText => _currentText;
+  String currentText;
 
-  String _toggleWeeksText;
-  @NgAttr('toggle-weeks-text')
-  void set toggleWeeksText(String value) {
-    _toggleWeeksText = value != null ? value :
-        _datepickerPopupConfig.toggleWeeksText;
-  }
-  String get toggleWeeksText => _toggleWeeksText;
+//  String _toggleWeeksText;
+//  @NgAttr('toggle-weeks-text')
+//  void set toggleWeeksText(String value) {
+//    _toggleWeeksText = value != null ? value :
+//        _datepickerPopupConfig.toggleWeeksText;
+//  }
+//  String get toggleWeeksText => _toggleWeeksText;
 
-  String _clearText;
-  @NgAttr('clear-text')
-  void set clearText(String value) {
-    _clearText = value != null ? value : _datepickerPopupConfig.clearText;
-  }
-  String get clearText => _clearText;
+//  String _clearText;
+//  @NgAttr('clear-text')
+//  void set clearText(String value) {
+//    _clearText = value != null ? value : _datepickerPopupConfig.clearText;
+//  }
+//  String get clearText => _clearText;
 
-  String _closeText;
-  @NgAttr('close-text')
-  void set closeText(String value) {
-    _closeText = value != null ? value : _datepickerPopupConfig.closeText;
-  }
-  String get closeText => _closeText;
+//  String _closeText;
+//  @NgAttr('close-text')
+//  void set closeText(String value) {
+//    _closeText = value != null ? value : _datepickerPopupConfig.closeText;
+//  }
+//  String get closeText => _closeText;
 
   bool isOpen = false;
   @NgTwoWay('is-open')
@@ -576,6 +578,7 @@ class DatepickerPopup implements NgShadowRootAware  {
       _elementFocusInitialized = true;
       isOpen = false;
     }
+    _scope.isOpen = isOpen;
   }
   bool get setIsOpen => isOpen;
   
@@ -620,18 +623,19 @@ class DatepickerPopup implements NgShadowRootAware  {
   }
   bool get showWeeks => _showWeeks;
   
-  @NgOneWay('date-disabled')
-  bool dateDisabled = false;
+//  @NgOneWay('date-disabled')
+//  bool dateDisabled = false;
   
   @NgOneWay('append-to-body')
   bool appendToBody = false;
 
   bool _closeOnDateSelection = false;
-  DateTime date;
-  Rect position;
+//  DateTime date;
+//  Rect position;
   bool _documentBindingInitialized = false; 
   bool _elementFocusInitialized = false;
   dom.Element _popup;
+  dom.Element _datepicker;
 
   dom.Element _element;
   Position _position;
@@ -642,17 +646,57 @@ class DatepickerPopup implements NgShadowRootAware  {
   NgModel get ngModel => _ngModel;
   NodeAttrs _attrs;
   
+  Scope _originalScope;
+  Scope _scope;
+  TemplateCache _templateCache;
+  Compiler _compiler;
+  Http _http;
+  DirectiveMap _directiveMap;
+  Injector _injector;
   
-  DatepickerPopup(this._element, this._position, this._dateFilter, this._datepickerPopupConfig, this._datepickerConfig, this._ngModel, this._attrs, Scope scope) {
-    _closeOnDateSelection = _attrs.containsKey('close-on-date-selection') ? scope.$eval(_attrs['close-on-date-selection']) : _datepickerPopupConfig.closeOnDateSelection;
-    appendToBody = _attrs.containsKey('datepicker-append-to-body') ? scope.$eval(_attrs['datepicker-append-to-body']) : _datepickerPopupConfig.appendToBody;
-    _showButtonBar = _attrs.containsKey('show-button-bar') ? scope.$eval(_attrs['show-button-bar']) : _datepickerPopupConfig.showButtonBar;
+  DatepickerPopup(this._element, this._position, this._dateFilter, this._datepickerPopupConfig, this._datepickerConfig, this._ngModel, this._attrs, this._originalScope,
+      this._templateCache, this._compiler, this._http, this._directiveMap, this._injector) {
+    
+    _scope = _originalScope.$new(isolate:true);
+    
+    _closeOnDateSelection = _attrs.containsKey('close-on-date-selection') ? _scope.$eval(_attrs['close-on-date-selection']) : _datepickerPopupConfig.closeOnDateSelection;
+    appendToBody = _attrs.containsKey('datepicker-append-to-body') ? _scope.$eval(_attrs['datepicker-append-to-body']) : _datepickerPopupConfig.appendToBody;
+    //_showButtonBar = _attrs.containsKey('show-button-bar') ? _scope.$eval(_attrs['show-button-bar']) : _datepickerPopupConfig.showButtonBar;
+    showButtonBar = _datepickerPopupConfig.showButtonBar;
 
-    scope.$on('destroy', (event) {
+    _originalScope.$on('destroy', (event) {
       if (_popup != null && _popup.parent != null)
       _popup.remove();
+      _scope.$destroy();
     });
+    
+    _attrs.observe('current-text', (text) {
+      _scope.currentText = text != null ? text : _datepickerPopupConfig.currentText;
+    });
+    
+    _attrs.observe('toggle-weeks-text', (text) {
+      _scope.toggleWeeksText = text != null ? text : _datepickerPopupConfig.toggleWeeksText;
+    });
+    
+    _attrs.observe('clear-text', (text) {
+      _scope.clearText = text != null ? text : _datepickerPopupConfig.clearText;
+    });
+    
+    _attrs.observe('close-text', (text) {
+      _scope.closeText = text != null ? text : _datepickerPopupConfig.closeText;
+    });
+    
+    _scope.dateSelection = _dateSelection;
+    
+    _scope.today = () {
+      _dateSelection(new DateTime.now());
+    };
+      
+    _scope.clearDate = () {
+      _dateSelection(null);
+    };
 
+    
     _element.onInput.listen(_inputChanged);
     _element.onChange.listen(_inputChanged);
     _element.onKeyUp.listen(_inputChanged);
@@ -660,67 +704,99 @@ class DatepickerPopup implements NgShadowRootAware  {
     // Outter change
     _ngModel.render = (value) {
       String d = _ngModel.viewValue != null ? _dateFilter(_ngModel.viewValue, _dateFormat) : '';
-      //
-      var currentValue = typedValue;
-      if (d != currentValue) {
-        typedValue =  value;
-      }
-      date = _ngModel.modelValue;
+      (_element as dynamic).value = d;
+      _scope.date = _ngModel.modelValue;
     };
-    showWeeks = datepickerOptions.containsKey('show-weeks') ? datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
-  }
+    
+    var injector = _injector.createChild([new Module()..value(Scope, _scope)]);
+    
+    // popup element used to display calendar
+    String html = """<div datepicker-popup-wrap 
+      ng-model='date' ng-change='dateSelection()'
+      is-open='isOpen' position='position' 
+      show-button-bar='showButtonBar' today='today()' 
+      show-weeks='showWeeks' clear-date='clearDate()'
+      current-text='currentText' toggle-weeks-text='toggleWeeksText'
+      close-text='closeText' clear-text='clearText'>
+      
+      <div datepicker datepicker-options='datepickerOptions' 
+        min='minDate' max='maxDate' ng-model='date'
+        show-weeks='showWeeks'></div>
+    </div>""";
+    //  date-disabled='dateDisabled'
+    
+    // Convert to html
+    List<dom.Element> rootElements = toNodeList(html);
 
-  void _inputChanged(dom.Event event) {
-    date = _ngModel.modelValue;
-  }
-  
-  get typedValue {
-    return (_element as dynamic).value;
-  }
-  set typedValue(value) {
-    (_element as dynamic).value = (value == null) ? '' : value.toString(); 
-  }
-  
-  void documentClickBind(dom.Event event) {
-    if (isOpen && event.target != _element) {
-      isOpen = false;
+    _popup = rootElements.first;
+    _datepicker = _popup.querySelector('[datepicker]');
+    //
+    _compiler(rootElements, _directiveMap)(injector, rootElements);
+    //
+    if (appendToBody) {
+      dom.document.body.append(_popup);
+    } else {
+      _element.parent.append(_popup);
+    }
+    
+    Map<String, String> datepickerOptions = {};
+    if (_attrs.containsKey('datepicker-options')) {
+      datepickerOptions = _originalScope.$eval(_attrs['datepicker-options']);
+      datepickerOptions.forEach((key, value) {
+        if (value != null) {
+          _datepicker.setAttribute(key, value.toString());
+        }
+      });
+    }
+
+    addWatchableAttribute(_attrs['min'], 'min');
+    addWatchableAttribute(_attrs['max'], 'max');
+    
+    if (_attrs.containsKey('show-weeks')) {
+      addWatchableAttribute('show-weeks', 'showWeeks', 'show-weeks');
+    } else {
+      _scope.showWeeks = datepickerOptions.containsKey('show-weeks') ? datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
+      _datepicker.setAttribute('show-weeks', 'showWeeks');
+    }
+
+    if (_attrs.containsKey('date-disabled')) {
+      _datepicker.setAttribute('date-disabled', _attrs['date-disabled']);
     }
   }
 
-  void elementFocusBind(dom.Event event) {
-    isOpen = true;
-  }
-  
-  void dateSelection(dt) {
-    if (dt != null) {
-      date = dt;
-    }
-    _ngModel.viewValue = date;
+  void _dateSelection(DateTime dt) {
+    _ngModel.viewValue = _scope.date = dt;
 
     if (_closeOnDateSelection) {
       isOpen = false;
     }
   }
   
-  void _updatePosition() {
-    position = appendToBody ? _position.offset(_element) : _position.position(_element);
-    position.top = position.top + _element.offsetHeight;
+  void _inputChanged(dom.Event event) {
+    _scope.$apply(() => _scope.date = _ngModel.modelValue);
   }
-  
-  void today() {
-    dateSelection(new DateTime.now());
-  }
-  
-  void clearDate() {
-    dateSelection(null);
-  }
-  
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
-    _popup = shadowRoot.querySelector('[datepicker-popup-wrap]');
-    if (appendToBody) {
-      dom.document.body.append(_popup);
-    } else {
-      _element.parent.append(_popup);
+
+  void addWatchableAttribute(String attribute, String scopeProperty, [String datepickerAttribute = null]) {
+    if (attribute != null) {
+      _originalScope.$watch(attribute, (value){
+        _scope[scopeProperty] = value;
+      });
+      _datepicker.setAttribute(datepickerAttribute != null ? datepickerAttribute : scopeProperty, scopeProperty);
     }
+  }
+  
+  void documentClickBind(dom.Event event) {
+    if (isOpen && event.target != _element) {
+      _scope.$apply(() => isOpen = false);
+    }
+  }
+
+  void elementFocusBind(dom.Event event) {
+    _scope.$apply(() => isOpen = true);
+  }
+  
+  void _updatePosition() {
+    _scope.position = appendToBody ? _position.offset(_element) : _position.position(_element);
+    _scope.position.top = _scope.position.top + _element.offsetHeight;
   }
 }
