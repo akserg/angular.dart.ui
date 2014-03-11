@@ -20,6 +20,7 @@ import 'package:angular/core_dom/module.dart';
 
 import 'package:angular_ui/utils/utils.dart';
 
+import 'package:angular_ui/accordion/accordion.dart';
 import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/collapse/collapse.dart';
@@ -31,6 +32,7 @@ import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/tabs/tabset.dart';
 
+part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
 part 'tests/collapse_tests.dart';
@@ -51,6 +53,7 @@ void main() {
 
   useHtmlEnhancedConfiguration();
   group('All Tests:', () {
+    group('Acoordion', () => accordionTests());
     group('Alert', () => alertTests());
     group('Buttons', () => buttonsTests());
     group('Collapse', () => collapseTests());
