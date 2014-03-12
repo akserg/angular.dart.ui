@@ -11,7 +11,7 @@ part of angular.ui.accordion;
     applyAuthorStyles: true
 )
 class AccordionGroupComponent implements NgDetachAware {
-  @NgTwoWay('is-open') bool _isOpen = false;
+  bool _isOpen = false;
   @NgAttr('heading') String heading;
   Scope scope;
   AccordionComponent accordion;
@@ -21,8 +21,7 @@ class AccordionGroupComponent implements NgDetachAware {
     accordion.addGroup(this);
   }
 
-  get isOpen => _isOpen;
-  
+  @NgTwoWay('is-open') get isOpen => _isOpen;
   set isOpen(var newValue) {
     _isOpen = utils.toBool(newValue);
     if (_isOpen) {

@@ -10,7 +10,7 @@ class AccordionDemoController {
   
   bool oneAtATime = true;
   
-  bool isopen = false;
+  bool isOpen = false;
 
   List groups = [
     {

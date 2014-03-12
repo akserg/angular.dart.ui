@@ -16,9 +16,9 @@
         <button class="btn btn-default btn-sm" ng-click="accCtrl.addItem()">Add Item</button>
         <div ng-repeat="item in accCtrl.items">{{item}}</div>
     </accordion-group>
-    <accordion-group is-open="accCtrl.isopen">
+    <accordion-group is-open="accCtrl.isOpen">
         <accordion-heading>
-            I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accCtrl.isopen, 'glyphicon-chevron-right': !accCtrl.isopen}"></i>
+            I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accCtrl.isOpen, 'glyphicon-chevron-right': !accCtrl.isOpen}"></i>
         </accordion-heading>
         This is just some content to illustrate fancy headings.
     </accordion-group>
