@@ -24,6 +24,7 @@ import 'package:angular_ui/angular_ui.dart';
   override: '*')
 import 'dart:mirrors';
 
+part 'accordion/accordionDemo.dart';
 part 'tabs/tabsDemo.dart';
 
 /**
@@ -51,6 +52,7 @@ class DemoModule extends Module {
     type(ButtonsCtrl);
     type(CarouselDemoController);
     type(TabsCtrl);
+    type(AccordionDemoController);
   }
 }
 
