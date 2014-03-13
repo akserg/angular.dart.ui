@@ -42,7 +42,7 @@ part 'tests/tabs_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
-//part 'tests/datepicker_tests.dart';
+part 'tests/datepicker_tests.dart';
 
 final _log = new logging.Logger('test');
 
@@ -53,17 +53,17 @@ void main() {
 
 //  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-    group('Alert', () => alertTests());
-    group('Buttons', () => buttonsTests());
-    group('Collapse', () => collapseTests());
-    group('DropdownToggle', () => dropdownToggleTests());
-    group('Position', () => positionTests());
-    group('Progressbar', () => porgressbarTests());
-    group('Tabs', () => tabsTests());
-    group('Timeout', () => timeoutTests());
-    group('Transition', () => transitionTests());
-    group('Modal', () => modalTests());
-//    group('Datepicker', () => datepickerTests());
+//    group('Alert', () => alertTests());
+//    group('Buttons', () => buttonsTests());
+//    group('Collapse', () => collapseTests());
+//    group('DropdownToggle', () => dropdownToggleTests());
+//    group('Position', () => positionTests());
+//    group('Progressbar', () => porgressbarTests());
+//    group('Tabs', () => tabsTests());
+//    group('Timeout', () => timeoutTests());
+//    group('Transition', () => transitionTests());
+//    group('Modal', () => modalTests());
+    group('Datepicker', () => datepickerTests());
   });
 }
 
