@@ -21,7 +21,7 @@ void modalTests() {
     beforeEach(inject((TestBed tb) => _ = tb));
     beforeEach(inject((Scope s) { 
       scope = s;
-      rootScope = s.$root;
+      rootScope = s.rootScope;
       //
       
     }));
@@ -80,13 +80,13 @@ void modalTests() {
     
     void close(result) {
       modal.close(result);
-      rootScope.$digest();
+      rootScope.rootScope.apply();
     }
 
     void dismiss(String reason) {
       modal.dismiss(reason);
       timeout.flush();
-      rootScope.$digest();
+      rootScope.rootScope.apply();
     }
     
     void clickOnBackdrop() {
@@ -95,7 +95,7 @@ void modalTests() {
       if (el != null) {
         _.triggerEvent(el, 'click');
         timeout.flush();
-        rootScope.$digest();
+        rootScope.rootScope.apply();
       }
     }
     
@@ -145,7 +145,7 @@ void modalTests() {
         // Trigger click event on backdrop
         _.triggerEvent(document.body.querySelector('.modal-backdrop'), 'click');
         timeout.flush();
-        rootScope.$digest();
+        rootScope.rootScope.apply();
         //
         expect(toHaveModalOpen()).toEqual(0);
         expect(toHaveBackdrop()).toBeFalsy();
@@ -234,7 +234,7 @@ void modalTests() {
         expect(toHaveModalOpen()).toEqual(2);
         
         triggerKeyDown(document, 27);
-        rootScope.$digest();
+        rootScope.rootScope.apply();
         
         expect(toHaveModalOpen()).toEqual(2);
         

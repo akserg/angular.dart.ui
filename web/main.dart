@@ -202,8 +202,8 @@ class ModalCtrlOtherTemplate {
       selected = value;
     };
     // Update model from inside
-    scope.$watch('ctrl2.selected', (newValue) {
-        ngModel.viewValue = newValue;
+    scope.watch('ctrl2.selected', (newValue, _) {
+      ngModel.viewValue = newValue;
     });
   }
   

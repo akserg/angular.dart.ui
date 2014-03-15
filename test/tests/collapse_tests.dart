@@ -34,48 +34,48 @@ void collapseTests() {
 
 
     it('should be hidden on initialization if isCollapsed = true without transition', () {
-      scope.isCollapsed = true;
-      scope.$digest();
+      scope.context['isCollapsed'] = true;
+      scope.rootScope.apply();
       //No animation timeout here
       expect(element.style.height, equals('0px'));
     });
 
     it('should collapse if isCollapsed = true with animation on subsequent use', () {
-      scope.isCollapsed = false;
-      scope.$digest();
-      scope.isCollapsed = true;
-      scope.$digest();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = true;
+      scope.rootScope.apply();
       timeout.flush();
       expect(element.style.height, equals('0px'));
     });
 
     it('should be shown on initialization if isCollapsed = false without transition', () {
-      scope.isCollapsed = false;
-      scope.$digest();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
       //No animation timeout here
       expect(element.style.height, isNot(equals('0px')));
     });
 
     it('should expand if isCollapsed = false with animation on subsequent use', () {
-      scope.isCollapsed = false;
-      scope.$digest();
-      scope.isCollapsed = true;
-      scope.$digest();
-      scope.isCollapsed = false;
-      scope.$digest();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = true;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
       timeout.flush();
       expect(element.style.height, isNot(equals('0px')));
     });
 
     it('should expand if isCollapsed = true with animation on subsequent uses', () {
-      scope.isCollapsed = false;
-      scope.$digest();
-      scope.isCollapsed = true;
-      scope.$digest();
-      scope.isCollapsed = false;
-      scope.$digest();
-      scope.isCollapsed = true;
-      scope.$digest();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = true;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
+      scope.context['isCollapsed'] = true;
+      scope.rootScope.apply();
       timeout.flush();
       expect(element.style.height, equals('0px'));
 
@@ -114,23 +114,23 @@ void collapseTests() {
 
 
     it('should grow accordingly when content size inside collapse increases', () {
-      scope['hid'] = true;
+      scope.context['hid'] = true;
       Collapse collapse = (ngProbe(element).directives as List).firstWhere((d) => d is Collapse);
       collapse.isCollapsed = false;
-      scope.$digest();
+      scope.rootScope.apply();
       var collapseHeight = element.clientHeight;
-      scope['hid'] = false;
-      scope.$digest();
+      scope.context['hid'] = false;
+      scope.rootScope.apply();
       expect(element.clientHeight, greaterThan(collapseHeight));
     });
 
     it('should shrink accordingly when content size inside collapse decreases', () {
-      scope['hid'] = false;
-      scope.isCollapsed = false;
-      scope.$digest();
+      scope.context['hid'] = false;
+      scope.context['isCollapsed'] = false;
+      scope.rootScope.apply();
       var collapseHeight = element.clientHeight;
-      scope['hid'] = true;
-      scope.$digest();
+      scope.context['hid'] = true;
+      scope.rootScope.apply();
       expect(element.clientHeight, lessThan(collapseHeight));
     });
 

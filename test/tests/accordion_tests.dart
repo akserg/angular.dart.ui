@@ -27,11 +27,11 @@ void accordionTests() {
         
         void createElements(AccordionConfig config) {
           ctrl = new AccordionComponent( $scope, config );
-          group1 = new AccordionGroupComponent( $scope.$new(), ctrl);
+          group1 = new AccordionGroupComponent( $scope.createChild(new PrototypeMap($scope.context)), ctrl);
           group1.isOpen = true;
-          group2 = new AccordionGroupComponent($scope.$new(), ctrl);
+          group2 = new AccordionGroupComponent($scope.createChild(new PrototypeMap($scope.context)), ctrl);
           group2.isOpen = true;
-          group3 = new AccordionGroupComponent($scope.$new(), ctrl);
+          group3 = new AccordionGroupComponent($scope.createChild(new PrototypeMap($scope.context)), ctrl);
           group3.isOpen = true;
         };
         

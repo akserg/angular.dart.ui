@@ -45,13 +45,13 @@ class BtnRadio {
   BtnRadio(this.element, this.ngModel, this.config, this.scope) {
     // model -> UI
     ngModel.render = (value) {
-      element.classes.toggle(config.activeClass, ngModel.modelValue == scope.$eval(btnRadioAttr));
+      element.classes.toggle(config.activeClass, ngModel.modelValue == scope.eval(btnRadioAttr));
     };
     
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
       if (!element.classes.contains(config.activeClass)) {
-        ngModel.viewValue = scope.$eval(btnRadioAttr);
+        ngModel.viewValue = scope.eval(btnRadioAttr);
       }
     });
   }
@@ -79,7 +79,7 @@ class BtnCheckbox {
   dynamic get falseValue => getCheckboxValue(btnCheckboxFalse, false);
   
   dynamic getCheckboxValue(attributeValue, defaultValue) {
-    var val = scope.$eval(attributeValue);
+    var val = scope.eval(attributeValue);
     return val != null ? val : defaultValue;
   }
   

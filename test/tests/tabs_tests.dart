@@ -42,13 +42,13 @@ void tabsTests() {
     
     dom.Element createElement() {
       
-      scope.first = '1';
-      scope.second = '2';
-      scope.actives = {};
-      scope.selectFirst = jasmine.createSpy('first select listener');
-      scope.selectSecond = jasmine.createSpy('second select listener');
-      scope.deselectFirst = jasmine.createSpy('first deselect listener');
-      scope.deselectSecond = jasmine.createSpy('second deselect listener');
+      scope.context['first'] = '1';
+      scope.context['second'] = '2';
+      scope.context['actives'] = {};
+      scope.context['selectFirst'] = jasmine.createSpy('first select listener');
+      scope.context['selectSecond'] = jasmine.createSpy('second select listener');
+      scope.context['deselectFirst'] = jasmine.createSpy('first deselect listener');
+      scope.context['deselectSecond'] = jasmine.createSpy('second deselect listener');
       
       String html =
       '''<div>
@@ -66,9 +66,9 @@ void tabsTests() {
       
       //Doing it twice or it doesn't work... why!?
       microLeap();
-      scope.$digest();
+      scope.rootScope.apply();
       microLeap();
-      scope.$digest();
+      scope.rootScope.apply();
       
       return element;
     };
@@ -94,8 +94,8 @@ void tabsTests() {
       expect( renderedText ( ngQuery(elems ,'#tab-content')[0] ) ).toEqual('first content is 1');
       
       //expect(contents(elems)[1]).not.toHaveClass('active');
-      //expect(scope.actives.one).toBe(true);
-      //expect(scope.actives.two).toBe(false);
+      //expect(scope.context['actives.one).toBe(true);
+      //expect(scope.context['actives.two).toBe(false);
     })));
     
     it('should change active on click', async(inject(() {
@@ -104,28 +104,28 @@ void tabsTests() {
       expect(contents(elems)[0]).toHaveClass('active');
       expect(titles(elems)[0]).not.toHaveClass('active');
       expect(titles(elems)[1]).toHaveClass('active');
-      //expect($rootScope.actives.one).toBe(false);
-      //expect($rootScope.actives.two).toBe(true);
+      //expect($rootscope.context['actives.one).toBe(false);
+      //expect($rootscope.context['actives.two).toBe(true);
     })));
 
     
     it('should call select callback on select', async(inject(() {
       Element elems = createElement();
       ngQuery(titles(elems)[1] , 'a')[0].click();
-      expect(scope.selectSecond).toHaveBeenCalled();
+      expect(scope.context['selectSecond']).toHaveBeenCalled();
       ngQuery(titles(elems)[0] , 'a')[0].click();
-      expect(scope.selectFirst).toHaveBeenCalled();
+      expect(scope.context['selectFirst']).toHaveBeenCalled();
     })));
 
    
     it('should call deselect callback on deselect', async(inject(() {
       Element elems = createElement();
-      expect(scope.deselectSecond).not.toHaveBeenCalled();
+      expect(scope.context['deselectSecond']).not.toHaveBeenCalled();
       ngQuery(titles(elems)[1] , 'a')[0].click();
       ngQuery(titles(elems)[0] , 'a')[0].click();
-      expect(scope.deselectSecond).toHaveBeenCalled();
+      expect(scope.context['deselectSecond']).toHaveBeenCalled();
       ngQuery(titles(elems)[0] , 'a')[0].click();
-      expect(scope.deselectFirst).toHaveBeenCalled();
+      expect(scope.context['deselectFirst']).toHaveBeenCalled();
     })));
 
   });
