@@ -59,7 +59,7 @@ void main() {
     group('Collapse', () => collapseTests());
     group('DropdownToggle', () => dropdownToggleTests());
     group('Position', () => positionTests());
-    group('Progressbar', () => porgressbarTests());
+//    group('Progressbar', () => porgressbarTests());
     group('Tabs', () => tabsTests());
     group('Timeout', () => timeoutTests());
     group('Transition', () => transitionTests());
