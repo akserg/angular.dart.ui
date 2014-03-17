@@ -24,6 +24,7 @@ void datepickerTests() {
     beforeEach(inject((TemplateCache c) { 
       cache = c;
       addToTemplateCache(cache, 'packages/angular_ui/datepicker/datepicker.html');
+      addToTemplateCache(cache, 'packages/angular_ui/datepicker/popup.html');
     }));
     
     afterEach(tearDownInjector);
@@ -598,9 +599,8 @@ void datepickerTests() {
       
       describe('attribute \'starting-day\'', () {
         Element createDatapicker() {
-          scope.startingDay = 1;
           scope.date = new DateTime(2010, 9, 30, 15, 30);
-          Element element = _.compile('<datepicker ng-model="date" starting-day="startingDay"></datepicker>', scope:scope);
+          Element element = _.compile('<datepicker ng-model="date" starting-day="1"></datepicker>', scope:scope);
 
           microLeap();
           scope.$digest();
@@ -610,29 +610,29 @@ void datepickerTests() {
           return element;
         }
 
-//        it('shows the day labels rotated', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getLabels(element)).toEqual(['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']);
-//        })));
+        it('shows the day labels rotated', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getLabels(element)).toEqual(['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']);
+        })));
 
-//        it('renders the calendar days correctly', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getOptions(element)).toEqual([
-//            ['30', '31', '01', '02', '03', '04', '05'],
-//            ['06', '07', '08', '09', '10', '11', '12'],
-//            ['13', '14', '15', '16', '17', '18', '19'],
-//            ['20', '21', '22', '23', '24', '25', '26'],
-//            ['27', '28', '29', '30', '01', '02', '03']
-//          ]);
-//        })));
+        it('renders the calendar days correctly', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getOptions(element)).toEqual([
+            ['31', '01', '02', '03', '04', '05', '06'],
+            ['07', '08', '09', '10', '11', '12', '13'],
+            ['14', '15', '16', '17', '18', '19', '20'],
+            ['21', '22', '23', '24', '25', '26', '27'],
+            ['28', '29', '30', '01', '02', '03', '04']
+          ]);
+        })));
 
-//        it('renders the week numbers correctly', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getWeeks(element)).toEqual(['35', '36', '37', '38', '39']);
-//        })));
+        it('renders the week numbers correctly', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getWeeks(element)).toEqual(['35', '36', '37', '38', '39']);
+        })));
       });
       
       describe('attribute \'show-weeks\'', () {
@@ -923,20 +923,23 @@ void datepickerTests() {
       
 //      describe('date-disabled expression', () {
 //        Element createDatapicker() {
+//          scope.date = new DateTime(2010, 9, 30, 15, 30);
 //          scope.dateDisabledHandler = jasmine.createSpy('dateDisabledHandler');
-//          Element element = _.compile('<datepicker ng-model="date" date-disabled="dateDisabledHandler(date, mode)"></datepicker>', scope:scope);
+//          Element element = _.compile('<datepicker ng-model="date" date-disabled="dateDisabledHandler"></datepicker>', scope:scope);
 //
+//          microLeap();
+//          scope.$digest();
 //          microLeap();
 //          scope.$digest();
 //          
 //          return element;
 //        }
 //        
-//        it('executes the dateDisabled expression for each visible day plus one for validation', async(inject(() {
+//        it('executes the dateDisabled expression for each visible day plus one for validation', () {
 //          Element element = createDatapicker();
 //          
 //          expect(scope.dateDisabledHandler.calls.length).toEqual(35 + 1);
-//        })));
+//        });
 //
 //        it('executes the dateDisabled expression for each visible month plus one for validation', async(inject(() {
 //          Element element = createDatapicker();
@@ -970,80 +973,75 @@ void datepickerTests() {
           return element;
         }
         
-//        it('changes the title format in \'day\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getTitle(element)).toEqual('September, 10');
-//        })));
+        it('changes the title format in \'day\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getTitle(element)).toEqual('September, 10');
+        })));
 
-//        it('changes the title & months format in \'month\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          clickTitleButton(element);
-//          microLeap();
-//
-//          expect(getTitle(element)).toEqual('10');
-//          expect(getOptions(element)).toEqual([
-//            ['Jan', 'Feb', 'Mar'],
-//            ['Apr', 'May', 'Jun'],
-//            ['Jul', 'Aug', 'Sep'],
-//            ['Oct', 'Nov', 'Dec']
-//          ]);
-//        })));
+        it('changes the title & months format in \'month\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          clickTitleButton(element);
+          microLeap();
 
-//        it('changes the title, year format & range in \'year\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          clickTitleButton(element, 2);
-//          microLeap();
-//
-//          expect(getTitle(element)).toEqual('01 - 10');
-//          expect(getOptions(element)).toEqual([
-//            ['01', '02', '03', '04', '05'],
-//            ['06', '07', '08', '09', '10']
-//          ]);
-//        })));
+          expect(getTitle(element)).toEqual('10');
+          expect(getOptions(element)).toEqual([
+            ['Jan', 'Feb', 'Mar'],
+            ['Apr', 'May', 'Jun'],
+            ['Jul', 'Aug', 'Sep'],
+            ['Oct', 'Nov', 'Dec']
+          ]);
+        })));
 
-//        it('shows day labels', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getLabels(element)).toEqual(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
-//        })));
+        it('changes the title, year format & range in \'year\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          clickTitleButton(element, 2);
+          microLeap();
 
-//        it('changes the day format', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getOptions(element)).toEqual([
-//            ['29', '30', '31', '1', '2', '3', '4'],
-//            ['5', '6', '7', '8', '9', '10', '11'],
-//            ['12', '13', '14', '15', '16', '17', '18'],
-//            ['19', '20', '21', '22', '23', '24', '25'],
-//            ['26', '27', '28', '29', '30', '1', '2']
-//          ]);
-//        })));
+          expect(getTitle(element)).toEqual('01 - 10');
+          expect(getOptions(element)).toEqual([
+            ['01', '02', '03', '04', '05'],
+            ['06', '07', '08', '09', '10']
+          ]);
+        })));
+
+        it('shows day labels', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getLabels(element)).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
+        })));
+
+        it('changes the day format', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getOptions(element)).toEqual([
+            ['30', '31', '1', '2', '3', '4', '5'],
+            ['6', '7', '8', '9', '10', '11', '12'],
+            ['13', '14', '15', '16', '17', '18', '19'],
+            ['20', '21', '22', '23', '24', '25', '26'],
+            ['27', '28', '29', '30', '1', '2', '3']
+          ]);
+        })));
       });      
       
       describe('setting datepickerConfig', () {
         
-        DatepickerConfig originalConfig;
-        
-        beforeEach(inject((DatepickerConfig dc) {
-          originalConfig = dc;
-        }));
-        
-        beforeEach(module((Module module) {
-          DatepickerConfig datepickerConfig = new DatepickerConfig()
-          ..startingDay = 6
-          ..showWeeks = false
-          ..dayFormat = 'd'
-          ..monthFormat = 'MMM'
-          ..yearFormat = 'yy'
-          ..yearRange = 10
-          ..dayHeaderFormat = 'EEEE'
-          ..dayTitleFormat = 'MMMM, yy'
-          ..monthTitleFormat = 'yy';
-          module.value(DatepickerConfig, datepickerConfig);
-        }));
+        beforeEach(() {
+          inject((DatepickerConfig dc) { 
+            dc
+            ..startingDay = 6
+            ..showWeeks = false
+            ..dayFormat = 'd'
+            ..monthFormat = 'MMM'
+            ..yearFormat = 'yy'
+            ..yearRange = 10
+            ..dayHeaderFormat = 'EEEE'
+            ..dayTitleFormat = 'MMMM, yy'
+            ..monthTitleFormat = 'yy';
+          });
+        });
         
         Element createDatapicker() {
           scope.date = new DateTime(2010, 9, 30, 15, 30);
@@ -1054,68 +1052,64 @@ void datepickerTests() {
           
           return element;
         }
-        
-        afterEach(module((Module module) {
-          module.value(DatepickerConfig, originalConfig);
-        }));
 
 
-//        it('changes the title format in \'day\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getTitle(element)).toEqual('September, 10');
-//        })));
+        it('changes the title format in \'day\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getTitle(element)).toEqual('September, 10');
+        })));
 
-//        it('changes the title & months format in \'month\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          clickTitleButton(element);
-//          microLeap();
-//
-//          expect(getTitle(element)).toEqual('10');
-//          expect(getOptions(element)).toEqual([
-//            ['Jan', 'Feb', 'Mar'],
-//            ['Apr', 'May', 'Jun'],
-//            ['Jul', 'Aug', 'Sep'],
-//            ['Oct', 'Nov', 'Dec']
-//          ]);
-//        })));
+        it('changes the title & months format in \'month\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          clickTitleButton(element);
+          microLeap();
 
-//        it('changes the title, year format & range in \'year\' mode', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          clickTitleButton(element, 2);
-//          microLeap();
-//
-//          expect(getTitle(element)).toEqual('01 - 10');
-//          expect(getOptions(element)).toEqual([
-//            ['01', '02', '03', '04', '05'],
-//            ['06', '07', '08', '09', '10']
-//          ]);
-//        })));
+          expect(getTitle(element)).toEqual('10');
+          expect(getOptions(element)).toEqual([
+            ['Jan', 'Feb', 'Mar'],
+            ['Apr', 'May', 'Jun'],
+            ['Jul', 'Aug', 'Sep'],
+            ['Oct', 'Nov', 'Dec']
+          ]);
+        })));
 
-//        it('changes the \'starting-day\' & day headers & format', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getLabels(element)).toEqual(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
-//          expect(getOptions(element)).toEqual([
-//            ['28', '29', '30', '31', '1', '2', '3'],
-//            ['4', '5', '6', '7', '8', '9', '10'],
-//            ['11', '12', '13', '14', '15', '16', '17'],
-//            ['18', '19', '20', '21', '22', '23', '24'],
-//            ['25', '26', '27', '28', '29', '30', '1']
-//          ]);
-//        })));
+        it('changes the title, year format & range in \'year\' mode', async(inject(() {
+          Element element = createDatapicker();
+          
+          clickTitleButton(element, 2);
+          microLeap();
 
-//        it('changes initial visibility for weeks', async(inject(() {
-//          Element element = createDatapicker();
-//          
-//          expect(getLabelsRow(element).querySelectorAll('th').first).toBeHidden();
-//          var tr = element.shadowRoot.querySelectorAll('tbody > tr');
-//          for (var i = 0; i < 5; i++) {
-//            expect(tr[i].querySelectorAll('td').first).toBeHidden();
-//          }
-//        })));
+          expect(getTitle(element)).toEqual('01 - 10');
+          expect(getOptions(element)).toEqual([
+            ['01', '02', '03', '04', '05'],
+            ['06', '07', '08', '09', '10']
+          ]);
+        })));
+
+        it('changes the \'starting-day\' & day headers & format', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getLabels(element)).toEqual(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+          expect(getOptions(element)).toEqual([
+            ['29', '30', '31', '1', '2', '3', '4'],
+            ['5', '6', '7', '8', '9', '10', '11'],
+            ['12', '13', '14', '15', '16', '17', '18'],
+            ['19', '20', '21', '22', '23', '24', '25'],
+            ['26', '27', '28', '29', '30', '1', '2']
+          ]);
+        })));
+
+        it('changes initial visibility for weeks', async(inject(() {
+          Element element = createDatapicker();
+          
+          expect(getLabelsRow(element).querySelectorAll('th').first.classes).toContain('ng-hide');
+          var tr = element.shadowRoot.querySelectorAll('tbody > tr');
+          for (var i = 0; i < 5; i++) {
+            expect(tr[i].querySelectorAll('td').first.classes).toContain('ng-hide');
+          }
+        })));
       });
       
       describe('controller', () {
@@ -1125,7 +1119,6 @@ void datepickerTests() {
         beforeEach(inject((DatepickerConfig datepickerConfig, Scope scope, Injector injector, DateFilter dateFilter) {
           var element = new DivElement();
           var attrs = new NodeAttrs(element);
-//          var ngModel = new NgModel(scope, attrs, element, injector);
           ctrl = new Datepicker.forTests(element, datepickerConfig, attrs, scope, dateFilter);
         }));
         
@@ -1208,47 +1201,167 @@ void datepickerTests() {
         });
         
         
-//        describe('\'isDisabled\' function', () {
-//          var date = new DateTime(2010, 9, 30, 15, 30);
-//
-//          it('to return false if no limit is set', async(inject(() {
-//            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
-//          })));
-//
-//          it('to handle correctly the \'min\' date', async(inject(() {
-//            ctrl.minDate = new Date('October 1, 2010');
-//            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
-//            expect(ctrl.isDisabled(date)).toBeTruthy();
-//
-//            ctrl.minDate = new Date('September 1, 2010');
-//            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
-//          })));
-//
-//          it('to handle correctly the \'max\' date', async(inject(() {
-//            ctrl.maxDate = new Date('October 1, 2010');
-//            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
-//
-//            ctrl.maxDate = new Date('September 1, 2010');
-//            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
-//            expect(ctrl.isDisabled(date)).toBeTruthy();
-//          })));
-//
-//          it('to handle correctly the scope \'dateDisabled\' expression', async(inject(() {
-//            $rootScope.dateDisabled = () {
-//              return false;
-//            };
-//            $rootScope.$digest();
-//            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
-//
-//            $rootScope.dateDisabled = () {
-//              return true;
-//            };
-//            $rootScope.$digest();
-//            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
-//          })));
-//        });
+        describe('\'isDisabled\' function', () {
+          var date = new DateTime(2010, 9, 30, 15, 30);
+
+          it('to return false if no limit is set', async(inject(() {
+            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
+          })));
+
+          it('to handle correctly the \'min\' date', async(inject(() {
+            ctrl.minDate = new DateTime(2010, 10, 1);
+            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
+            expect(ctrl.isDisabled(date)).toBeTruthy();
+
+            ctrl.minDate = new DateTime(2010, 9, 1);
+            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
+          })));
+
+          it('to handle correctly the \'max\' date', async(inject(() {
+            ctrl.maxDate = new DateTime(2010, 10, 1);
+            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
+
+            ctrl.maxDate = new DateTime(2010, 9, 1);
+            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
+            expect(ctrl.isDisabled(date)).toBeTruthy();
+          })));
+
+          it('to handle correctly the scope \'dateDisabled\' expression', async(inject(() {
+            ctrl.setDateDisabled((attribs) {
+              return false;
+            });
+            
+            expect(ctrl.isDisabled(date, 0)).toBeFalsy();
+
+            ctrl.setDateDisabled((attribs) {
+              return true;
+            });
+            expect(ctrl.isDisabled(date, 0)).toBeTruthy();
+          })));
+        });
       });
       
+      describe('as popup', () {
+        Element divElement, dropdownEl, element;
+        InputElement inputEl;
+        var changeInputValueTo;
+
+        void assignElements(Element wrapElement) {
+          inputEl = wrapElement.children[0];
+          dropdownEl = wrapElement.children[1].shadowRoot.querySelector('ul');
+          element = dropdownEl.shadowRoot.querySelector('table');
+        }
+        
+        void createPopup() {
+          scope.date = new DateTime(2010, 9, 30, 15, 30);
+          Element wrapElement = _.compile('<div><input ng-model="date" datepicker-popup></div>', scope:scope);
+
+          microLeap();
+          scope.$digest();
+//          microLeap();
+//          scope.$digest();
+//          microLeap();
+//          scope.$digest();
+//          microLeap();
+//          scope.$digest();
+          
+          assignElements(wrapElement);
+          
+          changeInputValueTo = (InputElement el, value) {
+            el.value = value;
+//            el.trigger($sniffer.hasEvent('input') ? 'input' : 'change');
+            scope.$digest();
+          };
+        };
+        
+        describe('', () {
+
+          it('to display the correct value in input', async(inject(() {
+            createPopup();
+            
+            expect(inputEl.value).toBe('2010-09-30');
+          })));
+
+//          it('does not to display datepicker initially', function() {
+//            expect(dropdownEl).toBeHidden();
+//          });
+//
+//          it('displays datepicker on input focus', function() {
+//            inputEl.focus();
+//            expect(dropdownEl).not.toBeHidden();
+//          });
+//
+//          it('renders the calendar correctly', function() {
+//            expect(getLabelsRow().css('display')).not.toBe('none');
+//            expect(getLabels()).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+//            expect(getOptions()).toEqual([
+//              ['29', '30', '31', '01', '02', '03', '04'],
+//              ['05', '06', '07', '08', '09', '10', '11'],
+//              ['12', '13', '14', '15', '16', '17', '18'],
+//              ['19', '20', '21', '22', '23', '24', '25'],
+//              ['26', '27', '28', '29', '30', '01', '02']
+//            ]);
+//          });
+//
+//          it('updates the input when a day is clicked', function() {
+//            clickOption(2, 3);
+//            expect(inputEl.val()).toBe('2010-09-15');
+//            expect($rootScope.date).toEqual(new Date('September 15, 2010 15:30:00'));
+//          });
+//
+//          it('should mark the input field dirty when a day is clicked', function() {
+//            expect(inputEl).toHaveClass('ng-pristine');
+//            clickOption(2, 3);
+//            expect(inputEl).toHaveClass('ng-dirty');
+//          });
+//
+//          it('updates the input correctly when model changes', function() {
+//            $rootScope.date = new Date('January 10, 1983 10:00:00');
+//            $rootScope.$digest();
+//            expect(inputEl.val()).toBe('1983-01-10');
+//          });
+//
+//          it('closes the dropdown when a day is clicked', function() {
+//            inputEl.focus();
+//            expect(dropdownEl.css('display')).not.toBe('none');
+//
+//            clickOption(2, 3);
+//            expect(dropdownEl.css('display')).toBe('none');
+//          });
+//
+//          it('updates the model & calendar when input value changes', function() {
+//            changeInputValueTo(inputEl, 'March 5, 1980');
+//
+//            expect($rootScope.date.getFullYear()).toEqual(1980);
+//            expect($rootScope.date.getMonth()).toEqual(2);
+//            expect($rootScope.date.getDate()).toEqual(5);
+//
+//            expect(getOptions()).toEqual([
+//              ['24', '25', '26', '27', '28', '29', '01'],
+//              ['02', '03', '04', '05', '06', '07', '08'],
+//              ['09', '10', '11', '12', '13', '14', '15'],
+//              ['16', '17', '18', '19', '20', '21', '22'],
+//              ['23', '24', '25', '26', '27', '28', '29'],
+//              ['30', '31', '01', '02', '03', '04', '05']
+//            ]);
+//            expectSelectedElement( 1, 3 );
+//          });
+//
+//          it('closes when click outside of calendar', function() {
+//            $document.find('body').click();
+//            expect(dropdownEl.css('display')).toBe('none');
+//          });
+//
+//          it('sets `ng-invalid` for invalid input', function() {
+//            changeInputValueTo(inputEl, 'pizza');
+//
+//            expect(inputEl).toHaveClass('ng-invalid');
+//            expect(inputEl).toHaveClass('ng-invalid-date');
+//            expect($rootScope.date).toBeUndefined();
+//            expect(inputEl.val()).toBe('pizza');
+//          });
+        });
+      });
     });
   });
 }

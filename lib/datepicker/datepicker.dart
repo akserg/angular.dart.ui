@@ -103,15 +103,68 @@ class Datepicker {
   List rows;
   List labels;
   String title;
-  var format, startingDay, yearRange;
+  var format;
   List<_Mode> modes;
 
-  @NgCallback('date-disabled')
+  @NgOneWay('day-format')
+  void set dayFormat(String value) {
+    format.day = value != null ? value : _datepickerConfig.dayFormat;
+  }
+  
+  @NgOneWay('month-format')
+  void set monthFormat(String value) {
+    format.month = value != null ? value : _datepickerConfig.monthFormat;
+  }
+  
+  @NgOneWay('year-format')
+  void set yearFormat(String value) {
+    format.year = value != null ? value : _datepickerConfig.yearFormat;
+  }
+   
+  @NgOneWay('day-header-format')
+  void set dayHeaderFormat(String value) {
+    format.dayHeader = value != null ? value : _datepickerConfig.dayHeaderFormat;
+  }
+  
+  @NgOneWay('day-title-format')
+  void set dayTitleFormat(String value) {
+    format.dayTitle = value != null ? value : _datepickerConfig.dayTitleFormat;
+  }
+   
+  @NgOneWay('month-title-format')
+  void set monthTitleFormat(String value) {
+    format.monthTitle = value != null ? value : _datepickerConfig.monthTitleFormat;
+  }
+  
+  int _startingDay;
+  @NgOneWay('starting-day')
+  void set startingDay(int value) {
+    _startingDay = value != null ? value : _datepickerConfig.startingDay;
+  }
+  int get startingDay => _startingDay;
+  
+  int _yearRange;
+  @NgOneWay('year-range')
+  void set yearRange(int value) {
+    _yearRange = value != null ? value : _datepickerConfig.yearRange;
+  }
+  int get yearRange => _yearRange;
+  
   var dateDisabled;
+  bool _isDateDisabledSet = false;
+  @NgCallback('date-disabled')
+  void setDateDisabled(value) {
+    dateDisabled = value;
+    _isDateDisabledSet = value != null;
+  }
+  
 
   bool _showWeeks = false;
   @NgOneWay('show-weeks')
   set showWeeks(bool value) {
+    if (value == null) {
+      value = false;
+    }
     _showWeeks = value;
     updateShowWeekNumbers();
   }
@@ -396,7 +449,10 @@ class Datepicker {
 
 
   dynamic getValue(value, defaultValue) {
-    var val = _scope.$eval(value);
+    var val = null;
+    if (value != null) {
+      val = _scope.$eval(value is String ? value : value.toString());
+    }
     return val != null ? val : defaultValue;
   }
 
@@ -429,7 +485,8 @@ class Datepicker {
   bool isDisabled(DateTime date, [int mode = 0]) {
     var currentMode = modes[mode];
     return ((minDate != null && currentMode.compare(date, minDate) < 0) ||
-        (maxDate != null && currentMode.compare(date, this.maxDate) > 0));
+        (maxDate != null && currentMode.compare(date, this.maxDate) > 0) ||
+        (_isDateDisabledSet && dateDisabled({'data':date, 'mode':currentMode.name})));
   }
   
 //  bool isDisabled(DateTime date, [int mode = 0]) {
