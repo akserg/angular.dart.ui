@@ -14,12 +14,13 @@ import 'package:logging/logging.dart' as logging;
 import 'package:logging_handlers/logging_handlers_shared.dart';
 
 //
-import 'package:unittest/html_enhanced_config.dart';
+//import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
 import 'package:angular_ui/utils/utils.dart';
 
+import 'package:angular_ui/accordion/accordion.dart';
 import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/collapse/collapse.dart';
@@ -32,6 +33,7 @@ import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/tabs/tabset.dart';
 
+part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
 part 'tests/collapse_tests.dart';
@@ -53,17 +55,17 @@ void main() {
 
 //  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-//    group('Alert', () => alertTests());
-//    group('Buttons', () => buttonsTests());
-//    group('Collapse', () => collapseTests());
-//    group('DropdownToggle', () => dropdownToggleTests());
-//    group('Position', () => positionTests());
+    group('Alert', () => alertTests());
+    group('Buttons', () => buttonsTests());
+    group('Collapse', () => collapseTests());
+    group('DropdownToggle', () => dropdownToggleTests());
+    group('Position', () => positionTests());
 //    group('Progressbar', () => porgressbarTests());
-//    group('Tabs', () => tabsTests());
-//    group('Timeout', () => timeoutTests());
-//    group('Transition', () => transitionTests());
-//    group('Modal', () => modalTests());
-    group('Datepicker', () => datepickerTests());
+    group('Tabs', () => tabsTests());
+    group('Timeout', () => timeoutTests());
+    group('Transition', () => transitionTests());
+    group('Modal', () => modalTests());
+//    group('Datepicker', () => datepickerTests());
   });
 }
 

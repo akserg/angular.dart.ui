@@ -20,9 +20,9 @@ All rights reserved.  Please see the LICENSE.md file.
     
     <h3>Datepicker</h3>
     <div date-picker-ctrl>
-        <!--pre>Selected date is: <em>{{ctrl.dt | date:'fullDate' }}</em></pre-->
+        <pre>Selected date is: <em>{{ctrl.dt | date:'fullDate' }}</em></pre>
     
-        <!--div class="row">
+        <div class="row">
             <div class="col-md-3">
                 <p class="input-group">
                   <input type="text" class="form-control" value="{{ctrl.dt | date:ctrl.format}}">
@@ -35,9 +35,9 @@ All rights reserved.  Please see the LICENSE.md file.
           <div class="well well-sm">
               <datepicker ng-model="ctrl.dt" min="ctrl.minDate" show-weeks="ctrl.showWeeks"></datepicker>
           </div>
-        </div-->
+        </div>
     
-        <h4>Popup</h4>
+        <!--h4>Popup</h4>
         <div class="row">
             <div class="col-md-3">
                 <p class="input-group">
@@ -49,19 +49,19 @@ All rights reserved.  Please see the LICENSE.md file.
                   </span>
                 </p>
             </div>
-        </div>
+        </div-->
         <!--div class="row">
             <div class="col-md-6">
                 <label>Format:</label> <select class="form-control" ng-model="ctrl.format" ng-options="f for f in ctrl.formats"><option></option></select>
             </div>
         </div-->
     
-        <hr>
+        <!--hr>
         <button class="btn btn-sm btn-info" ng-click="ctrl.today()">Today</button>
         <button class="btn btn-sm btn-default" ng-click="ctrl.dt = '2009-08-24'">2009-08-24</button>
         <button class="btn btn-sm btn-success" ng-click="ctrl.toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
         <button class="btn btn-sm btn-danger" ng-click="ctrl.clear()">Clear</button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.toggleMin()" tooltip="After today restriction">Min date</button>
+        <button class="btn btn-sm btn-default" ng-click="ctrl.toggleMin()" tooltip="After today restriction">Min date</button-->
     </div>
 
     <hr>
@@ -122,7 +122,12 @@ All rights reserved.  Please see the LICENSE.md file.
         </div>
       </div>
     </div>
+
+    <hr>
     
+    <h3>Accordion</h3>
+    <div ng-include="accordion/accordionDemo.html"></div>
+        
     <hr>
     
     <h3>Alert</h3>
@@ -155,7 +160,7 @@ All rights reserved.  Please see the LICENSE.md file.
     
     <hr>
 
-    <h3>Progressbar</h3>
+    <!--h3>Progressbar</h3>
     <div progress-ctrl>
         <h3>Static</h3>
         <div class="row">
@@ -179,7 +184,7 @@ All rights reserved.  Please see the LICENSE.md file.
         <stackedProgress><bar ng-repeat="bar in ctrl.stacked" value="bar.value" type="{{bar.type}}"><span ng-hide="bar.value < 5">{{bar.value}}%</span></bar></stackedProgress>
     </div>
     
-    <hr>
+    <hr-->
 
     <h3>Buttons</h3>    
     <div buttons-ctrl>
@@ -207,7 +212,7 @@ All rights reserved.  Please see the LICENSE.md file.
       </div>
     </div>
 
-    <h4>Tabs</h4>
+    <h3>Tabs</h3>
     <div ng-include="tabs/tabsDemo.html"></div>
 
     <hr>

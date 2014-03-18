@@ -19,7 +19,7 @@ void datepickerTests() {
     beforeEach(inject((TestBed tb) => _ = tb));
     beforeEach(inject((Scope s) { 
       scope = s;
-      scope.date = new DateTime(2010, 9, 30, 15, 30);
+      scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
     }));
     beforeEach(inject((TemplateCache c) { 
       cache = c;
@@ -33,7 +33,7 @@ void datepickerTests() {
       Element element = _.compile('<datepicker ng-model="date"></datepicker>', scope:scope);
 
       microLeap();
-      scope.$digest();
+      scope.rootScope.apply();
       
       return element;
     }
@@ -188,7 +188,7 @@ void datepickerTests() {
       })));
       
       it('value is correct', async(inject(() {
-        expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
       })));
       
       it('has \'selected\' only the correct day', async(inject(() {
@@ -200,20 +200,20 @@ void datepickerTests() {
       it('has no \'selected\' day when model is cleared', async(inject(() {
         Element element = createDatapicker();
         
-        scope.date = null;
-        scope.$digest();
+        scope.context['date'] = null;
+        scope.rootScope.apply();
 
-        expect(scope.date).toBe(null);
+        expect(scope.context['date']).toBe(null);
         expectSelectedElement(element, null, null );
       })));
       
       it('does not change current view when model is cleared', async(inject(() {
         Element element = createDatapicker();
         
-        scope.date = null;
-        scope.$digest();
+        scope.context['date'] = null;
+        scope.rootScope.apply();
 
-        expect(scope.date).toBe(null);
+        expect(scope.context['date']).toBe(null);
         expect(getTitle(element)).toEqual('September 2010');
       })));
       
@@ -236,9 +236,9 @@ void datepickerTests() {
         
         clickOption(element, 2, 2);
         microLeap();
-        scope.$digest();
+        scope.rootScope.apply();
 
-        expect(scope.date).toEqual(new DateTime(2010, 9, 15, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 9, 15, 15, 30));
       })));
       
       it('moves to the previous month & renders correctly when \'previous\' button is clicked', async(inject(() {
@@ -266,11 +266,11 @@ void datepickerTests() {
         
         clickPreviousButton(element);
         microLeap();
-        expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
 
         clickOption(element, 2, 3);
         microLeap();
-        expect(scope.date).toEqual(new DateTime(2010, 8, 12, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 8, 12, 15, 30));
       })));
       
       it('moves to the next month & renders correctly when \'next\' button is clicked', async(inject(() {
@@ -298,11 +298,11 @@ void datepickerTests() {
         
         clickNextButton(element); 
         microLeap();
-        expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
 
         clickOption(element, 2, 2); 
         microLeap();
-        expect(scope.date).toEqual(new DateTime(2010, 10, 13, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 10, 13, 15, 30));
       })));
       
       it('updates the calendar when a day of another month is selected', async(inject(() {
@@ -310,7 +310,7 @@ void datepickerTests() {
         
         clickOption(element, 4, 4); 
         microLeap();
-        expect(scope.date).toEqual(new DateTime(2010, 10, 1, 15, 30));
+        expect(scope.context['date']).toEqual(new DateTime(2010, 10, 1, 15, 30));
         expect(getTitle(element)).toEqual('October 2010');
         expect(getLabels(element)).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
         expect(getOptions(element)).toEqual([
@@ -343,11 +343,11 @@ void datepickerTests() {
           it('updates', async(inject(() {
             Element element = createDatapicker();
             
-            scope.date = new DateTime(2005, 11, 7, 23, 30);
-            scope.$digest();
+            scope.context['date'] = new DateTime(2005, 11, 7, 23, 30);
+            scope.rootScope.apply();
             
             testCalendar(element);
-            expect(scope.date is DateTime).toBe(true);
+            expect(scope.context['date'] is DateTime).toBe(true);
           })));
         });
 
@@ -356,10 +356,10 @@ void datepickerTests() {
           it('to a Number, it updates calendar', async(inject(() {
             Element element = createDatapicker();
             
-            scope.date = new DateTime(2005, 11, 7, 23, 30).millisecondsSinceEpoch;
-            scope.$digest();
+            scope.context['date'] = new DateTime(2005, 11, 7, 23, 30).millisecondsSinceEpoch;
+            scope.rootScope.apply();
             testCalendar(element);
-            expect(scope.date is num).toBe(true);
+            expect(scope.context['date'] is num).toBe(true);
           })));
 
           it('to a string that can be parsed by Date, it updates calendar', async(inject(() {
@@ -377,20 +377,20 @@ void datepickerTests() {
              * * `"2012-02-27T14+00:00"`
              * * `"-123450101 00:00:00 Z"`: in the year -12345.
              */
-            scope.date = '2005-11-07 23:30:00';
-            scope.$digest();
+            scope.context['date'] = '2005-11-07 23:30:00';
+            scope.rootScope.apply();
             testCalendar(element);
-            expect(scope.date is String).toBe(true);
+            expect(scope.context['date'] is String).toBe(true);
           })));
 
 //          it('to a string that cannot be parsed by Date, it gets invalid', async(inject(() {
 //            Element element = createDatapicker();
 //            
-//            scope.date = 'pizza';
-//            scope.$digest();
+//            scope.context['date'] = 'pizza';
+//            scope.rootScope.apply();
 //            expect(element.classes.contains('ng-invalid')).toBeTruthy();
 //            expect(element.classes.contains('ng-invalid-date')).toBeTruthy();
-//            expect(scope.date).toBe('pizza');
+//            expect(scope.context['date']).toBe('pizza');
 //          })));
         });
       });
@@ -441,7 +441,7 @@ void datepickerTests() {
           clickTitleButton(element);
           microLeap();
                     
-          expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+          expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
         })));
 
         it('has \'selected\' only the correct month', async(inject(() {
@@ -503,7 +503,7 @@ void datepickerTests() {
 
           clickOption(element, 3, 1);
           microLeap();
-          expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+          expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
           expect(getTitle(element)).toEqual('November 2005');
           expect(getOptions(element)).toEqual([
             ['31', '01', '02', '03', '04', '05', '06'],
@@ -515,7 +515,7 @@ void datepickerTests() {
 
           clickOption(element, 2, 2);
           microLeap();
-          expect(scope.date).toEqual(new DateTime(2005, 11, 16, 15, 30));
+          expect(scope.context['date']).toEqual(new DateTime(2005, 11, 16, 15, 30));
         })));
       });
       
@@ -546,7 +546,7 @@ void datepickerTests() {
           clickTitleButton(element, 2);
           microLeap();
                     
-          expect(scope.date).toEqual(new DateTime(2010, 9, 30, 15, 30));
+          expect(scope.context['date']).toEqual(new DateTime(2010, 9, 30, 15, 30));
         })));
 
         it('has \'selected\' only the selected year', async(inject(() {
@@ -599,13 +599,13 @@ void datepickerTests() {
       
       describe('attribute \'starting-day\'', () {
         Element createDatapicker() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
           Element element = _.compile('<datepicker ng-model="date" starting-day="1"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           return element;
         }
@@ -639,11 +639,11 @@ void datepickerTests() {
         Element weekHeader, weekElement;
         
         Element createDatapicker() {
-          scope.showWeeks = false;
+          scope.context['showWeeks'] = false;
           Element element = _.compile('<datepicker ng-model="date" show-weeks="showWeeks"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           weekHeader = getLabelsRow(element).querySelectorAll('th').first;
           weekElement = element.shadowRoot.querySelectorAll('tbody > tr')[1].querySelectorAll('td').first;
@@ -662,14 +662,14 @@ void datepickerTests() {
         it('toggles week numbers', async(inject(() {
           Element element = createDatapicker();
           
-          scope.showWeeks = true;
-          scope.$digest();
+          scope.context['showWeeks'] = true;
+          scope.rootScope.apply();
           expect(weekHeader.text).toEqual('#');
           expect(weekHeader.classes).not.toContain('ng-hide');
           expect(weekElement.classes).not.toContain('ng-hide');
                     
-          scope.showWeeks = false;
-          scope.$digest();
+          scope.context['showWeeks'] = false;
+          scope.rootScope.apply();
           expect(weekHeader.text).toEqual('#');
           expect(weekHeader.classes).toContain('ng-hide');
           expect(weekElement.classes).toContain('ng-hide');
@@ -678,12 +678,12 @@ void datepickerTests() {
      
       describe('min attribute', () {
         Element createDatapicker() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
-          scope.mindate = new DateTime(2010, 9, 13);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['mindate'] = new DateTime(2010, 9, 13);
           Element element = _.compile('<datepicker ng-model="date" min="mindate"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           return element;
         }
@@ -701,8 +701,8 @@ void datepickerTests() {
         it('disables appropriate days when min date changes', async(inject(() {
           Element element = createDatapicker();
           
-          scope.mindate = new DateTime(2010, 9, 6);
-          scope.$digest();
+          scope.context['mindate'] = new DateTime(2010, 9, 6);
+          scope.rootScope.apply();
           for (var i = 0; i < 5; i ++) {
             for (var j = 0; j < 7; j ++) {
               expect(isDisabledOption(element, i, j)).toBe( (i < 1) );
@@ -713,9 +713,9 @@ void datepickerTests() {
         it('invalidates when model is a disabled date', async(inject(() {
           Element element = createDatapicker();
           
-          scope.mindate = new DateTime(2010, 9, 6);
-          scope.date = new DateTime(2010, 9, 2);
-          scope.$digest();
+          scope.context['mindate'] = new DateTime(2010, 9, 6);
+          scope.context['date'] = new DateTime(2010, 9, 2);
+          scope.rootScope.apply();
 //          expect(element.classes.contains('ng-invalid')).toBeTruthy();
 //          expect(element.classes.contains('ng-invalid-date-disabled')).toBeTruthy();
         })));
@@ -787,9 +787,9 @@ void datepickerTests() {
         it('enables everything before if it is cleared', async(inject(() {
           Element element = createDatapicker();
           
-          scope.mindate = null;
-          scope.date = new DateTime(1949, 12, 20);
-          scope.$digest();
+          scope.context['mindate'] = null;
+          scope.context['date'] = new DateTime(1949, 12, 20);
+          scope.rootScope.apply();
 
           clickTitleButton(element);
           microLeap();
@@ -803,12 +803,12 @@ void datepickerTests() {
       
       describe('max attribute', () {
         Element createDatapicker() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
-          scope.maxdate = new DateTime(2010, 9, 26);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['maxdate'] = new DateTime(2010, 9, 26);
           Element element = _.compile('<datepicker ng-model="date" max="maxdate"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           return element;
         }
@@ -826,8 +826,8 @@ void datepickerTests() {
         it('disables appropriate days when max date changes', async(inject(() {
           Element element = createDatapicker();
           
-          scope.maxdate = new DateTime(2010, 9, 19);
-          scope.$digest();
+          scope.context['maxdate'] = new DateTime(2010, 9, 19);
+          scope.rootScope.apply();
           for (var i = 0; i < 5; i ++) {
             for (var j = 0; j < 7; j ++) {
               expect(isDisabledOption(element, i, j)).toBe( (i > 2) );
@@ -838,8 +838,8 @@ void datepickerTests() {
         it('invalidates when model is a disabled date', async(inject(() {
           Element element = createDatapicker();
           
-          scope.maxdate = new DateTime(2010, 9, 19);
-          scope.$digest();
+          scope.context['maxdate'] = new DateTime(2010, 9, 19);
+          scope.rootScope.apply();
 //          expect(element.classes.contains('ng-invalid')).toBeTruthy();
 //          expect(element.classes.contains('ng-invalid-date-disabled')).toBeTruthy();
         })));
@@ -911,8 +911,8 @@ void datepickerTests() {
         it('enables everything after if it is cleared', async(inject(() {
           Element element = createDatapicker();
           
-          scope.maxdate = null;
-          scope.$digest();
+          scope.context['maxdate'] = null;
+          scope.rootScope.apply();
           for (var i = 0; i < 5; i ++) {
             for (var j = 0; j < 7; j ++) {
               expect(isDisabledOption(element, i, j)).toBe( false );
@@ -923,14 +923,14 @@ void datepickerTests() {
       
 //      describe('date-disabled expression', () {
 //        Element createDatapicker() {
-//          scope.date = new DateTime(2010, 9, 30, 15, 30);
-//          scope.dateDisabledHandler = jasmine.createSpy('dateDisabledHandler');
+//          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
+//          scope.context['date']DisabledHandler = jasmine.createSpy('dateDisabledHandler');
 //          Element element = _.compile('<datepicker ng-model="date" date-disabled="dateDisabledHandler"></datepicker>', scope:scope);
 //
 //          microLeap();
-//          scope.$digest();
+//          scope.rootScope.apply();
 //          microLeap();
-//          scope.$digest();
+//          scope.rootScope.apply();
 //          
 //          return element;
 //        }
@@ -938,16 +938,16 @@ void datepickerTests() {
 //        it('executes the dateDisabled expression for each visible day plus one for validation', () {
 //          Element element = createDatapicker();
 //          
-//          expect(scope.dateDisabledHandler.calls.length).toEqual(35 + 1);
+//          expect(scope.context['date']DisabledHandler.calls.length).toEqual(35 + 1);
 //        });
 //
 //        it('executes the dateDisabled expression for each visible month plus one for validation', async(inject(() {
 //          Element element = createDatapicker();
 //          
-//          scope.dateDisabledHandler.reset();
+//          scope.context['date']DisabledHandler.reset();
 //          clickTitleButton(element);
 //          microLeap();
-//          expect(scope.dateDisabledHandler.calls.length).toEqual(12 + 1);
+//          expect(scope.context['date']DisabledHandler.calls.length).toEqual(12 + 1);
 //        })));
 //
 //        it('executes the dateDisabled expression for each visible year plus one for validation', async(inject(() {
@@ -955,20 +955,20 @@ void datepickerTests() {
 //          
 //          clickTitleButton(element);
 //          microLeap();
-//          scope.dateDisabledHandler.reset();
+//          scope.context['date']DisabledHandler.reset();
 //          clickTitleButton(element);
 //          microLeap();
-//          expect(scope.dateDisabledHandler.calls.length).toEqual(20 + 1);
+//          expect(scope.context['date']DisabledHandler.calls.length).toEqual(20 + 1);
 //        })));
 //      });
       
       describe('formatting attributes', () {
         Element createDatapicker() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
           Element element = _.compile('<datepicker ng-model="date" day-format="\'d\'" day-header-format="\'EEEE\'" day-title-format="\'MMMM, yy\'" month-format="\'MMM\'" month-title-format="\'yy\'" year-format="\'yy\'" year-range="10"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           return element;
         }
@@ -1044,11 +1044,11 @@ void datepickerTests() {
         });
         
         Element createDatapicker() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
           Element element = _.compile('<datepicker ng-model="date"></datepicker>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
           
           return element;
         }
@@ -1253,24 +1253,24 @@ void datepickerTests() {
         }
         
         void createPopup() {
-          scope.date = new DateTime(2010, 9, 30, 15, 30);
+          scope.context['date'] = new DateTime(2010, 9, 30, 15, 30);
           Element wrapElement = _.compile('<div><input ng-model="date" datepicker-popup></div>', scope:scope);
 
           microLeap();
-          scope.$digest();
+          scope.rootScope.apply();
 //          microLeap();
-//          scope.$digest();
+//          scope.rootScope.apply();
 //          microLeap();
-//          scope.$digest();
+//          scope.rootScope.apply();
 //          microLeap();
-//          scope.$digest();
+//          scope.rootScope.apply();
           
           assignElements(wrapElement);
           
           changeInputValueTo = (InputElement el, value) {
             el.value = value;
 //            el.trigger($sniffer.hasEvent('input') ? 'input' : 'change');
-            scope.$digest();
+            scope.rootScope.apply();
           };
         };
         

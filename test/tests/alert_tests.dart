@@ -30,12 +30,12 @@ void alertTests() {
             "close='removeAlert(\$index)'>{{alert.msg}}" +
           "</alert>" +
         "</div>");
-      scope.alerts = [
+      scope.context['alerts'] = [
         { 'msg':'foo', 'type':'success'},
         { 'msg':'bar', 'type':'error'},
         { 'msg':'baz'}
       ];
-      scope.$digest();
+      scope.rootScope.apply();
       return element.querySelectorAll('alert');
     };
     
@@ -56,7 +56,7 @@ void alertTests() {
       var alerts = createAlerts();
 
       for (var i = 0, n = alerts.length; i < n; i++) {
-        expect(findContent(i).text).toEqual(scope.alerts[i]['msg']);
+        expect(findContent(i).text).toEqual(scope.context['alerts'][i]['msg']);
       }
     });
   });

@@ -21,6 +21,7 @@ class DatepickerModule extends Module {
     type(Datepicker);
     type(DatepickerPopupWrap);
     type(DatepickerPopup);
+    type(WeekNumberFilter);
   }
 }
 
@@ -105,7 +106,7 @@ class Datepicker {
   String title;
   var format;
   List<_Mode> modes;
-
+  
   @NgOneWay('day-format')
   void set dayFormat(String value) {
     format.day = value != null ? value : _datepickerConfig.dayFormat;
@@ -213,10 +214,6 @@ class Datepicker {
   Datepicker(this._element, this._datepickerConfig, this._attrs, this._ngModel, this._scope, this._dateFilter) {
     showWeeks = _datepickerConfig.showWeeks;
 
-    _ngModel.render = (value) {
-      refill(true);
-    };
-
     init();
     refill();
   }
@@ -235,25 +232,25 @@ class Datepicker {
     DateTime date;
     bool valid = true;
     
-      if (_ngModel.modelValue != null) {
-        try {
-          if (_ngModel.modelValue is String) {
-            date = DateTime.parse(_ngModel.modelValue);
-          } else if (_ngModel.modelValue is int) {
-            date = new DateTime.fromMillisecondsSinceEpoch(_ngModel.modelValue);
-          } else {
-            date = _ngModel.modelValue as DateTime;
-          }
-        } on Exception catch(e) {
-          print(e);
+    if (_ngModel.modelValue != null) {
+      try {
+        if (_ngModel.modelValue is String) {
+          date = DateTime.parse(_ngModel.modelValue);
+        } else if (_ngModel.modelValue is int) {
+          date = new DateTime.fromMillisecondsSinceEpoch(_ngModel.modelValue);
+        } else {
+          date = _ngModel.modelValue as DateTime;
         }
-  
-        if (date == null) {
-          valid = false;
-        } else if (updateSelected) {
-          selected = date;
-        }
+      } on Exception catch(e) {
+        print(e);
       }
+
+      if (date == null) {
+        valid = false;
+      } else if (updateSelected) {
+        selected = date;
+      }
+    }
     _ngModel.setValidity('date', valid);
 
     var currentMode = modes[mode];
@@ -316,14 +313,9 @@ class Datepicker {
 
   void move(int direction) {
     var step = modes[mode].step;
-    int month = selected.month + direction * (step.containsKey('months') ?
-        step['months'] : 0);
-        // selected.setMonth( selected.getMonth() + direction * (step.months || 0) );
-    int year = selected.year + direction * (step.containsKey('years') ?
-        step['years'] : 0);
-        // selected.setFullYear( selected.getFullYear() + direction * (step.years || 0) );
-    selected = new DateTime(year, month, selected.day, selected.hour,
-        selected.minute, selected.second, selected.millisecond);
+    int month = selected.month + direction * (step.containsKey('months') ? step['months'] : 0);
+    int year = selected.year + direction * (step.containsKey('years') ? step['years'] : 0);
+    selected = new DateTime(year, month, selected.day, selected.hour, selected.minute, selected.second, selected.millisecond);
     refill();
   }
 
@@ -451,7 +443,7 @@ class Datepicker {
   dynamic getValue(value, defaultValue) {
     var val = null;
     if (value != null) {
-      val = _scope.$eval(value is String ? value : value.toString());
+      val = _scope.eval(value is String ? value : value.toString());
     }
     return val != null ? val : defaultValue;
   }
@@ -464,10 +456,8 @@ class Datepicker {
     var dates = new List();
     var current = startDate, i = 0;
     while (i++ < n) {
-      dates.add(new DateTime.fromMillisecondsSinceEpoch(
-          current.millisecondsSinceEpoch));
+      dates.add(new DateTime.fromMillisecondsSinceEpoch(current.millisecondsSinceEpoch));
       current = current.add(new Duration(days: 1));
-          // setDate( current.getDate() + 1 );
     }
     return dates;
   }
@@ -500,4 +490,17 @@ class Datepicker {
 //    }
 //    return false;
 //  }
+}
+
+/**
+ * Filter to show week number
+ */
+@NgFilter(name:'weekNumber')
+class WeekNumberFilter {
+  call(valueToFilter, datepicker) {
+    if (valueToFilter != null && valueToFilter is List) {
+      return datepicker.getWeekNumber(valueToFilter.toList());
+    }
+    return null;
+  }
 }

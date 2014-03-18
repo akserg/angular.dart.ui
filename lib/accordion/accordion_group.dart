@@ -10,23 +10,27 @@ part of angular.ui.accordion;
     templateUrl: 'packages/angular_ui/accordion/accordion_group.html',
     applyAuthorStyles: true
 )
-class AccordionGroupComponent {
-  @NgTwoWay('is-open') bool isOpen = false;
+class AccordionGroupComponent implements NgDetachAware {
+  bool _isOpen = false;
   @NgAttr('heading') String heading;
   Scope scope;
+  AccordionComponent accordion;
 
-  AccordionGroupComponent(this.scope, AccordionComponent accordion) {
-
+  AccordionGroupComponent(this.scope, this.accordion) {
     _log.fine('AccordionGroupComponent');
     accordion.addGroup(this);
+  }
 
-    scope.$watch(() => isOpen, (value) {
-      //_log.finer('watch: $value');
-
-      if(value != null && value == true) {
-        accordion.closeOthers(this);
-      }
-    });
+  @NgTwoWay('is-open') get isOpen => _isOpen;
+  set isOpen(var newValue) {
+    _isOpen = utils.toBool(newValue);
+    if (_isOpen) {
+      accordion.closeOthers(this);
+    }
+  }
+  
+  void detach() {
+    this.accordion.removeGroup(this);
   }
 }
 

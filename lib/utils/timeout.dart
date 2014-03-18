@@ -74,7 +74,7 @@ class Timeout {
       }
       //
       if (!skipApply) {
-        scope.$apply();
+        scope.apply();
       }
     });
 

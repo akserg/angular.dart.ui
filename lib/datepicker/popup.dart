@@ -49,48 +49,48 @@ class DatepickerPopup  {
   DatepickerPopup(Scope _originalScope, this._element, this._dateFilter, this._attrs, this._ngModel, this._position,
       this._parser, this._compiler, this._directiveMap, this._injector, this._datepickerConfig, this._datepickerPopupConfig) {
     // create a child scope so we are not polluting original one
-    _scope = _originalScope.$new(); 
+    _scope = _originalScope.createChild(new PrototypeMap(_originalScope.context)); 
     
-    _closeOnDateSelection = _attrs.containsKey('close-on-date-selection') ? _originalScope.$eval(_attrs['close-on-date-selection']) : _datepickerPopupConfig.closeOnDateSelection;
-    _appendToBody = _attrs.containsKey('datepicker-append-to-body') ? _originalScope.$eval(_attrs['datepicker-append-to-body']) : _datepickerPopupConfig.appendToBody;
+    _closeOnDateSelection = _attrs.containsKey('close-on-date-selection') ? _originalScope.eval(_attrs['close-on-date-selection']) : _datepickerPopupConfig.closeOnDateSelection;
+    _appendToBody = _attrs.containsKey('datepicker-append-to-body') ? _originalScope.eval(_attrs['datepicker-append-to-body']) : _datepickerPopupConfig.appendToBody;
     
     _attrs.observe('datepicker-popup', (value) {
         _dateFormat = value != null ? value : _datepickerPopupConfig.dateFormat;
         _ngModel.render(null);
     });
     
-    _scope.showButtonBar = _attrs.containsKey('show-button-bar') ? _originalScope.$eval(_attrs['show-button-bar']) : _datepickerPopupConfig.showButtonBar;
+    _scope.context['showButtonBar'] = _attrs.containsKey('show-button-bar') ? _originalScope.eval(_attrs['show-button-bar']) : _datepickerPopupConfig.showButtonBar;
     
-    _originalScope.$on(r'$destroy', () {
+    _originalScope.on(r'$destroy').listen((evt) {
       popupEl.remove();
-      _scope.$destroy();
+      _scope.destroy();
     });
     
     _attrs.observe('current-text', (text) {
-      _scope.currentText = text != null ? text : _datepickerPopupConfig.currentText;
+      _scope.context['currentText'] = text != null ? text : _datepickerPopupConfig.currentText;
     });
     
     _attrs.observe('toggle-wWeeks-text', (text) {
-      _scope.toggleWeeksText = text != null ? text : _datepickerPopupConfig.toggleWeeksText;
+      _scope.context['toggleWeeksText'] = text != null ? text : _datepickerPopupConfig.toggleWeeksText;
     });
     
     _attrs.observe('clear-text', (text) {
-      _scope.clearText = text != null ? text : _datepickerPopupConfig.clearText;
+      _scope.context['clearText'] = text != null ? text : _datepickerPopupConfig.clearText;
     });
     
     _attrs.observe('close-text', (text) {
-      _scope.closeText = text != null ? text : _datepickerPopupConfig.closeText;
+      _scope.context['closeText'] = text != null ? text : _datepickerPopupConfig.closeText;
     });
     
     if (_attrs.containsKey('is-open')) {
       getIsOpen = _parser(_attrs['is-open']);
       setIsOpen = getIsOpen.assign;
 
-      _originalScope.$watch(getIsOpen, (value) {
-        _scope.isOpen = !! value;
+      _originalScope.watch(getIsOpen, (value, prev) {
+        _scope.context['isOpen'] = !! value;
       });
     }
-    _scope.isOpen = getIsOpen != null ? getIsOpen(_originalScope) : false; // Initial state
+    _scope.context['isOpen'] = getIsOpen != null ? getIsOpen(_originalScope) : false; // Initial state
     
     ///////////////
     String html = '<div datepicker-popup-wrap><div datepicker></div></div>';
@@ -106,7 +106,7 @@ class DatepickerPopup  {
     //
     Map<String, String> datepickerOptions = {};
     if (_attrs.containsKey('datepicker-options')) {
-      datepickerOptions = _originalScope.$eval(_attrs['datepicker-options']);
+      datepickerOptions = _originalScope.eval(_attrs['datepicker-options']);
       datepickerOptions.forEach((key, value) {
         datepickerEl.setAttribute(key, value.toString());
       });
@@ -116,11 +116,11 @@ class DatepickerPopup  {
     //_ngModel.$parsers.unshift(_parseDate);
     
     // Inner change
-    _scope.dateSelection = (dt) {
+    _scope.context['dateSelection'] = (dt) {
       if (dt != null) {
-        _scope.date = dt;
+        _scope.context['date'] = dt;
       }
-      _ngModel.viewValue = _parseDate(_scope.date);
+      _ngModel.viewValue = _parseDate(_scope.context['date']);
       _ngModel.render(null);
 
       if (_closeOnDateSelection != null) {
@@ -136,7 +136,7 @@ class DatepickerPopup  {
     _ngModel.render = (value) {
       var date = _ngModel.viewValue != null ? _dateFilter(_ngModel.viewValue, _dateFormat) : '';
       (_element as dynamic).value = date;
-      _scope.date = _ngModel.modelValue;
+      _scope.context['date'] = _ngModel.modelValue;
     };
 
     addWatchableAttribute(_attrs['min'], 'min');
@@ -145,7 +145,7 @@ class DatepickerPopup  {
     if (_attrs.containsKey('show-weeks')) {
       addWatchableAttribute(_attrs['show-weeks'], 'showWeeks', 'show-weeks');
     } else {
-      _scope.showWeeks = datepickerOptions.containsKey('show-weeks') ? datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
+      _scope.context['showWeeks'] = datepickerOptions.containsKey('show-weeks') ? datepickerOptions['show-weeks'] : _datepickerConfig.showWeeks;
       datepickerEl.attributes['show-weeks'] = 'showWeeks';
     }
     
@@ -154,7 +154,7 @@ class DatepickerPopup  {
     }
     
     var documentBindingInitialized = false, elementFocusInitialized = false;
-    _scope.$watch('isOpen', (value) {
+    _scope.watch('isOpen', (value, prev) {
       if (value != null) {
         updatePosition();
         dom.document.addEventListener('click', _documentClickBind);
@@ -176,12 +176,12 @@ class DatepickerPopup  {
       }
     });
     
-    _scope.today = () {
-      _scope.dateSelection(new DateTime.now());
+    _scope.context['today'] = () {
+      _scope.context['dateSelection'](new DateTime.now());
     };
     // TODO: 'clear' method of Map conflicts to Scope method 
-    _scope.clearDate = () {
-      _scope.dateSelection(null);
+    _scope.context['clearDate'] = () {
+      _scope.context['dateSelection'](null);
     };
     
     // var injector = _injector.createChild([new Module()..value(Scope, _scope)]);
@@ -198,21 +198,21 @@ class DatepickerPopup  {
     if (setIsOpen) {
       setIsOpen(_originalScope, !!value);
     } else {
-      _scope.isOpen = !!value;
+      _scope.context['isOpen'] = !!value;
     }
   }
 
   void _documentClickBind(dom.Event event) {
     // if (_scope.isOpen && event.target != _element[0]) {
-    if (_scope.isOpen && event.target != _element) {
-     _scope.$apply(() {
+    if (_scope.context['isOpen'] && event.target != _element) {
+     _scope.apply(() {
         setOpen(false);
       });
     }
   }
   
   void _elementFocusBind(dom.Event evt) {
-    _scope.$apply(() {
+    _scope.apply(() {
       setOpen(true);
     });
   }
@@ -241,22 +241,22 @@ class DatepickerPopup  {
   }
   
   void _inputChanged(dom.Event event) {
-    _scope.$apply(() => _scope.date = _ngModel.modelValue);
+    _scope.apply(() => _scope.context['date'] = _ngModel.modelValue);
   }
   
   void addWatchableAttribute(attribute, scopeProperty, [datepickerAttribute = null]) {
     if (attribute != null) {
       // TODO: What the parser ewe needs here: _originalScope.$watch($parse(attribute), (value){
-      _originalScope.$watch(attribute, (value){
-        _scope[scopeProperty] = value;
+      _originalScope.watch(attribute, (value, prev) {
+        _scope.context[scopeProperty] = value;
       });
       datepickerEl.attributes[datepickerAttribute != null ? datepickerAttribute : scopeProperty] = scopeProperty;
     }
   }
   
   void updatePosition() {
-    _scope.position = _appendToBody ? _position.offset(_element) : _position.position(_element);
-    _scope.position.top = _scope.position.top + _element.offsetHeight;
+    _scope.context['position'] = _appendToBody ? _position.offset(_element) : _position.position(_element);
+    _scope.context['position'].top = _scope.context['position'].top + _element.offsetHeight;
   }
 }
 
@@ -271,7 +271,7 @@ class DatepickerPopupWrap {
   Scope _scope;
   
   String get display {
-    return _scope.isOpen != null && _scope.isOpen ? 'block' : 'none';
+    return _scope.context['isOpen'] != null && _scope.context['isOpen'] ? 'block' : 'none';
   }
   
   DatepickerPopupWrap(dom.Element element, this._scope) {

@@ -24,6 +24,7 @@ import 'package:angular_ui/angular_ui.dart';
   override: '*')
 import 'dart:mirrors';
 
+part 'accordion/accordionDemo.dart';
 part 'tabs/tabsDemo.dart';
 
 /**
@@ -52,6 +53,7 @@ class DemoModule extends Module {
     type(ButtonsCtrl);
     type(CarouselDemoController);
     type(TabsCtrl);
+    type(AccordionDemoController);
   }
 }
 
@@ -257,8 +259,8 @@ class ModalCtrlOtherTemplate {
       selected = value;
     };
     // Update model from inside
-    scope.$watch('ctrl2.selected', (newValue) {
-        ngModel.viewValue = newValue;
+    scope.watch('ctrl2.selected', (newValue, _) {
+      ngModel.viewValue = newValue;
     });
   }
   

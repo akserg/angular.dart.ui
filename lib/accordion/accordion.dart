@@ -5,7 +5,7 @@ library angular.ui.accordion;
 
 import 'package:angular/angular.dart';
 //import 'package:angular_ui/app/injectable_service.dart';
-
+import 'package:angular/utils.dart' as utils;
 import 'package:logging/logging.dart' show Logger;
 
 part 'accordion_group.dart';
@@ -49,7 +49,7 @@ class AccordionComponent {
   /*
    * This array keeps track of the accordion groups
    */
-  List<AccordionGroupComponent> _groups = [];
+  List<AccordionGroupComponent> groups = [];
 
   AccordionComponent(this.scope, this._config)
   {
@@ -62,9 +62,8 @@ class AccordionComponent {
   void closeOthers(AccordionGroupComponent openGroup) {
     isCloseOthers = isCloseOthers != null ? isCloseOthers : _config.closeOthers;
     if(isCloseOthers) {
-      _groups.forEach((e) {
-
-        if(e != openGroup && e.isOpen != null && e.isOpen) {
+      groups.forEach((e) {
+        if(e != openGroup) {
           e.isOpen = false;
         }
       });
@@ -75,15 +74,13 @@ class AccordionComponent {
    * This is called from the accordion-group directive to add itself to the accordion
    */
   void addGroup(AccordionGroupComponent groupScope) {
-    _groups.add(groupScope);
-
-    groupScope.scope.$on('destroy', (e) => removeGroup(groupScope)); // TODO type annotation e
+    groups.add(groupScope);
   }
 
   /*
    *  This is called from the accordion-group directive when to remove itself
    */
   void removeGroup(AccordionGroupComponent groupScope) {
-    _groups.remove(groupScope);
+    groups.remove(groupScope);
   }
 }
