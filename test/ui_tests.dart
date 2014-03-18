@@ -14,7 +14,7 @@ import 'package:logging/logging.dart' as logging;
 import 'package:logging_handlers/logging_handlers_shared.dart';
 
 //
-import 'package:unittest/html_enhanced_config.dart';
+//import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 import 'package:angular/core_dom/module.dart';
 
@@ -51,7 +51,7 @@ void main() {
   logging.Logger.root.level = logging.Level.FINEST;
   _log.fine('Running unit tests for Angular UI library.');
 
-  useHtmlEnhancedConfiguration();
+//  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
     group('Acoordion', () => accordionTests());
     group('Alert', () => alertTests());
@@ -59,7 +59,7 @@ void main() {
     group('Collapse', () => collapseTests());
     group('DropdownToggle', () => dropdownToggleTests());
     group('Position', () => positionTests());
-//    group('Progressbar', () => porgressbarTests());
+    group('Progressbar', () => porgressbarTests());
     group('Tabs', () => tabsTests());
     group('Timeout', () => timeoutTests());
     group('Transition', () => transitionTests());

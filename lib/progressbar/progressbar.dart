@@ -68,8 +68,8 @@ class ProgressBar extends _ProgressbarBase {
 
   ProgressBar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element);
 
-  evalMaxOrDefault(Scope scope) => max = (max == null) ? _config.max : toInt(scope.context.$parent.eval(max.toString()));
-  evalAnimateOrDefault(Scope scope) => animate = (animate == null) ? _config.animate : toBool(scope.context.$parent.eval(animate.toString()));
+  evalMaxOrDefault(Scope scope) => max = (max == null) ? _config.max : toInt(scope.parentScope.eval(max.toString()));
+  evalAnimateOrDefault(Scope scope) => animate = (animate == null) ? _config.animate : toBool(scope.parentScope.eval(animate.toString()));
 
   NodeAttrs get nodeAttr => _attrs;
   dom.Element getShadowElement(shadowRoot) => getFirstDiv(shadowRoot).children.first;
@@ -133,8 +133,8 @@ class Bar extends _ProgressbarBase {
     _element = element;
   }
 
-  evalMaxOrDefault(Scope scope) => _max = (_parentAttrs["max"] == null) ? _config.max : scope.context.$parent.eval(_parentAttrs["max"]);
-  evalAnimateOrDefault(Scope scope) => _animate = (_parentAttrs['animate'] == null) ? _config.animate : toBool(scope.context.$parent.eval(_parentAttrs['animate']));
+  evalMaxOrDefault(Scope scope) => _max = (_parentAttrs["max"] == null) ? _config.max : scope.parentScope.eval(_parentAttrs["max"]);
+  evalAnimateOrDefault(Scope scope) => _animate = (_parentAttrs['animate'] == null) ? _config.animate : toBool(scope.parentScope.eval(_parentAttrs['animate']));
 
   _lazyInitParentAttrs() {
     if (_parentAttrs == null) _parentAttrs = new NodeAttrs(_element.parent);
