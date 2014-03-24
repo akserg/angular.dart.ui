@@ -32,6 +32,7 @@ import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/timepicker/timepicker.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -45,6 +46,7 @@ part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
 part 'tests/datepicker_tests.dart';
+part 'tests/timepicker_tests.dart';
 
 final _log = new logging.Logger('test');
 
@@ -55,17 +57,18 @@ void main() {
 
 //  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-    group('Alert', () => alertTests());
-    group('Buttons', () => buttonsTests());
-    group('Collapse', () => collapseTests());
-    group('DropdownToggle', () => dropdownToggleTests());
-    group('Position', () => positionTests());
+//    group('Alert', () => alertTests());
+//    group('Buttons', () => buttonsTests());
+//    group('Collapse', () => collapseTests());
+//    group('DropdownToggle', () => dropdownToggleTests());
+//    group('Position', () => positionTests());
 //    group('Progressbar', () => porgressbarTests());
-    group('Tabs', () => tabsTests());
-    group('Timeout', () => timeoutTests());
-    group('Transition', () => transitionTests());
-    group('Modal', () => modalTests());
+//    group('Tabs', () => tabsTests());
+//    group('Timeout', () => timeoutTests());
+//    group('Transition', () => transitionTests());
+//    group('Modal', () => modalTests());
 //    group('Datepicker', () => datepickerTests());
+    group('Timepicker', () => timepickerTests());
   });
 }
 

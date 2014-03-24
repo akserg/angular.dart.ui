@@ -5,9 +5,9 @@ part of angular.ui.test;
 
 void porgressbarTests() {
   describe('Testing progressbar:', () {
-    Scope $rootScope;
+    Scope rootScope;
     Injector injector;
-    Compiler $compile;
+    Compiler compile;
     TemplateCache cache;
     dom.Element shadowElement;
     dom.Element element;
@@ -16,8 +16,8 @@ void porgressbarTests() {
 
     dom.Element compileElement(String htmlText) {
       List<Node> elements = $(htmlText);
-      $compile(elements, injector.get(DirectiveMap))(injector, elements);
-      $rootScope.rootScope.apply();
+      compile(elements, injector.get(DirectiveMap))(injector, elements);
+      rootScope.rootScope.apply();
       microLeap();
       return elements[0];
     }
@@ -32,12 +32,14 @@ void porgressbarTests() {
       module.install(new ProgressbarModule());
       return (Injector _injector) {
         injector = _injector;
-        $compile = injector.get(Compiler);
-        $rootScope = injector.get(Scope);
+        compile = injector.get(Compiler);
+        rootScope = injector.get(Scope);
         cache = injector.get(TemplateCache);
         loadTemplatesToCache();
-        $rootScope.context['value'] = 22;
+        rootScope.context['value'] = 22;
         element = compileElement('<progressbar animate="false" value="value">{{value}} %</progressbar>');
+        microLeap();
+        rootScope.rootScope.apply();
         shadowElement = getFirstDiv(element.shadowRoot);
       };
     }));
@@ -74,7 +76,7 @@ void porgressbarTests() {
     it('it should be possible to add additional classes', async(inject(() {
       element = compileElement('<stackedProgress class="progress-striped active" animate="false" max="200"><bar class="pizza" value="value"></bar></stackedProgress>');
       shadowElement = getFirstDiv(element.shadowRoot);
-      $rootScope.rootScope.apply();
+      rootScope.rootScope.apply();
 
       expect(shadowElement).toHaveClass('progress-striped');
       expect(shadowElement).toHaveClass('active');
@@ -84,8 +86,8 @@ void porgressbarTests() {
     describe('"max" attribute', () {
       beforeEach(module(() {
         return () {
-          $rootScope.context['max'] = 200;
-          $rootScope.context['value'] = 22;
+          rootScope.context['max'] = 200;
+          rootScope.context['value'] = 22;
           element = compileElement('<progressbar max="max" animate="false" value="value">{{value}}/{{max}}</progressbar>');
           shadowElement = getFirstDiv(element.shadowRoot);
         };
@@ -96,16 +98,16 @@ void porgressbarTests() {
       })));
 
       it('adjusts the "bar" width when value changes', async(inject(() {
-        $rootScope.context['value'] = 60;
-        $rootScope.rootScope.apply();
+        rootScope.context['value'] = 60;
+        rootScope.rootScope.apply();
         expect(getProgressbarChildBar().style.width).toEqual('30%');
 
-        $rootScope.context['value'] += 12;
-        $rootScope.rootScope.apply();
+        rootScope.context['value'] += 12;
+        rootScope.rootScope.apply();
         expect(getProgressbarChildBar().style.width).toEqual('36%');
 
-        $rootScope.context['value'] = 0;
-        $rootScope.rootScope.apply();
+        rootScope.context['value'] = 0;
+        rootScope.rootScope.apply();
         expect(getProgressbarChildBar().style.width).toEqual('0%');
       })));
 
@@ -117,10 +119,10 @@ void porgressbarTests() {
     describe('"type" attribute', () {
       beforeEach(module(() {
         return () {
-          $rootScope.context['type'] = 'success';
-          $rootScope.context['value'] = 22;
+          rootScope.context['type'] = 'success';
+          rootScope.context['value'] = 22;
           element = compileElement('<progressbar value="value" animate="false" type="{{type}}">test</progressbar>');
-          $rootScope.rootScope.apply();
+          rootScope.rootScope.apply();
           shadowElement = getFirstDiv(element.shadowRoot);
         };
       }));
@@ -131,9 +133,9 @@ void porgressbarTests() {
       })));
 
       it('should change classes if type changed', async(inject(() {
-        $rootScope.context['type'] = 'warning';
-        $rootScope.context['value'] += 1;
-        $rootScope.rootScope.apply();
+        rootScope.context['type'] = 'warning';
+        rootScope.context['value'] += 1;
+        rootScope.rootScope.apply();
 
         var barEl = getProgressbarChildBar();
         expect(barEl).toHaveClass(BAR_CLASS);
@@ -145,13 +147,13 @@ void porgressbarTests() {
     describe('stacked', () {
       beforeEach(module(() {
         return () {
-          $rootScope.context['objects'] = [
+          rootScope.context['objects'] = [
             { 'value': 10, 'type': 'success' },
             { 'value': 50, 'type': 'warning' },
             { 'value': 20 }
           ];
           element = compileElement('<stackedProgress animate="false"><bar ng-repeat="o in objects" value="o.value" type="{{o.type}}">{{o.value}}</bar></stackedProgress>');
-          $rootScope.rootScope.apply();
+          rootScope.rootScope.apply();
           shadowElement = getFirstDiv(element.shadowRoot);
         };
       }));
@@ -181,11 +183,11 @@ void porgressbarTests() {
       })));
 
       it('should change classes if type changed', async(inject(() {
-        $rootScope.context['objects'][0]['type'] = 'warning';
-        $rootScope.context['objects'][1]['type'] = '';
-        $rootScope.context['objects'][2]['type'] = 'info';
+        rootScope.context['objects'][0]['type'] = 'warning';
+        rootScope.context['objects'][1]['type'] = '';
+        rootScope.context['objects'][2]['type'] = 'info';
 
-        $rootScope.rootScope.apply();
+        rootScope.rootScope.apply();
 
         expect(getProgressChildBar(0)).not.toHaveClass(BAR_CLASS + '-success');
         expect(getProgressChildBar(0)).toHaveClass(BAR_CLASS + '-warning');
@@ -199,12 +201,12 @@ void porgressbarTests() {
       })));
 
       it('should change classes if type changed', async(inject(() {
-        $rootScope.context['objects'][0]['type'] = 'info';
-        $rootScope.context['objects'][0]['value'] = 70;
-        $rootScope.context['objects'].removeAt(1);
-        $rootScope.context['objects'].removeAt(1);
+        rootScope.context['objects'][0]['type'] = 'info';
+        rootScope.context['objects'][0]['value'] = 70;
+        rootScope.context['objects'].removeAt(1);
+        rootScope.context['objects'].removeAt(1);
 
-        $rootScope.rootScope.apply();
+        rootScope.rootScope.apply();
 
         expect(element.children.length).toBe(1);
 

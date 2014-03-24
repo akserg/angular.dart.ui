@@ -98,16 +98,17 @@ void tabsTests() {
       //expect(scope.context['actives.two).toBe(false);
     })));
     
-//    it('should change active on click', async(inject(() {
-//      Element elems = createElement();
-//      ngQuery(titles(elems)[1] , 'a')[0].click();
-//      expect(contents(elems)[0]).toHaveClass('active');
-//      expect(titles(elems)[0]).not.toHaveClass('active');
-//      expect(titles(elems)[1]).toHaveClass('active');
-//      //expect($rootscope.context['actives.one).toBe(false);
-//      //expect($rootscope.context['actives.two).toBe(true);
-//    })));
-
+    it('should change active on click', async(inject(() {
+      Element elems = createElement();
+      ngQuery(titles(elems)[1] , 'a')[0].click();
+      microLeap();
+      scope.rootScope.apply();
+      expect(contents(elems)[0]).toHaveClass('active');
+      expect(titles(elems)[0]).not.toHaveClass('active');
+      expect(titles(elems)[1]).toHaveClass('active');
+      //expect($rootscope.context['actives.one).toBe(false);
+      //expect($rootscope.context['actives.two).toBe(true);
+    })));
     
     it('should call select callback on select', async(inject(() {
       Element elems = createElement();

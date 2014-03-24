@@ -9,7 +9,7 @@ void accordionTests() {
   describe('Accordion', () {
     
     TestBed _;
-    Scope $scope;
+    Scope scope;
     dom.Element element;
     
     beforeEach(setUpInjector);
@@ -17,7 +17,7 @@ void accordionTests() {
       module.install(new AlertModule());
     }));
     beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => $scope = s));
+    beforeEach(inject((Scope s) => scope = s));
     
     afterEach(tearDownInjector);
   
@@ -26,12 +26,12 @@ void accordionTests() {
         AccordionGroupComponent group1, group2, group3;
         
         void createElements(AccordionConfig config) {
-          ctrl = new AccordionComponent( $scope, config );
-          group1 = new AccordionGroupComponent( $scope.createChild(new PrototypeMap($scope.context)), ctrl);
+          ctrl = new AccordionComponent( scope, config );
+          group1 = new AccordionGroupComponent( scope.createChild(new PrototypeMap(scope.context)), ctrl);
           group1.isOpen = true;
-          group2 = new AccordionGroupComponent($scope.createChild(new PrototypeMap($scope.context)), ctrl);
+          group2 = new AccordionGroupComponent(scope.createChild(new PrototypeMap(scope.context)), ctrl);
           group2.isOpen = true;
-          group3 = new AccordionGroupComponent($scope.createChild(new PrototypeMap($scope.context)), ctrl);
+          group3 = new AccordionGroupComponent(scope.createChild(new PrototypeMap(scope.context)), ctrl);
           group3.isOpen = true;
         };
         

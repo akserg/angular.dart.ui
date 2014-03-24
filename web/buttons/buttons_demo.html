@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<div buttons-ctrl>
+  <h4>Single toggle</h4>
+  <pre>{{ctrl.singleModel}}</pre>
+  <button type="button" class="btn btn-primary" ng-model="ctrl.singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+      Single Toggle
+  </button>
+
+  <h4>Checkbox</h4>
+  <pre>{{ctrl.leftModel}} - {{ctrl.middleModel}} - {{ctrl.rightModel}}</pre>
+  <div class="btn-group">
+      <button type="button" class="btn btn-primary" ng-model="ctrl.leftModel" btn-checkbox>Left</button>
+      <button type="button" class="btn btn-primary" ng-model="ctrl.middleModel" btn-checkbox>Middle</button>
+      <button type="button" class="btn btn-primary" ng-model="ctrl.rightModel" btn-checkbox>Right</button>
+  </div>
+
+  <h4>Radio</h4>
+  <pre>{{ctrl.radioModel}}</pre>
+  <div class="btn-group">
+      <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="'Left'">Left</button>
+      <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="'Middle'">Middle</button>
+      <button type="button" class="btn btn-primary" ng-model="ctrl.radioModel" btn-radio="'Right'">Right</button>
+  </div>
+</div>
