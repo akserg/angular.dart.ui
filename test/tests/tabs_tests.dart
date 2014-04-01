@@ -8,7 +8,6 @@ void tabsTests() {
   
   List<Element> titles(Element elm) {
     return elm.children[0].shadowRoot.querySelectorAll('ul.nav-tabs li');
-    //return ngQuery(elm, 'ul.nav-tabs li');
   }
   
   List<Element> contents(Element elm) {
@@ -27,16 +26,19 @@ void tabsTests() {
     TestBed _;
     Scope scope;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new TabsModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-    beforeEach(inject((TemplateCache cache) {
-      addToTemplateCache(cache, 'packages/angular_ui/tabs/tab.html');
-      addToTemplateCache(cache, 'packages/angular_ui/tabs/tabset.html');
-    }));
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new TabsModule());
+      });
+      inject((TestBed tb, Scope s, TemplateCache cache) { 
+        _ = tb;
+        scope = s;
+        //
+        addToTemplateCache(cache, 'packages/angular_ui/tabs/tab.html');
+        addToTemplateCache(cache, 'packages/angular_ui/tabs/tabset.html');
+      });
+    });
     
     afterEach(tearDownInjector);
     
@@ -76,11 +78,8 @@ void tabsTests() {
     it('should create clickable titles', async(inject(() {
       ElementList<Element> t = titles(createElement());
       expect(t.length).toBe(2);
-      //print(t[0].outerHtml);
       expect(renderedText( ngQuery(t[0] ,'a')[0] )).toEqual('First Tab 1');
       //It should put the tab-heading element into the 'a' title
-      //print( ngQuery(t[1] ,'tab-heading')[0].innerHtml );
-      //expect( ngQuery(t[1] ,'a')[0].children[0].shadowRoot .is('tab-heading')).toBe(true);
       expect(renderedText( ngQuery(t[1] ,'a')[0] )).toEqual('Second Tab 2');
       expect( ngQuery(t[1] ,'tab-heading')[0].innerHtml ).toEqual('<b>Second</b> Tab 2');
     })));
@@ -92,10 +91,6 @@ void tabsTests() {
       expect(contents(elems)[0]).toHaveClass('active');
       print(ngQuery(elems ,'tab')[0].getDestinationInsertionPoints()[0].text);
       expect( renderedText ( ngQuery(elems ,'#tab-content')[0] ) ).toEqual('first content is 1');
-      
-      //expect(contents(elems)[1]).not.toHaveClass('active');
-      //expect(scope.context['actives.one).toBe(true);
-      //expect(scope.context['actives.two).toBe(false);
     })));
     
     it('should change active on click', async(inject(() {
@@ -106,8 +101,6 @@ void tabsTests() {
       expect(contents(elems)[0]).toHaveClass('active');
       expect(titles(elems)[0]).not.toHaveClass('active');
       expect(titles(elems)[1]).toHaveClass('active');
-      //expect($rootscope.context['actives.one).toBe(false);
-      //expect($rootscope.context['actives.two).toBe(true);
     })));
     
     it('should call select callback on select', async(inject(() {

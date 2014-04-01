@@ -52,6 +52,7 @@ class BtnRadio {
     element.on[config.toggleEvent].listen((dom.Event event) {
       if (!element.classes.contains(config.activeClass)) {
         ngModel.viewValue = scope.eval(btnRadioAttr);
+        ngModel.render(ngModel.modelValue);
       }
     });
   }
@@ -92,6 +93,7 @@ class BtnCheckbox {
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
       ngModel.viewValue = element.classes.contains(config.activeClass) ? falseValue : trueValue;
+      ngModel.render(ngModel.modelValue);
     });
   }
 }

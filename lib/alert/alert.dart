@@ -35,6 +35,12 @@ class Alert {
   bool get showable => (close as BoundExpression).expression.isChain;
   
   /**
+   * Calculate and return alert type as string depnds on type. If type is null
+   * methods returns 'warning' as default value.
+   */
+  String get alertTypeAsString => "alert-${type != null ? type : 'warning'}";
+  
+  /**
    * Thst method calls [close] callback
    */
   void closeHandler() {

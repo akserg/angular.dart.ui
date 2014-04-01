@@ -12,12 +12,16 @@ void accordionTests() {
     Scope scope;
     dom.Element element;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new AlertModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new AlertModule());
+      });
+      inject((TestBed tb, Scope s) { 
+        _ = tb;
+        scope = s;
+      });
+    });
     
     afterEach(tearDownInjector);
   

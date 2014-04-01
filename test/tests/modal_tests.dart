@@ -14,24 +14,24 @@ void modalTests() {
     Timeout timeout;
     Modal modal;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new ModalModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) { 
-      scope = s;
-      rootScope = s.rootScope;
-      //
-      
-    }));
-    beforeEach(inject((Timeout t) => timeout = t));
-    beforeEach(inject((TemplateCache c) {
-      cache = c;
-      addToTemplateCache(cache, 'packages/angular_ui/modal/window.html');
-    }));
-    beforeEach(inject((Modal m) => modal = m));
-    
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new ModalModule());
+      });
+      inject((TestBed tb, Modal m, Timeout t, Scope s, TemplateCache c) { 
+        _ = tb;
+        modal = m;
+        timeout = t;
+        //
+        scope = s;
+        rootScope = s.rootScope;
+        //
+        cache = c;
+        addToTemplateCache(cache, 'packages/angular_ui/modal/window.html');
+      });
+    });
+
     afterEach(tearDownInjector);
     
     /**

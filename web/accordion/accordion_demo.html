@@ -1,9 +1,9 @@
+<!DOCTYPE html>
 <div accordion-demo-controller>
   <label class="checkbox">
     <input type="checkbox" ng-model="accCtrl.oneAtATime">
     Open only one at a time
   </label>
-
   <accordion close-others="accCtrl.oneAtATime">
     <accordion-group heading="Static Header, initially expanded" is-open="true">
       This content is straight in the template.
@@ -24,4 +24,3 @@
     </accordion-group>
   </accordion>
 </div>
-

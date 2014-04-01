@@ -12,14 +12,17 @@ void timeoutTests() {
     Scope scope;
     Timeout timeout;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new TimeoutModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-    beforeEach(inject((Timeout t) => timeout = t));
-    
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new TimeoutModule());
+      });
+      inject((TestBed tb, Scope s, Timeout t) { 
+        _ = tb;
+        scope = s;
+        timeout = t;
+      });
+    });
     
     afterEach(tearDownInjector);
     

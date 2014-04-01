@@ -11,18 +11,25 @@ void buttonsTests() {
     TestBed _;
     Scope scope;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new ButtonModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new ButtonModule());
+      });
+      inject((TestBed tb, Scope s) {
+        _ = tb;
+        scope = s;
+      });
+    });
+    
     afterEach(tearDownInjector);
     
     var compileButton = (String markup) {
       var el = _.compile(markup);
+      
+      microLeap();
       scope.rootScope.apply();
+      
       return el;
     };
     
@@ -49,16 +56,14 @@ void buttonsTests() {
     
     //UI-> model
     it('should toggle default model values on click', () {
-      scope.context['model'] = false;
       var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>');
+      scope.context['model'] = false;
 
-      btn.click();
-      scope.rootScope.apply();
+      _.triggerEvent(btn, 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(true);
       expect(btn).toHaveClass('active');
 
-      btn.click();
-      scope.rootScope.apply();
+      _.triggerEvent(btn, 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(false);
       expect(btn).not.toHaveClass('active');
     });
@@ -67,13 +72,11 @@ void buttonsTests() {
       scope.context['model'] = 0;
       var btn = compileButton('<button ng-model="model" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">click</button>');
 
-      btn.click();
-      scope.rootScope.apply();
+      _.triggerEvent(btn, 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(1);
       expect(btn).toHaveClass('active');
 
-      btn.click();
-      scope.rootScope.apply();
+      _.triggerEvent(btn, 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(0);
       expect(btn).not.toHaveClass('active');
     });
@@ -99,12 +102,16 @@ void buttonsTests() {
     TestBed _;
     Scope scope;
     
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new ButtonModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new ButtonModule());
+      });
+      inject((TestBed tb, Scope s) { 
+        _ = tb;
+        scope = s;
+      });
+    });
 
     afterEach(tearDownInjector);
     
@@ -131,14 +138,12 @@ void buttonsTests() {
       var btns = compileButtons('<button ng-model="model" btn-radio="1">click1</button><button ng-model="model" btn-radio="2">click2</button>');
       expect(scope.context['model']).toBeNull();
 
-      btns[0].click();
-      scope.rootScope.apply();
+      _.triggerEvent(btns[0], 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(1);
       expect(btns[0]).toHaveClass('active');
       expect(btns[1]).not.toHaveClass('active');
 
-      btns[1].click();
-      scope.rootScope.apply();
+      _.triggerEvent(btns[1], 'click', 'MouseEvent');
       expect(scope.context['model']).toEqual(2);
       expect(btns[1]).toHaveClass('active');
       expect(btns[0]).not.toHaveClass('active');
