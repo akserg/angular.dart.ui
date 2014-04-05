@@ -30,6 +30,7 @@ import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/rating/rating.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -42,6 +43,7 @@ part 'tests/tabs_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
+part 'tests/rating_tests.dart';
 
 final _log = new logging.Logger('test');
 
@@ -63,6 +65,7 @@ void main() {
     group('Timeout', () => timeoutTests());
     group('Transition', () => transitionTests());
     group('Modal', () => modalTests());
+    group('Rating', () => ratingTests());
   });
 }
 

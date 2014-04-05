@@ -1,4 +1,4 @@
 <!DOCTYPE html>
-<span ng-mouseleave="ctrl.reset()">
-  <i ng-repeat="r in ctrl.range" ng-mouseenter="ctrl.enter($index + 1)" ng-click="ctrl.rate($index + 1)" class="glyphicon" ng-class="ctrl.stateClass($index, r)"></i>
+<span ng-mouseleave="ctrl.reset()" ng-mouseout="ctrl.reset()">
+  <i ng-repeat="r in ctrl.range" ng-mouseenter="ctrl.enter($index + 1)" ng-mouseover="ctrl.enter($index + 1)" ng-click="ctrl.rate($index + 1)" class="glyphicon" ng-class="ctrl.stateClass($index, r)"></i>
 </span>

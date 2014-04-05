@@ -33,6 +33,7 @@ part 'dropdown_toggle/dropdown_toggle_demo.dart';
 part 'modal/modal_demo.dart';
 part 'progressbar/progressbar_demo.dart';
 part 'tabs/tabs_demo.dart';
+part 'rating/rating_demo.dart';
 
 /**
  * Entry point into app.
@@ -60,5 +61,6 @@ class DemoModule extends Module {
     type(CarouselDemoController);
     type(TabsCtrl);
     type(AccordionDemoController);
+    type(RatingCtrl);
   }
 }
