@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <div dragdrop-demo-controller>
   
-   <div ui-draggable>DRAG ME</div>
-  
-  <div ui-draggable style="background-color:yellow;width:150px;height:150px;border:1px solid #000;">Drag me</div>
-  <div ui-droppable style="width:200px;height:200px;border:1px solid #000;">Drop here</div>
-  
+  <div class="row">
+    <div class="col-sm-2">
+      <div ui-draggable class="panel panel-success">
+        <div class="panel-heading">Draggable One</div>
+        <div class="panel-body"></div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div ui-draggable class="panel panel-success">
+        <div class="panel-heading">Draggable Two</div>
+        <div class="panel-body"></div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div ui-droppable class="panel panel-info">
+        <div class="panel-heading">Drop here</div>
+        <div class="panel-body"></div>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -10,13 +10,35 @@ part 'draggable.dart';
 part 'droppable.dart';
 
 @NgInjectableService()
-class UIDragDropService {
+class DragDropDataService {
   var draggableData;
+}
+
+@NgInjectableService()
+class DragDropConfig {
+  DataTransferEffect dragEffect = DataTransferEffect.MOVE;
+  DataTransferEffect dropEffect = DataTransferEffect.MOVE;
+  String onDragStartClass = "ui-drag-start";
+  String onDragEnterClass = "ui-drag-enter";
+  String onDragOverClass = "ui-drag-over";
+}
+
+class DataTransferEffect {
+
+  static const COPY = const DataTransferEffect('copy');
+  static const LINK = const DataTransferEffect('link');
+  static const MOVE = const DataTransferEffect('move');
+  static const NONE = const DataTransferEffect('none');
+  static const values = const <DataTransferEffect>[COPY, LINK, MOVE, NONE];
+    
+  final String name;
+  const DataTransferEffect(this.name);
 }
 
 class DragDropModule extends Module {
   DragDropModule() {
-    type(UIDragDropService);
+    type(DragDropDataService);
+    type(DragDropConfig);
     type(DraggableComponent);
     type(DroppableComponent);
   }
