@@ -17,6 +17,7 @@ import 'package:angular_ui/tabs/tabset.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/dragdrop/dragdrop.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -30,6 +31,7 @@ class AngularUIModule extends Module {
     install(new ButtonModule());
     install(new CarouselModule());
     install(new CollapseModule());
+    install(new DragDropModule());
     install(new DropdownToggleModule());
     install(new ProgressbarModule());
     install(new RatingModule());

@@ -29,6 +29,7 @@ part 'alert/alert_demo.dart';
 part 'buttons/buttons_demo.dart';
 part 'carousel/carousel_demo.dart';
 part 'collapse/collapse_demo.dart';
+part 'dragdrop/dragdrop_demo.dart';
 part 'dropdown_toggle/dropdown_toggle_demo.dart';
 part 'modal/modal_demo.dart';
 part 'progressbar/progressbar_demo.dart';
@@ -62,5 +63,6 @@ class DemoModule extends Module {
     type(TabsCtrl);
     type(AccordionDemoController);
     type(RatingCtrl);
+    type(DragDropDemoController);
   }
 }
