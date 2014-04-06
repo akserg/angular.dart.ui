@@ -12,10 +12,10 @@ class DragDropShoppingBasketDemoController {
   List<Product> shoppingBasket = [];
   
   DragDropShoppingBasketDemoController() {
-    availableProducts.add(new Product("Blu Shoes", 3));
-    availableProducts.add(new Product("Good Jacket", 1));
-    availableProducts.add(new Product("Red Shirt", 5));
-    availableProducts.add(new Product("Blu Jeans", 4));
+    availableProducts.add(new Product("Blu Shoes", 3, 35));
+    availableProducts.add(new Product("Good Jacket", 1, 90));
+    availableProducts.add(new Product("Red Shirt", 5, 12));
+    availableProducts.add(new Product("Blu Jeans", 4, 60));
   }
   
   void orderedProduct(Product orderedProduct) {
@@ -31,16 +31,24 @@ class DragDropShoppingBasketDemoController {
         return;
       }
     }
-    shoppingBasket.add(new Product(newProduct.name, 1));
+    shoppingBasket.add(new Product(newProduct.name, 1, newProduct.cost));
   }
   
+  int totalCost() {
+    int cost = 0;
+    for(Product product in shoppingBasket) {
+      cost+= (product.cost*product.quantity);
+    }
+    return cost;
+  }
 }
 
 class Product {
   
   int quantity;
+  int cost;
   String name;
   
-  Product(this.name, this.quantity);
+  Product(this.name, this.quantity, this.cost);
 
 }
