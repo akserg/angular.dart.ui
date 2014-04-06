@@ -11,6 +11,7 @@ part 'droppable.dart';
 
 @NgInjectableService()
 class DragDropDataService {
+  Function onDragSuccessCallback;
   var draggableData;
 }
 

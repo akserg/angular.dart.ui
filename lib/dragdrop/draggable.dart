@@ -11,14 +11,22 @@ class DraggableComponent {
   html.Element _elem;
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
+  bool _enabled = true;
 
+  @NgOneWay("draggable-enabled")
+  set draggable(bool value) {
+    if(value!=null) {
+      _enabled = value;
+      _elem.draggable = _enabled;
+    }
+  }
   @NgOneWay("draggable-data")
   var draggableData;
   @NgCallback("on-drag-success")
   Function onDragSuccessCallback;
 
   DraggableComponent(this._elem, this._dragDropService, this._dragDropConfig) {
-    _elem.draggable = true;
+    _elem.draggable = _enabled;
 
     _elem.onDragStart.listen((html.MouseEvent event) {
       _onDragStart(event);
@@ -32,20 +40,25 @@ class DraggableComponent {
   }
 
   void _onDragStart(html.Event event) {
+    if(!_enabled) {
+      return;
+    }
     print("drag start");
     html.Element dragTarget = event.target;
     dragTarget.classes.add(_dragDropConfig.onDragStartClass);
     _dragDropService.draggableData = draggableData;
+    _dragDropService.onDragSuccessCallback = onDragSuccessCallback;
   }
 
   void _onDragEnd(html.Event event) {
-    print("drag end");
-    if(onDragSuccessCallback!=null){
-      onDragSuccessCallback(); 
+    if(!_enabled) {
+      return;
     }
+    print("drag end");
     html.Element dragTarget = event.target;
     dragTarget.classes.remove(_dragDropConfig.onDragStartClass);
     _dragDropService.draggableData = null;
+    _dragDropService.onDragSuccessCallback = null;
   }
 
 }

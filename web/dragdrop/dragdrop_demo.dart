@@ -52,3 +52,25 @@ class Product {
   Product(this.name, this.quantity, this.cost);
 
 }
+
+
+
+
+@NgController(
+    selector: '[dd-list-demo-controller]',
+    publishAs: 'listCtrl')
+class DragDropListDemoController {
+  
+  List<String> todoList = ['Task 1: Fix Blu Bug','Task 2: Create Sortable','Task 3: Improve Tabs','Task 4: Publish new version'];
+  List<String> ongoingList = ['Task 5: Create Drag&Drop'];
+  List<String> doneList = ['Task 6: Create Alert', 'Task 7: Test Accordion'];
+  
+  void add(List<String> list, String value) {
+    list.add(value);
+  }
+  
+  void remove(List<String> list, String value) {
+    list.remove(value);
+  }
+  
+}

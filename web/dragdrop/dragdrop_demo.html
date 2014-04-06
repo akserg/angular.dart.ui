@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <div >
+
+
   <h4>Drag And Drop - Shopping basket</h4>
   <div class="row" dd-shopping-demo-controller>
     <div class="col-sm-3">
       <div class="panel panel-success">
         <div class="panel-heading">Available products</div>
         <div class="panel-body">
-          <div ng-repeat="product in shoppingCtrl.availableProducts" class="panel panel-default" ng-show="product.quantity>0"
-            ui-draggable draggable-data="product" on-drag-success="shoppingCtrl.orderedProduct(product)">
+          <div ng-repeat="product in shoppingCtrl.availableProducts" class="panel panel-default"
+            ui-draggable draggable-enabled="product.quantity>0" draggable-data="product" on-drag-success="shoppingCtrl.orderedProduct(product)">
             <div class="panel-body">
-              {{product.name}} - ${{product.cost}} (available: {{product.quantity}})
+              <div ng-show="product.quantity>0">{{product.name}} - ${{product.cost}} (available: {{product.quantity}})</div>
+              <div ng-hide="product.quantity>0"><del>{{product.name}}</del> (NOT available)</div>
             </div>
           </div>        
         </div>
@@ -27,6 +30,51 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <h4>Drag And Drop - Move from list to list</h4>
+  <div class="row" dd-list-demo-controller>
+    <div class="col-sm-3">
+      <div class="panel panel-warning" ui-droppable on-drop-success="listCtrl.add(listCtrl.todoList, data)">
+        <div class="panel-heading">To Do</div>
+        <div class="panel-body">
+          <div ng-repeat="item in listCtrl.todoList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.todoList, item)">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-info" ui-droppable on-drop-success="listCtrl.add(listCtrl.ongoingList, data)">
+        <div class="panel-heading">Ongoing</div>
+        <div class="panel-body">
+          <div ng-repeat="item in listCtrl.ongoingList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.ongoingList, item)">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-success" ui-droppable on-drop-success="listCtrl.add(listCtrl.doneList, data)">
+        <div class="panel-heading">Done</div>
+        <div class="panel-body">
+          <div ng-repeat="item in listCtrl.doneList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.doneList, item)">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>    
   </div>
 
 </div>

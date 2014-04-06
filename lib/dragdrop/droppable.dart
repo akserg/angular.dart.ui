@@ -50,6 +50,9 @@ class DroppableComponent {
     if (onDropSuccessCallback!=null) {
       onDropSuccessCallback({'data':_dragDropService.draggableData});
     }
+    if(_dragDropService.onDragSuccessCallback!=null){
+      _dragDropService.onDragSuccessCallback(); 
+    }
     _elem.classes.remove(_dragDropConfig.onDragOverClass);
     _elem.classes.remove(_dragDropConfig.onDragEnterClass);
   }

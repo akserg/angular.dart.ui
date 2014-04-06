@@ -64,5 +64,6 @@ class DemoModule extends Module {
     type(AccordionDemoController);
     type(RatingCtrl);
     type(DragDropShoppingBasketDemoController);
+    type(DragDropListDemoController);
   }
 }
