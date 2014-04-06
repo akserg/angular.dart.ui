@@ -9,7 +9,9 @@ class DroppableComponent {
   html.Element _elem;
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
-
+  @NgCallback("on-drop-success")
+  Function onDropSuccessCallback;
+  
   DroppableComponent(this._elem, this._dragDropService, this._dragDropConfig) {
     print("new droppable created " + _elem.toString());
     _elem.onDragEnter.listen(_onDragEnter);
@@ -44,7 +46,10 @@ class DroppableComponent {
   }
 
   void _onDrop(html.Event event) {
-    print("drop. Receveid data:" + _dragDropService.draggableData);
+    print("drop. Receveid data:" + _dragDropService.draggableData.toString());
+    if (onDropSuccessCallback!=null) {
+      onDropSuccessCallback({'data':_dragDropService.draggableData});
+    }
     _elem.classes.remove(_dragDropConfig.onDragOverClass);
     _elem.classes.remove(_dragDropConfig.onDragEnterClass);
   }

@@ -12,9 +12,10 @@ class DraggableComponent {
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
 
-  @NgOneWay("ui-draggable-data")
-  var draggableData = "data from draggable object";
-
+  @NgOneWay("draggable-data")
+  var draggableData;
+  @NgCallback("on-drag-success")
+  Function onDragSuccessCallback;
 
   DraggableComponent(this._elem, this._dragDropService, this._dragDropConfig) {
     _elem.draggable = true;
@@ -39,6 +40,9 @@ class DraggableComponent {
 
   void _onDragEnd(html.Event event) {
     print("drag end");
+    if(onDragSuccessCallback!=null){
+      onDragSuccessCallback(); 
+    }
     html.Element dragTarget = event.target;
     dragTarget.classes.remove(_dragDropConfig.onDragStartClass);
     _dragDropService.draggableData = null;

@@ -1,23 +1,29 @@
 <!DOCTYPE html>
-<div dragdrop-demo-controller>
-  
-  <div class="row">
-    <div class="col-sm-2">
-      <div ui-draggable class="panel panel-success">
-        <div class="panel-heading">Draggable One</div>
-        <div class="panel-body"></div>
+<div >
+  <div class="row" dd-shopping-demo-controller>
+    <div class="col-sm-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">Choose your products</div>
+        <div class="panel-body">
+          <div ng-repeat="product in shoppingCtrl.availableProducts" class="panel panel-default" ng-show="product.quantity>0"
+            ui-draggable draggable-data="product" on-drag-success="shoppingCtrl.orderedProduct(product)">
+            <div class="panel-body">
+              {{product.name}} (available: {{product.quantity}})
+            </div>
+          </div>        
+        </div>
       </div>
     </div>
-    <div class="col-sm-2">
-      <div ui-draggable class="panel panel-success">
-        <div class="panel-heading">Draggable Two</div>
-        <div class="panel-body"></div>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div ui-droppable class="panel panel-info">
-        <div class="panel-heading">Drop here</div>
-        <div class="panel-body"></div>
+    <div class="col-sm-3">
+      <div ui-droppable on-drop-success="shoppingCtrl.addToBasket(data)" class="panel panel-info">
+        <div class="panel-heading">Shopping Basket (Drop here)</div>
+        <div class="panel-body">
+          <div ng-repeat="product in shoppingCtrl.shoppingBasket" class="panel panel-default">
+            <div class="panel-body">
+              {{product.name}} (ordered: {{product.quantity}})
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
