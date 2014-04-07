@@ -30,8 +30,11 @@ class DraggableComponent {
 
     _elem.onDragStart.listen((html.MouseEvent event) {
       _onDragStart(event);
-      event.dataTransfer.effectAllowed = _dragDropConfig.dragEffect.name;
-      event.dataTransfer.setData('text/html', '');
+      //workaround to avoid NullPointerException during unit testing
+      if (event.dataTransfer!=null) {
+        event.dataTransfer.effectAllowed = _dragDropConfig.dragEffect.name;
+        event.dataTransfer.setData('text/html', '');
+      }
     });
     _elem.onDragEnd.listen(_onDragEnd);
 
@@ -40,10 +43,11 @@ class DraggableComponent {
   }
 
   void _onDragStart(html.Event event) {
+    print("drag start called. Is it enabled?: " + _enabled.toString());
     if(!_enabled) {
       return;
     }
-    print("drag start");
+    print("drag start: " + event.type);
     html.Element dragTarget = event.target;
     dragTarget.classes.add(_dragDropConfig.onDragStartClass);
     _dragDropService.draggableData = draggableData;

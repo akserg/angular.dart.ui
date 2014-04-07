@@ -13,11 +13,13 @@ class DroppableComponent {
   Function onDropSuccessCallback;
   
   DroppableComponent(this._elem, this._dragDropService, this._dragDropConfig) {
-    print("new droppable created " + _elem.toString());
     _elem.onDragEnter.listen(_onDragEnter);
     _elem.onDragOver.listen((html.MouseEvent event) {
       _onDragOver(event);
-      event.dataTransfer.dropEffect = _dragDropConfig.dropEffect.name;
+      //workaround to avoid NullPointerException during unit testing
+      if (event.dataTransfer!=null) {
+        event.dataTransfer.dropEffect = _dragDropConfig.dropEffect.name;
+      }
     });
     _elem.onDragLeave.listen(_onDragLeave);
     _elem.onTouchEnter.listen(_onDragEnter);
