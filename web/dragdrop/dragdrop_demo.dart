@@ -54,8 +54,6 @@ class Product {
 }
 
 
-
-
 @NgController(
     selector: '[dd-list-demo-controller]',
     publishAs: 'listCtrl')
@@ -72,5 +70,20 @@ class DragDropListDemoController {
   void remove(List<String> list, String value) {
     list.remove(value);
   }
+}
+
+
+@NgController(
+    selector: '[dd-custom-image-demo-controller]',
+    publishAs: 'customImageCtrl')
+class DragDropCustomImageDemoController {
   
+  DragDropConfig dragdropConfig = new DragDropConfig();
+  
+  DragDropCustomImageDemoController() {
+    dragdropConfig.dragImage = new DragImage(new dom.ImageElement(src: "dragdrop/smile.jpg"));
+    dragdropConfig.dropEffect = DataTransferEffect.COPY;
+    dragdropConfig.dragEffect = DataTransferEffect.COPY;
+  }
+ 
 }

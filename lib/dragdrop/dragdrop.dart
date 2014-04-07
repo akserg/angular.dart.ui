@@ -16,12 +16,26 @@ class DragDropDataService {
 }
 
 @NgInjectableService()
+class DragDropConfigService {
+  DragDropConfig config = new DragDropConfig();
+}
+
 class DragDropConfig {
+  DragImage dragImage;
   DataTransferEffect dragEffect = DataTransferEffect.MOVE;
   DataTransferEffect dropEffect = DataTransferEffect.MOVE;
   String onDragStartClass = "ui-drag-start";
   String onDragEnterClass = "ui-drag-enter";
   String onDragOverClass = "ui-drag-over";
+}
+
+class DragImage {
+  html.Element imageElement;
+  int x_offset;
+  int y_offset;
+  
+  DragImage(this.imageElement, {this.x_offset : 0, this.y_offset : 0}) {}
+  
 }
 
 class DataTransferEffect {
@@ -39,7 +53,7 @@ class DataTransferEffect {
 class DragDropModule extends Module {
   DragDropModule() {
     type(DragDropDataService);
-    type(DragDropConfig);
+    type(DragDropConfigService);
     type(DraggableComponent);
     type(DroppableComponent);
   }

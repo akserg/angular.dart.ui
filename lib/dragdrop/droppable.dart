@@ -12,7 +12,13 @@ class DroppableComponent {
   @NgCallback("on-drop-success")
   Function onDropSuccessCallback;
   
-  DroppableComponent(this._elem, this._dragDropService, this._dragDropConfig) {
+  @NgOneWay("dragdrop-config")
+  set dragdropConfig(DragDropConfig config) {
+    _dragDropConfig = config;
+  }
+  
+  DroppableComponent(this._elem, this._dragDropService, DragDropConfigService dragDropConfigService) {
+    _dragDropConfig = dragDropConfigService.config;
     _elem.onDragEnter.listen(_onDragEnter);
     _elem.onDragOver.listen((html.MouseEvent event) {
       _onDragOver(event);

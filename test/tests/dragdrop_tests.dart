@@ -11,14 +11,14 @@ void dragdropTests() {
     TestBed _;
     Scope scope;
     DragDropDataService ddDataService;
-    DragDropConfig ddConfig;
+    DragDropConfigService ddConfig;
     
     beforeEach(() {
       setUpInjector();
       module((Module module) {
         module.install(new DragDropModule());
       });
-      inject((TestBed tb, Scope s, DragDropDataService injDragDropDataService,DragDropConfig injDragDropConfig) { 
+      inject((TestBed tb, Scope s, DragDropDataService injDragDropDataService,DragDropConfigService injDragDropConfig) { 
         _ = tb;
         scope = s;
         ddDataService = injDragDropDataService;
@@ -86,11 +86,11 @@ void dragdropTests() {
       it('Drag events should add/remove the expected classes to the target element', async(inject(() {
         dom.Element dragElem = ngQuery(createElement(), '#dragId')[0];
         
-        expect(dragElem).not.toHaveClass(ddConfig.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
         _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
-        expect(dragElem).toHaveClass(ddConfig.onDragStartClass);
+        expect(dragElem).toHaveClass(ddConfig.config.onDragStartClass);
         _.triggerEvent(dragElem, 'dragend', 'MouseEvent');
-        expect(dragElem).not.toHaveClass(ddConfig.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
         
       })));
 
@@ -98,10 +98,10 @@ void dragdropTests() {
         dom.Element dragElem = ngQuery(createElement(dragEnabled: false), '#dragId')[0];
         
         expect(ddDataService.draggableData).toBeNull();
-        expect(dragElem).not.toHaveClass(ddConfig.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
         _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
         expect(ddDataService.draggableData).toBeNull();
-        expect(dragElem).not.toHaveClass(ddConfig.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
         
       })));
  
@@ -109,26 +109,26 @@ void dragdropTests() {
         Function dropSuccessCallback = (){};
         dom.Element dropElem = ngQuery(createElement(dropSuccessCallback:dropSuccessCallback), '#dropId')[0];
         
-        expect(dropElem).not.toHaveClass(ddConfig.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
         
         _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
-        expect(dropElem).toHaveClass(ddConfig.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.onDragOverClass);
+        expect(dropElem).toHaveClass(ddConfig.config.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
  
         _.triggerEvent(dropElem, 'dragover', 'MouseEvent');
-        expect(dropElem).toHaveClass(ddConfig.onDragEnterClass);
-        expect(dropElem).toHaveClass(ddConfig.onDragOverClass);
+        expect(dropElem).toHaveClass(ddConfig.config.onDragEnterClass);
+        expect(dropElem).toHaveClass(ddConfig.config.onDragOverClass);
         
         _.triggerEvent(dropElem, 'dragleave', 'MouseEvent');
-        expect(dropElem).not.toHaveClass(ddConfig.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
 
         _.triggerEvent(dropElem, 'dragover', 'MouseEvent');
         _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
         _.triggerEvent(dropElem, 'drop', 'MouseEvent');
-        expect(dropElem).not.toHaveClass(ddConfig.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
       })));
       
       it('Drop event should activate the onDropSuccess and onDragSuccess callbacks', async(inject(() {

@@ -23,6 +23,7 @@ import 'package:angular_ui/angular_ui.dart';
 ],
   override: '*')
 import 'dart:mirrors';
+import 'package:angular_ui/dragdrop/dragdrop.dart';
 
 part 'accordion/accordion_demo.dart';
 part 'alert/alert_demo.dart';
@@ -65,5 +66,6 @@ class DemoModule extends Module {
     type(RatingCtrl);
     type(DragDropShoppingBasketDemoController);
     type(DragDropListDemoController);
+    type(DragDropCustomImageDemoController);
   }
 }
