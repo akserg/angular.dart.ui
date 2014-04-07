@@ -12,10 +12,10 @@ class DragDropShoppingBasketDemoController {
   List<Product> shoppingBasket = [];
   
   DragDropShoppingBasketDemoController() {
-    availableProducts.add(new Product("Blu Shoes", 3, 35));
+    availableProducts.add(new Product("Blue Shoes", 3, 35));
     availableProducts.add(new Product("Good Jacket", 1, 90));
     availableProducts.add(new Product("Red Shirt", 5, 12));
-    availableProducts.add(new Product("Blu Jeans", 4, 60));
+    availableProducts.add(new Product("Blue Jeans", 4, 60));
   }
   
   void orderedProduct(Product orderedProduct) {

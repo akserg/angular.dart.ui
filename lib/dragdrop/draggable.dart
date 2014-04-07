@@ -51,9 +51,6 @@ class DraggableComponent {
   }
 
   void _onDragEnd(html.Event event) {
-    if(!_enabled) {
-      return;
-    }
     print("drag end");
     html.Element dragTarget = event.target;
     dragTarget.classes.remove(_dragDropConfig.onDragStartClass);
