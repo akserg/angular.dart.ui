@@ -49,7 +49,7 @@ void dragdropTests() {
           </div>
           <div id='dropId'
             ui-droppable 
-            on-drop-success="dropSuccessCallback()">
+            on-drop-success="dropSuccessCallback(data)">
           </div>
         </div>''';
         dom.Element element = _.compile(html.trim());
@@ -132,7 +132,7 @@ void dragdropTests() {
       })));
       
       it('Drop event should activate the onDropSuccess and onDragSuccess callbacks', async(inject(() {
-       Function dragSuccessCallback = jasmine.createSpy('drag callback');
+        Function dragSuccessCallback = jasmine.createSpy('drag callback');
         Function dropSuccessCallback = jasmine.createSpy('drop callback');
             
         dom.Element mainElement = createElement(dropSuccessCallback:dropSuccessCallback, dragSuccessCallback:dragSuccessCallback);
@@ -148,6 +148,26 @@ void dragdropTests() {
         _.triggerEvent(dropElem, 'drop', 'MouseEvent');
         expect(dropSuccessCallback).toHaveBeenCalledOnce();
         expect(dragSuccessCallback).toHaveBeenCalledOnce();
+      })));
+      
+      it('The onDropSuccess callback should receive the dragged data as paramenter', async(inject(() {
+        Function dragSuccessCallback = () {};
+        
+        bool dropCallbackCalled = false;
+        var dropCallbackReceivedData;
+        Function dropSuccessCallback = (var data) {
+          dropCallbackCalled = true;
+          dropCallbackReceivedData = data;
+        };
+            
+        dom.Element mainElement = createElement(dropSuccessCallback:dropSuccessCallback, dragSuccessCallback:dragSuccessCallback);
+        dom.Element dragElem = ngQuery(mainElement, '#dragId')[0];
+        dom.Element dropElem = ngQuery(mainElement, '#dropId')[0];
+          
+        _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
+        _.triggerEvent(dropElem, 'drop', 'MouseEvent');
+        expect(dropCallbackCalled).toBeTruthy();
+        expect(dropCallbackReceivedData).toBe(dragData);
       })));
     });
 
