@@ -87,3 +87,23 @@ class DragDropCustomImageDemoController {
   }
  
 }
+
+
+@NgController(
+    selector: '[dd-handler-demo-controller]',
+    publishAs: 'listCtrl')
+class DragDropHandlerDemoController {
+  
+  List<String> todoList = ['Task 1: Fix Blu Bug','Task 2: Create Sortable','Task 3: Improve Tabs','Task 4: Publish new version'];
+  List<String> doneList = ['Task 6: Create Alert', 'Task 7: Test Accordion'];
+  
+  void done(String value) {
+    todoList.remove(value);
+    doneList.add(value);
+  }
+  
+  void undo(String value) {
+    doneList.remove(value);
+    todoList.add(value);
+  }
+}

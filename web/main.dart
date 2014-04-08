@@ -67,5 +67,6 @@ class DemoModule extends Module {
     type(DragDropShoppingBasketDemoController);
     type(DragDropListDemoController);
     type(DragDropCustomImageDemoController);
+    type(DragDropHandlerDemoController);
   }
 }

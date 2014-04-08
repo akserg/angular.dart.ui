@@ -24,6 +24,7 @@ class DragDropConfig {
   DragImage dragImage;
   DataTransferEffect dragEffect = DataTransferEffect.MOVE;
   DataTransferEffect dropEffect = DataTransferEffect.MOVE;
+  String dragCursor = "move";
   String onDragStartClass = "ui-drag-start";
   String onDragEnterClass = "ui-drag-enter";
   String onDragOverClass = "ui-drag-over";
@@ -56,5 +57,6 @@ class DragDropModule extends Module {
     type(DragDropConfigService);
     type(DraggableComponent);
     type(DroppableComponent);
+    type(DraggableHandlerComponent);
   }
 }

@@ -3,12 +3,11 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
-@NgDirective(selector: '[ui-draggable]')
-
-
+@NgDirective(selector: '[ui-draggable]',
+  visibility: NgDirective.CHILDREN_VISIBILITY)
 class DraggableComponent {
 
-  html.Element _elem;
+  html.Element _draggableElement;
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
   bool _enabled = true;
@@ -17,7 +16,7 @@ class DraggableComponent {
   set draggable(bool value) {
     if(value!=null) {
       _enabled = value;
-      _elem.draggable = _enabled;
+      _draggableElement.draggable = _enabled;
     }
   }
   @NgOneWay("draggable-data")
@@ -25,15 +24,18 @@ class DraggableComponent {
   @NgOneWay("dragdrop-config")
   set dragdropConfig(DragDropConfig config) {
     _dragDropConfig = config;
+    if (config.dragCursor!=null) {
+      _draggableElement.style.cursor = config.dragCursor;
+    }
   }
   @NgCallback("on-drag-success")
   Function onDragSuccessCallback;
 
-  DraggableComponent(this._elem, this._dragDropService, DragDropConfigService dragDropConfigService) {
-    _dragDropConfig = dragDropConfigService.config;
-    _elem.draggable = _enabled;
+  DraggableComponent(this._draggableElement, this._dragDropService, DragDropConfigService dragDropConfigService) {
+    dragdropConfig = dragDropConfigService.config;
+    _draggableElement.draggable = _enabled;
 
-    _elem.onDragStart.listen((html.MouseEvent event) {
+    _draggableElement.onDragStart.listen((html.MouseEvent event) {
       _onDragStart(event);
       //workaround to avoid NullPointerException during unit testing
       if (event.dataTransfer!=null) {
@@ -47,10 +49,10 @@ class DraggableComponent {
         
       }
     });
-    _elem.onDragEnd.listen(_onDragEnd);
+    _draggableElement.onDragEnd.listen(_onDragEnd);
 
-    _elem.onTouchStart.listen(_onDragStart);
-    _elem.onTouchEnd.listen(_onDragEnd);
+    _draggableElement.onTouchStart.listen(_onDragStart);
+    _draggableElement.onTouchEnd.listen(_onDragEnd);
   }
 
   void _onDragStart(html.Event event) {
@@ -73,4 +75,13 @@ class DraggableComponent {
     _dragDropService.onDragSuccessCallback = null;
   }
 
+}
+
+@NgDirective(selector: '[draggable-handler]')
+class DraggableHandlerComponent {
+  
+  DraggableHandlerComponent(html.Element elem, DraggableComponent draggablecomponent) {
+    //draggablecomponent.setHandler(elem);
+  }
+  
 }
