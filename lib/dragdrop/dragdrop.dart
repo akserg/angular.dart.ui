@@ -57,6 +57,5 @@ class DragDropModule extends Module {
     type(DragDropConfigService);
     type(DraggableComponent);
     type(DroppableComponent);
-    type(DraggableHandlerComponent);
   }
 }

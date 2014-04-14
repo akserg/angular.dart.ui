@@ -8,6 +8,7 @@ part of angular.ui.dragdrop;
 class DraggableComponent {
 
   html.Element _draggableElement;
+  DraggableElementHandler draggableHandler;
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
   bool _enabled = true;
@@ -16,24 +17,23 @@ class DraggableComponent {
   set draggable(bool value) {
     if(value!=null) {
       _enabled = value;
-      _draggableElement.draggable = _enabled;
+      draggableHandler.refresh();
     }
   }
   @NgOneWay("draggable-data")
   var draggableData;
+  
   @NgOneWay("dragdrop-config")
   set dragdropConfig(DragDropConfig config) {
     _dragDropConfig = config;
-    if (config.dragCursor!=null) {
-      _draggableElement.style.cursor = config.dragCursor;
-    }
+    draggableHandler.refresh();
   }
   @NgCallback("on-drag-success")
   Function onDragSuccessCallback;
 
   DraggableComponent(this._draggableElement, this._dragDropService, DragDropConfigService dragDropConfigService) {
+    draggableHandler = new DraggableElementHandler(this);
     dragdropConfig = dragDropConfigService.config;
-    _draggableElement.draggable = _enabled;
 
     _draggableElement.onDragStart.listen((html.MouseEvent event) {
       _onDragStart(event);
@@ -77,11 +77,18 @@ class DraggableComponent {
 
 }
 
-@NgDirective(selector: '[draggable-handler]')
-class DraggableHandlerComponent {
+class DraggableElementHandler {
   
-  DraggableHandlerComponent(html.Element elem, DraggableComponent draggablecomponent) {
-    //draggablecomponent.setHandler(elem);
+  String defaultCursor;
+  DraggableComponent draggableComponent;
+  DraggableElementHandler(this.draggableComponent ) {
+    defaultCursor = draggableComponent._draggableElement.style.cursor;
   }
   
+  void refresh() {
+    draggableComponent._draggableElement.draggable = draggableComponent._enabled;
+    if (draggableComponent._dragDropConfig.dragCursor!=null) {
+      draggableComponent._draggableElement.style.cursor = draggableComponent._enabled ? draggableComponent._dragDropConfig.dragCursor : defaultCursor;
+    }
+  }
 }
