@@ -9,6 +9,17 @@ class DroppableComponent {
   html.Element _elem;
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
+  List<String> dropZoneNames = [];
+  
+  @NgOneWay("drop-zones")
+  set dropZones (var dropZoneNames) {
+    if (dropZoneNames!=null && (dropZoneNames is String)) {
+      this.dropZoneNames = [dropZoneNames];
+    } else if (dropZoneNames!=null && (dropZoneNames is List<String>)) {
+      this.dropZoneNames = dropZoneNames;
+    }
+  }
+  
   @NgCallback("on-drop-success")
   Function onDropSuccessCallback;
   
@@ -34,27 +45,35 @@ class DroppableComponent {
   }
 
   void _onDragEnter(html.Event event) {
-    print("drag enter");
+    if(!isAllowedDragZone()) {
+      return;
+    }
     // This is necessary to allow us to drop.
     event.preventDefault();
     _elem.classes.add(_dragDropConfig.onDragEnterClass);
   }
 
   void _onDragOver(html.Event event) {
-    //print("drag over");
+    if(!isAllowedDragZone()) {
+      return;
+    }
     // This is necessary to allow us to drop.
     event.preventDefault();
     _elem.classes.add(_dragDropConfig.onDragOverClass);
   }
 
   void _onDragLeave(html.Event event) {
-    print("drag leave");
+    if(!isAllowedDragZone()) {
+      return;
+    }
     _elem.classes.remove(_dragDropConfig.onDragOverClass);
     _elem.classes.remove(_dragDropConfig.onDragEnterClass);
   }
 
   void _onDrop(html.Event event) {
-    print("drop. Receveid data:" + _dragDropService.draggableData.toString());
+    if(!isAllowedDragZone()) {
+      return;
+    }
     if (onDropSuccessCallback!=null) {
       onDropSuccessCallback({'data':_dragDropService.draggableData});
     }
@@ -63,5 +82,17 @@ class DroppableComponent {
     }
     _elem.classes.remove(_dragDropConfig.onDragOverClass);
     _elem.classes.remove(_dragDropConfig.onDragEnterClass);
+  }
+  
+  bool isAllowedDragZone() {
+    if (dropZoneNames.isEmpty && _dragDropService.allowedDropZones.isEmpty) {
+      return true;
+    }
+    for (String dragZone in _dragDropService.allowedDropZones) {
+      if (dropZoneNames.contains(dragZone)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

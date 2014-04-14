@@ -13,6 +13,7 @@ part 'droppable.dart';
 class DragDropDataService {
   Function onDragSuccessCallback;
   var draggableData;
+  List<String> allowedDropZones = [];
 }
 
 @NgInjectableService()

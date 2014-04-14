@@ -169,8 +169,39 @@ void dragdropTests() {
         expect(dropCallbackCalled).toBeTruthy();
         expect(dropCallbackReceivedData).toBe(dragData);
       })));
-    });
+    
 
+      it('Drop zones should be correctly evaluated by the DroppableComponent', async(inject(() {
+        DragDropDataService ddService = new DragDropDataService();
+        DroppableComponent droppableComponent = new DroppableComponent(new dom.DivElement(), ddService, new DragDropConfigService());
+        
+        droppableComponent.dropZones = [];
+        ddService.allowedDropZones = [];
+        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        
+        droppableComponent.dropZones = 'zone1';
+        ddService.allowedDropZones = [];
+        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+  
+        droppableComponent.dropZones = [];
+        ddService.allowedDropZones = ['zone1'];
+        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+        
+        droppableComponent.dropZones = 'zone1';
+        ddService.allowedDropZones = ['zone1','zone3'];
+        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        
+        droppableComponent.dropZones = ['zone1','zone4'];
+        ddService.allowedDropZones = ['zone1','zone3'];
+        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        
+        droppableComponent.dropZones = ['zone1','zone4'];
+        ddService.allowedDropZones = ['zone2'];
+        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+        
+      })));
+      
+    });
   });
 }
 

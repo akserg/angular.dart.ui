@@ -9,7 +9,7 @@
         <div class="panel-heading">Available products</div>
         <div class="panel-body">
           <div ng-repeat="product in shoppingCtrl.availableProducts" class="panel panel-default"
-            ui-draggable draggable-enabled="product.quantity>0" draggable-data="product" on-drag-success="shoppingCtrl.orderedProduct(product)">
+            ui-draggable draggable-enabled="product.quantity>0" draggable-data="product" on-drag-success="shoppingCtrl.orderedProduct(product)" allowed-drop-zones="'demo1'">
             <div class="panel-body">
               <div ng-show="product.quantity>0">{{product.name}} - ${{product.cost}} (available: {{product.quantity}})</div>
               <div ng-hide="product.quantity>0"><del>{{product.name}}</del> (NOT available)</div>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="col-sm-3">
-      <div ui-droppable on-drop-success="shoppingCtrl.addToBasket(data)" class="panel panel-info">
+      <div ui-droppable on-drop-success="shoppingCtrl.addToBasket(data)" drop-zones="'demo1'" class="panel panel-info">
         <div class="panel-heading">Shopping Basket (to pay: ${{shoppingCtrl.totalCost()}})</div>
         <div class="panel-body">
           <div ng-repeat="product in shoppingCtrl.shoppingBasket" class="panel panel-default">
@@ -35,11 +35,12 @@
   <h4>Drag And Drop - Move from list to list</h4>
   <div class="row" dd-list-demo-controller>
     <div class="col-sm-3">
-      <div class="panel panel-warning" ui-droppable on-drop-success="listCtrl.add(listCtrl.todoList, data)">
+      <div class="panel panel-warning" 
+      ui-droppable on-drop-success="listCtrl.add(listCtrl.todoList, data)" drop-zones="'demo2'">
         <div class="panel-heading">To Do</div>
         <div class="panel-body">
           <div ng-repeat="item in listCtrl.todoList" class="panel panel-default"
-            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.todoList, item)">
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.todoList, item)" allowed-drop-zones="'demo2'">
             <div class="panel-body">
               {{item}}
             </div>
@@ -49,11 +50,11 @@
     </div>
 
     <div class="col-sm-3">
-      <div class="panel panel-info" ui-droppable on-drop-success="listCtrl.add(listCtrl.ongoingList, data)">
+      <div class="panel panel-info" ui-droppable on-drop-success="listCtrl.add(listCtrl.ongoingList, data)" drop-zones="'demo2'">
         <div class="panel-heading">Ongoing</div>
         <div class="panel-body">
           <div ng-repeat="item in listCtrl.ongoingList" class="panel panel-default"
-            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.ongoingList, item)">
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.ongoingList, item)" allowed-drop-zones="'demo2'">
             <div class="panel-body">
               {{item}}
             </div>
@@ -63,11 +64,11 @@
     </div>
 
     <div class="col-sm-3">
-      <div class="panel panel-success" ui-droppable on-drop-success="listCtrl.add(listCtrl.doneList, data)">
+      <div class="panel panel-success" ui-droppable on-drop-success="listCtrl.add(listCtrl.doneList, data)" drop-zones="'demo2'">
         <div class="panel-heading">Done</div>
         <div class="panel-body">
           <div ng-repeat="item in listCtrl.doneList" class="panel panel-default"
-            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.doneList, item)">
+            ui-draggable draggable-data="item" on-drag-success="listCtrl.remove(listCtrl.doneList, item)" allowed-drop-zones="'demo2'">
             <div class="panel-body">
               {{item}}
             </div>
@@ -86,7 +87,7 @@
         <div class="panel-heading">Drag me</div>
         <div class="panel-body">
           <div class="panel panel-default"
-            ui-draggable dragdrop-config="customImageCtrl.dragdropConfig">
+            ui-draggable dragdrop-config="customImageCtrl.dragdropConfig" allowed-drop-zones="'demo3'">
             <div class="panel-body">
               I show a custom image on drag
             </div>
@@ -96,7 +97,7 @@
     </div>
 
     <div class="col-sm-3">
-      <div class="panel panel-success" ui-droppable>
+      <div class="panel panel-success" ui-droppable drop-zones="'demo3'">
         <div class="panel-heading">Drop here</div>
         <div class="panel-body">
         </div>
@@ -104,33 +105,61 @@
     </div>    
   </div>
   
-  <h4>Drag And Drop - Draggable element with handler</h4>
-  <div class="row" dd-handler-demo-controller>
-    <div class="col-sm-3">
-      <div class="panel panel-warning">
-        <div class="panel-heading">To Do</div>
+  <h4>Drag And Drop - Use multiple drop-zones</h4>
+  <div class="row">
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop only in zone <b>ONE</b></div>
         <div class="panel-body">
-          <div ng-repeat="item in listCtrl.todoList" class="panel panel-default"
-            ui-draggable draggable-data="item" on-drag-success="listCtrl.done(item)">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="'demo4-zone-one'">
             <div class="panel-body">
-              <span draggable-handler class="glyphicon glyphicon-move"></span> {{item}}
+              Drag me
             </div>
           </div>        
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-      <div class="panel panel-info" ui-droppable>
-        <div class="panel-heading">Done</div>
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop only in zone <b>TWO</b></div>
         <div class="panel-body">
-          <div ng-repeat="item in listCtrl.doneList" class="panel panel-default">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="'demo4-zone-two'">
             <div class="panel-body">
-              <span class="glyphicon glyphicon-remove-circle" ng-click="listCtrl.undo(item)"></span> {{item}}
+              Drag me
             </div>
           </div>        
         </div>
       </div>
     </div>
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop in both zone <b>ONE</b> or <b>TWO</b></div>
+        <div class="panel-body">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="['demo4-zone-one','demo4-zone-two']">
+            <div class="panel-body">
+              Drag me
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>    
+    <div class="col-sm-2">
+      <div class="panel panel-success" ui-droppable drop-zones="'demo4-zone-one'">
+        <div class="panel-heading">Drop Zone <b>ONE</b></div>
+        <div class="panel-body">
+        </div>
+      </div>
+    </div> 
+    <div class="col-sm-2">
+      <div class="panel panel-success" ui-droppable drop-zones="'demo4-zone-two'">
+        <div class="panel-heading">Drop Zone <b>TWO</b></div>
+        <div class="panel-body">
+        </div>
+      </div>
+    </div> 
   </div>
 
 </div>

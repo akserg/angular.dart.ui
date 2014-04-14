@@ -12,7 +12,17 @@ class DraggableComponent {
   DragDropDataService _dragDropService;
   DragDropConfig _dragDropConfig;
   bool _enabled = true;
-
+  List<String> allowedDropZones = [];
+  
+  @NgOneWay("allowed-drop-zones")
+  set dropZones (var dropZones) {
+    if (dropZones!=null && (dropZones is String)) {
+      this.allowedDropZones = [dropZones];
+    } else if (dropZones!=null && (dropZones is List<String>)) {
+      this.allowedDropZones = dropZones;
+    }
+  }
+  
   @NgOneWay("draggable-enabled")
   set draggable(bool value) {
     if(value!=null) {
@@ -56,19 +66,17 @@ class DraggableComponent {
   }
 
   void _onDragStart(html.Event event) {
-    print("drag start called. Is it enabled?: " + _enabled.toString());
     if(!_enabled) {
       return;
     }
-    print("drag start: " + event.type);
     html.Element dragTarget = event.target;
     dragTarget.classes.add(_dragDropConfig.onDragStartClass);
+    _dragDropService.allowedDropZones = allowedDropZones;
     _dragDropService.draggableData = draggableData;
     _dragDropService.onDragSuccessCallback = onDragSuccessCallback;
   }
 
   void _onDragEnd(html.Event event) {
-    print("drag end");
     html.Element dragTarget = event.target;
     dragTarget.classes.remove(_dragDropConfig.onDragStartClass);
     _dragDropService.draggableData = null;
