@@ -27,7 +27,7 @@ void dragdropTests() {
     });
     
     afterEach(tearDownInjector);
-  
+
     group('Draggable and Droppable directives', () {
       
       var dragData = "Hello World at " + new DateTime.now().toString();
@@ -202,6 +202,116 @@ void dragdropTests() {
       })));
       
     });
+    
+    group('Drop Zones', () {
+          
+          dom.Element elem;
+          
+          dom.Element createElement() {
+            
+            scope.context['dragOneSuccessCallback'] = jasmine.createSpy('drag one callback');
+            scope.context['dragTwoSuccessCallback'] = jasmine.createSpy('drag two callback');
+            scope.context['dragOneTwoSuccessCallback'] = jasmine.createSpy('drag one-two callback');
+            scope.context['dropOneSuccessCallback'] = jasmine.createSpy('drop one callback');
+            scope.context['dropTwoSuccessCallback'] = jasmine.createSpy('drop two callback');
+            scope.context['dropOneTwoSuccessCallback'] = jasmine.createSpy('drop one-two callback');
+            String html =
+            '''<div>
+              <div id='dragIdOne'
+                ui-draggable 
+                allowed-drop-zones="'zone-one'"
+                on-drag-success="dragOneSuccessCallback()">
+              </div>
+              <div id='dragIdTwo'
+                ui-draggable 
+                allowed-drop-zones="'zone-two'"
+                on-drag-success="dragTwoSuccessCallback()">
+              </div>
+              <div id='dragIdOneTwo'
+                ui-draggable 
+                allowed-drop-zones="['zone-one','zone-two']"
+                on-drag-success="dragOneTwoSuccessCallback()">
+              </div>
+              <div id='dropIdOne'
+                ui-droppable 
+                drop-zones="'zone-one'"
+                on-drop-success="dropOneSuccessCallback(data)">
+              </div>
+              <div id='dropIdTwo'
+                ui-droppable 
+                drop-zones="'zone-two'"
+                on-drop-success="dropTwoSuccessCallback(data)">
+              </div>
+              <div id='dropIdOneTwo'
+                ui-droppable 
+                drop-zones="['zone-one','zone-two']"
+                on-drop-success="dropOneTwoSuccessCallback(data)">
+              </div>
+            </div>''';
+            dom.Element element = _.compile(html.trim());
+            
+            microLeap();
+            scope.rootScope.apply();
+            
+            return element;
+          };
+          
+          it('Drop events should not be activated on the wrong drop-zone', async(inject(() {
+            dom.Element mainElement = createElement();
+            dom.Element dragElemOne = ngQuery(mainElement, '#dragIdOne')[0];
+            dom.Element dropElemTwo = ngQuery(mainElement, '#dropIdTwo')[0];
+              
+            _.triggerEvent(dragElemOne, 'dragstart', 'MouseEvent');
+            
+            _.triggerEvent(dropElemTwo, 'dragenter', 'MouseEvent');
+            expect(dropElemTwo).not.toHaveClass(ddConfig.config.onDragEnterClass);
+            
+            _.triggerEvent(dropElemTwo, 'dragover', 'MouseEvent');
+            expect(dropElemTwo).not.toHaveClass(ddConfig.config.onDragOverClass);
+            
+            _.triggerEvent(dragElemOne, 'drop', 'MouseEvent');
+            expect(scope.context['dragOneSuccessCallback']).not.toHaveBeenCalled();
+            expect(scope.context['dropTwoSuccessCallback']).not.toHaveBeenCalled();
+          })));
+          
+          it('Drop events should be activated on the same drop-zone', async(inject(() {
+            dom.Element mainElement = createElement();
+            dom.Element dragElemOne = ngQuery(mainElement, '#dragIdOne')[0];
+            dom.Element dropElemOne = ngQuery(mainElement, '#dropIdOne')[0];
+              
+            _.triggerEvent(dragElemOne, 'dragstart', 'MouseEvent');
+            
+            _.triggerEvent(dropElemOne, 'dragenter', 'MouseEvent');
+            expect(dropElemOne).toHaveClass(ddConfig.config.onDragEnterClass);
+            
+            _.triggerEvent(dropElemOne, 'dragover', 'MouseEvent');
+            expect(dropElemOne).toHaveClass(ddConfig.config.onDragOverClass);
+            
+            _.triggerEvent(dropElemOne, 'drop', 'MouseEvent');
+            expect(scope.context['dragOneSuccessCallback']).toHaveBeenCalled();
+            expect(scope.context['dropOneSuccessCallback']).toHaveBeenCalled();
+          })));
+          
+          it('Drop events on multiple drop-zone', async(inject(() {
+            dom.Element mainElement = createElement();
+            dom.Element dragElemOneTwo = ngQuery(mainElement, '#dragIdOneTwo')[0];
+            dom.Element dropElemOneTwo = ngQuery(mainElement, '#dropIdOneTwo')[0];
+              
+            _.triggerEvent(dragElemOneTwo, 'dragstart', 'MouseEvent');
+            
+            _.triggerEvent(dropElemOneTwo, 'dragenter', 'MouseEvent');
+            expect(dropElemOneTwo).toHaveClass(ddConfig.config.onDragEnterClass);
+            
+            _.triggerEvent(dropElemOneTwo, 'dragover', 'MouseEvent');
+            expect(dropElemOneTwo).toHaveClass(ddConfig.config.onDragOverClass);
+            
+            _.triggerEvent(dropElemOneTwo, 'drop', 'MouseEvent');
+            expect(scope.context['dragOneTwoSuccessCallback']).toHaveBeenCalled();
+            expect(scope.context['dropOneTwoSuccessCallback']).toHaveBeenCalled();
+          })));
+          
+        });
+    
   });
 }
 
