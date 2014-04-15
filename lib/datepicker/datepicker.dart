@@ -96,14 +96,24 @@ class _Mode {
 @NgComponent(selector: '[datepicker][ng-model]', publishAs: 'd', 
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
-class Datepicker {
+class Datepicker implements NgShadowRootAware {
 
   int mode = 0;
   DateTime selected = new DateTime.now();
   bool showWeekNumbers = false;
-  List rows;
-  List labels;
-  String title;
+
+  var _lastModelValue;
+  bool _modelValueChanged = false;
+  bool get modelValueChanged {
+    var res = _modelValueChanged;
+    _modelValueChanged = false;
+    return res;
+  }
+
+  _Mode get currentMode {
+    return modes[mode];
+  }
+  
   var format;
   List<_Mode> modes;
   
@@ -151,15 +161,13 @@ class Datepicker {
   }
   int get yearRange => _yearRange;
   
-  var dateDisabled;
-  bool _isDateDisabledSet = false;
+  var _dateDisabled = null;
   @NgCallback('date-disabled')
-  void setDateDisabled(value) {
-    dateDisabled = value;
-    _isDateDisabledSet = value != null;
+  void set dateDisabled(value) {
+    _dateDisabled = null;
   }
+  get dateDisabled => _dateDisabled;
   
-
   bool _showWeeks = false;
   @NgOneWay('show-weeks')
   set showWeeks(bool value) {
@@ -174,32 +182,14 @@ class Datepicker {
   DateTime minDate;
   @NgOneWay('min')
   void set min(value) {
-    minDate = null;
-    if (value != null) {
-      if (value is String) {
-        minDate = DateTime.parse(value);
-      } else if (value is int) {
-        minDate = new DateTime.fromMillisecondsSinceEpoch(value);
-      } else {
-        minDate = value as DateTime;
-      }
-    }
+    minDate = parseDate(value);
     refill();
   }
 
   DateTime maxDate;
   @NgOneWay('max')
   void set max(value) {
-    maxDate = null;
-    if (value != null) {
-      if (value is String) {
-        maxDate = DateTime.parse(value);
-      } else if (value is int) {
-        maxDate = new DateTime.fromMillisecondsSinceEpoch(value);
-      } else {
-        maxDate = value as DateTime;
-      }
-    }
+    maxDate = parseDate(value);
     refill();
   }
 
@@ -209,15 +199,27 @@ class Datepicker {
   NgModel _ngModel;
   Scope _scope;
   DateFilter _dateFilter;
-
+  
+  List rows;
+  List labels;
   
   Datepicker(this._element, this._datepickerConfig, this._attrs, this._ngModel, this._scope, this._dateFilter) {
-    showWeeks = _datepickerConfig.showWeeks;
-
     init();
-    refill();
+
+    showWeeks = _datepickerConfig.showWeeks;
+    
+    _ngModel.render = (value) {
+      refill(true);
+    };
   }
 
+  /**
+   * Redraw component first time because ShadowRoot are available now.
+   */
+  @override
+  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+    refill(true);
+  }
   
   Datepicker.forTests(this._element, this._datepickerConfig, this._attrs, this._scope, this._dateFilter) {
     init();
@@ -226,54 +228,152 @@ class Datepicker {
   
   void updateShowWeekNumbers() {
     showWeekNumbers = mode == 0 && showWeeks;
+    showWeekNumbersEls();
   }
 
   void refill([bool updateSelected = false]) {
-    DateTime date;
     bool valid = true;
-    
-    if (_ngModel.modelValue != null) {
-      try {
-        if (_ngModel.modelValue is String) {
-          date = DateTime.parse(_ngModel.modelValue);
-        } else if (_ngModel.modelValue is int) {
-          date = new DateTime.fromMillisecondsSinceEpoch(_ngModel.modelValue);
-        } else {
-          date = _ngModel.modelValue as DateTime;
-        }
-      } on Exception catch(e) {
-        print(e);
-      }
-
-      if (date == null) {
-        valid = false;
-      } else if (updateSelected) {
-        selected = date;
-      }
+    DateTime date = parseDate(_ngModel.modelValue);
+    if (date == null) {
+      valid = false;
+    } else if (updateSelected) {
+      selected = date;
     }
-    _ngModel.setValidity('date', valid);
+    
+//    _ngModel.setValidity('date', valid);
 
     var currentMode = modes[mode];
-    var data = currentMode.getVisibleDates(selected, date);
+    _VisibleDates data = currentMode.getVisibleDates(selected, date);
     data.objects.forEach((_DateVO obj) {
       obj.disabled = isDisabled(obj.date, mode);
     });
 
-    _ngModel.setValidity('date-disabled', (date == null || !isDisabled(date)));
+//    _ngModel.setValidity('date-disabled', (date == null || !isDisabled(date)));
 
     rows = split(data.objects, currentMode.split);
     labels = data.labels;
-    title = data.title;
-  }
-
-  // Split array into smaller arrays
-  List split(List arr, int size) {
-    var arrays = [];
-    while (arr.length > 0) {
-      arrays.add(arr.getRange(0, size).toList());
-      arr.removeRange(0, size);
+    String title = data.title;
+    
+    // DOM render
+    
+    // <th colspan="{{rows[0].length - 2 + showWeekNumbers}}"><button type="button" class="btn btn-default btn-sm btn-block" ng-click="toggleMode()"><strong>{{title}}</strong></button></th>
+    dom.TableCellElement titleEl = _element.shadowRoot.querySelector("#title");
+    if (titleEl != null) {
+      if (rows.length > 0) {
+        titleEl.colSpan = rows[0].length - 2 + (showWeekNumbers ? 1 : 0);
+      }
+      (titleEl.firstChild as dom.ButtonElement).setInnerHtml('<strong>$title</strong>');
     }
-    return arrays;
+    
+//    <th ng-show="d.showWeekNumbers" class="text-center">#</th>
+//    <th ng-repeat="label in d.labels | toList" class="text-center">{{label}}</th>
+
+    dom.TableRowElement labelsEl = _element.shadowRoot.querySelector("#labels");
+    if (labelsEl != null) {
+      labelsEl.children.clear();
+      
+      dom.TableCellElement showWeekNumbersEl = new dom.TableCellElement();
+      showWeekNumbersEl.classes.add("text-center");
+      if (showWeekNumbers) {
+        showWeekNumbersEl.classes.remove("ng-hide");
+      } else {
+        showWeekNumbersEl.classes.add("ng-hide");
+      }
+      showWeekNumbersEl.text = '#';
+      labelsEl.append(showWeekNumbersEl);
+      
+      labels.forEach((String label) {
+        dom.TableCellElement labelEl = new dom.TableCellElement();
+        labelEl.classes.add("text-center");
+        labelEl.text = label;
+        labelsEl.append(labelEl);
+      });
+    }
+    
+//    <tr ng-repeat="row in d.visibleDates | toRows:d.currentMode.split">
+//      <td ng-show="d.showWeekNumbers" class="text-center"><em>{{ row | weekNumber:d }}</em></td>
+//      <td ng-repeat="dt in row" class="text-center">
+//        <button type="button" style="width:100%;" class="btn btn-default btn-sm" ng-class="{'btn-info': dt.selected}" 
+//    ng-click="d.select(dt.date)" ng-disabled="dt.disabled"><span ng-class="{'text-muted': dt.secondary}">{{dt.label}}</span></button>
+//      </td>
+//    </tr>    
+    
+    dom.TableSectionElement rowsEl = _element.shadowRoot.querySelector("#rows");
+    if (rowsEl != null) {
+      rowsEl.children.clear();
+      
+      rows.forEach((List row){
+        dom.TableRowElement rowEl = new dom.TableRowElement();
+        rowsEl.append(rowEl);
+        
+        dom.TableCellElement rowWeekNumbersEl = new dom.TableCellElement();
+        rowWeekNumbersEl.classes.add("text-center");
+        if (showWeekNumbers) {
+          rowWeekNumbersEl.classes.remove("ng-hide");
+        } else {
+          rowWeekNumbersEl.classes.add("ng-hide");
+        }
+        rowWeekNumbersEl.setInnerHtml('<em>${getWeekNumber(row)}</em>');
+        rowEl.append(rowWeekNumbersEl);
+  
+        row.forEach((_DateVO dt) {
+          dom.TableCellElement dtEl = new dom.TableCellElement();
+          dtEl.classes.add("text-center");
+          rowEl.append(dtEl);
+          
+          dom.ButtonElement btnEl = new dom.ButtonElement()
+          ..type = 'button'
+          ..style.width = '100%'
+          ..classes.add('btn btn-default btn-sm')
+          ..onClick.listen((dom.MouseEvent evt){
+            select(dt.date);
+          });
+          if (dt.selected) {
+            btnEl.classes.add('btn-info');
+          }
+          if (dt.disabled) {
+            btnEl.disabled = true;
+          }
+          dtEl.append(btnEl);
+          
+          dom.SpanElement labelSpan = new dom.SpanElement()
+          ..text = dt.label;
+          if (dt.secondary) {
+            labelSpan.classes.add('text-muted');
+          }
+          btnEl.append(labelSpan);
+        });
+      });
+    }
+  }
+  
+  void showWeekNumbersEls() {
+    dom.TableCellElement titleEl = _element.shadowRoot.querySelector("#title");
+    if (titleEl != null && rows != null && rows.length > 0) {
+      titleEl.colSpan = rows[0].length - 2 + (showWeekNumbers ? 1 : 0);
+    }
+    //
+    List<dom.TableCellElement> showWeekNumbersEls = _element.shadowRoot.querySelectorAll("#labels > td");
+    if (showWeekNumbersEls != null && showWeekNumbersEls.length > 0) {
+      dom.TableCellElement showWeekNumbersEl = showWeekNumbersEls.first;
+      if (showWeekNumbers) {
+        showWeekNumbersEl.classes.remove("ng-hide");
+      } else {
+        showWeekNumbersEl.classes.add("ng-hide");
+      }
+    }
+    //
+    dom.TableSectionElement rowsEl = _element.shadowRoot.querySelector("#rows");
+    if (rowsEl != null) {
+      rowsEl.children.forEach((dom.TableRowElement rowEl) {
+        dom.TableCellElement rowWeekNumbersEl = rowEl.firstChild;
+        if (showWeekNumbers) {
+          rowWeekNumbersEl.classes.remove("ng-hide");
+        } else {
+          rowWeekNumbersEl.classes.add("ng-hide");
+        }
+      });
+    }
   }
 
   void setMode(value) {
@@ -370,7 +470,7 @@ class Datepicker {
           numDates += (7 - numDates % 7) % 7; // Next
 
           var days = getDates(firstDate, numDates), 
-              labels = new List(7);
+              labels = new List(); // !!! 7
           for (var i = 0; i < numDates; i++) {
             DateTime dt = days[i];
             days[i] = makeDate(dt, format.day, selected != null &&
@@ -378,7 +478,7 @@ class Datepicker {
                 selected.year == dt.year, dt.month != month);
           }
           for (var j = 0; j < 7; j++) {
-            labels[j] = _dateFilter(days[j].date, format.dayHeader);
+            labels.add(_dateFilter(days[j].date, format.dayHeader));
           }
           return new _VisibleDates()
           ..objects = days
@@ -476,7 +576,7 @@ class Datepicker {
     var currentMode = modes[mode];
     return ((minDate != null && currentMode.compare(date, minDate) < 0) ||
         (maxDate != null && currentMode.compare(date, this.maxDate) > 0) ||
-        (_isDateDisabledSet && dateDisabled({'data':date, 'mode':currentMode.name})));
+        (dateDisabled != null && dateDisabled({'date':date, 'mode':currentMode.name})));
   }
   
 //  bool isDisabled(DateTime date, [int mode = 0]) {
@@ -504,3 +604,34 @@ class WeekNumberFilter {
     return null;
   }
 }
+
+//@NgFilter(name:'toTitle')
+//class ToTitleFilter {
+//  String call(_VisibleDates value) {
+//    String res = value == null ? '' : value.title;
+//    print('toTitle $res');
+//    return res;
+//  }
+//}
+//
+//@NgFilter(name:'toLabels')
+//class ToLabelsFilter {
+//  List call(_VisibleDates value) {
+//    return value == null ? const [] : value.labels;
+//  }
+//}
+//
+//@NgFilter(name:'toRows')
+//class ToRowsFilter {
+//  List call(_VisibleDates value, int splitValue) {
+//    return value == null ? const [] : split(value.objects, splitValue);
+//  }
+//}
+//
+//@NgFilter(name:'toColsSpan')
+//class ToColsSpanFilter {
+//  int call(_VisibleDates value, int splitValue, bool showWeekNumbers) {
+//    List res = split(value.objects, splitValue);
+//    return res[0].length - 2 + (showWeekNumbers ? 1 : 0);
+//  }
+//}

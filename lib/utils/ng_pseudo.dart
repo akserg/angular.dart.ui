@@ -10,7 +10,7 @@ part of angular.ui.utils;
 class NgPseudo {
   dom.Element _element;
   set name(n) {
-    _element.pseudo = n;
+    _element.attributes['pseudo'] = n;
   }
 
   NgPseudo(dom.Element this._element);

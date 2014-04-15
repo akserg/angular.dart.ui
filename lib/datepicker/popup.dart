@@ -220,22 +220,22 @@ class DatepickerPopup  {
   // TODO: reverse from dateFilter string to Date object
   DateTime _parseDate(viewValue) {
     if (viewValue == null) {
-      _ngModel.setValidity('date', true);
+//      _ngModel.setValidity('date', true);
       return null;
     } else if (viewValue is DateTime) {
-      _ngModel.setValidity('date', true);
+//      _ngModel.setValidity('date', true);
       return viewValue;
     } else if (viewValue is String) {
       var date = DateTime.parse(viewValue);
       if (date == null) {
-        _ngModel.setValidity('date', false);
+//        _ngModel.setValidity('date', false);
         return null;
       } else {
-        _ngModel.setValidity('date', true);
+//        _ngModel.setValidity('date', true);
         return date;
       }
     } else {
-      _ngModel.setValidity('date', false);
+//      _ngModel.setValidity('date', false);
       return null;
     }
   }

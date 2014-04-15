@@ -10,11 +10,15 @@ part of angular.ui.test;
 void dropdownToggleTests() {
   describe('Testing dropdownToggle:', () {
     TestBed _;
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.type(DropdownToggle);
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.type(DropdownToggle);
+      });
+      inject((TestBed tb) { 
+        _ = tb;
+      });
+    });
 
     afterEach(tearDownInjector);
 

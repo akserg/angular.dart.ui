@@ -32,8 +32,8 @@ void timepickerTests() {
     
     afterEach(tearDownInjector);
 
-    Element createTimepicker() {
-      Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
+    dom.Element createTimepicker() {
+      dom.Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
 
       microLeap();
       _scope.rootScope.apply();
@@ -45,21 +45,21 @@ void timepickerTests() {
       return [_scope.context['time'].hour, _scope.context['time'].minute];
     }
 
-    Element getArrow(element, isUp, tdIndex) {
+    dom.Element getArrow(element, isUp, tdIndex) {
       var el = ngQuery(element, 'tr')[(isUp) ? 0 : 2];
       el = ngQuery(el, 'td')[tdIndex];
       return ngQuery(el, 'a')[0];
     }
 
-    Element getHoursButton(element, isUp) {
+    dom.Element getHoursButton(element, isUp) {
       return getArrow(element, isUp, 0);
     }
 
-    Element getMinutesButton(element, isUp) {
+    dom.Element getMinutesButton(element, isUp) {
       return getArrow(element, isUp, 2);
     }
 
-    ButtonElement getMeridianButton(element) {
+    dom.ButtonElement getMeridianButton(element) {
       return ngQuery(element, 'button')[0];
     }
 
@@ -71,19 +71,19 @@ void timepickerTests() {
       }
     }
 
-    Event wheelThatMouse(delta) {
-      var e = new WheelEvent('mousewheel', deltaX:delta);
+    dom.Event wheelThatMouse(delta) {
+      var e = new dom.WheelEvent('mousewheel', deltaX:delta);
       return e;
     }
     
-    Event wheelThatOtherMouse(delta) {
-      var e = new WheelEvent('wheel', deltaY:delta);
+    dom.Event wheelThatOtherMouse(delta) {
+      var e = new dom.WheelEvent('wheel', deltaY:delta);
       e.deltaY = delta;
       return e;
     }
     
     List getTimeState(element, [withoutMeridian = false]) {
-      List<InputElement> inputs = ngQuery(element, 'input');
+      List<dom.InputElement> inputs = ngQuery(element, 'input');
 
       var state = [];
       for (var i = 0; i < 2; i ++) {
@@ -98,7 +98,7 @@ void timepickerTests() {
     //*****************
     
     it('contains three row & three input elements', async(inject(() {
-      Element element = createTimepicker();
+      dom.Element element = createTimepicker();
       
       expect(ngQuery(element, 'tr').length).toBe(3);
       expect(ngQuery(element, 'input').length).toBe(2);
@@ -106,7 +106,7 @@ void timepickerTests() {
     })));
     
     it('has initially the correct time & meridian', async(inject(() {
-      Element element = createTimepicker();
+      dom.Element element = createTimepicker();
       
       expect(getTimeState(element)).toEqual(['02', '40', 'PM']);
       expect(getModelState()).toEqual([14, 40]);
@@ -114,7 +114,7 @@ void timepickerTests() {
     
     it('has `selected` current time when model is initially cleared', async(inject(() {
       _scope.context['time'] = null;
-      Element element = createTimepicker();
+      dom.Element element = createTimepicker();
 
       expect(_scope.context['time']).toBe(null);
       expect(getTimeState(element)).not.toEqual(['', '', '']);
@@ -122,7 +122,7 @@ void timepickerTests() {
     
     it('changes inputs when model changes value', async(inject(() {
       _scope.context['time'] = newTime(11, 50);
-      Element element = createTimepicker();
+      dom.Element element = createTimepicker();
       
       expect(getTimeState(element)).toEqual(['11', '50', 'AM']);
       expect(getModelState()).toEqual([11, 50]);
@@ -136,7 +136,7 @@ void timepickerTests() {
     })));
     
 //    it('increases / decreases hours when arrows are clicked', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var up = getHoursButton(element, true);
 //      var down = getHoursButton(element, false);
@@ -155,7 +155,7 @@ void timepickerTests() {
 //    })));
 //
 //    it('increase / decreases minutes by default step when arrows are clicked', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var up = getMinutesButton(element, true);
 //      var down = getMinutesButton(element, false);
@@ -174,14 +174,14 @@ void timepickerTests() {
 //    })));
 //    
 //    it('meridian button has correct type', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var button = getMeridianButton(element);
 //      expect(button.attributes['type']).toBe('button');
 //    })));
 //  
 //    it('toggles meridian when button is clicked', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var button = getMeridianButton(element);
 //  
@@ -199,7 +199,7 @@ void timepickerTests() {
 //    })));
 //  
 //    it('has minutes "connected" to hours', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var up = getMinutesButton(element, true);
 //      var down = getMinutesButton(element, false);
@@ -229,7 +229,7 @@ void timepickerTests() {
 //    })));
 //  
 //    it('has hours "connected" to meridian', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var up = getHoursButton(element, true);
 //      var down = getHoursButton(element, false);
@@ -283,7 +283,7 @@ void timepickerTests() {
 //      _scope.context['time'] = newTime(23, 50);
 //      _scope.rootScope.apply();
 //  
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var date =  _scope.context['time'].getDate();
 //      var up = getHoursButton(element, true);
@@ -296,7 +296,7 @@ void timepickerTests() {
 //  
 //    it('changes only the time part when minutes change', async(inject(() {
 //      //element = $compile('<timepicker ng-model="time" minute-step="15"></timepicker>')($rootScope);
-//      Element element = createTimepicker('minute-step="15"');
+//      dom.Element element = createTimepicker('minute-step="15"');
 //      _scope.context['time'] = newTime(0, 0);
 //      _scope.rootScope.apply();
 //  
@@ -320,7 +320,7 @@ void timepickerTests() {
 //    })));
 //  
 //    it('responds properly on "mousewheel" events', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var inputs = element.find('input');
 //      var hoursEl = inputs.eq(0), minutesEl = inputs.eq(1);
@@ -374,7 +374,7 @@ void timepickerTests() {
 //    })));
 //  
 //    it('responds properly on "wheel" events', async(inject(() {
-//      Element element = createTimepicker();
+//      dom.Element element = createTimepicker();
 //      
 //      var inputs = element.find('input');
 //      var hoursEl = inputs.eq(0), minutesEl = inputs.eq(1);
@@ -436,11 +436,11 @@ void timepickerTests() {
 ////        _scope.rootScope.apply();
 ////      });
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['hstep'] = 2;
 //        _scope.context['mstep'] = 30;
 //        _scope.context['time'] = newTime(14, 0);
-//        Element element = _.compile('<timepicker ng-model="time" hour-step="hstep" minute-step="mstep"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" hour-step="hstep" minute-step="mstep"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -449,7 +449,7 @@ void timepickerTests() {
 //      }
 //  
 //      it('increases / decreases hours by configurable step', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var up = getHoursButton(element, true);
 //        var down = getHoursButton(element, false);
@@ -483,7 +483,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('increases / decreases minutes by configurable step', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var up = getMinutesButton(element, true);
 //        var down = getMinutesButton(element, false);
@@ -522,7 +522,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('responds properly on "mousewheel" events with configurable steps', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var inputs = element.find('input');
 //        var hoursEl = inputs.eq(0), minutesEl = inputs.eq(1);
@@ -556,7 +556,7 @@ void timepickerTests() {
 //      })));
 //      
 //      it('responds properly on "wheel" events with configurable steps', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var inputs = element.find('input');
 //        var hoursEl = inputs.eq(0), minutesEl = inputs.eq(1);
@@ -590,7 +590,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('can handle strings as steps', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var upHours = getHoursButton(element, true);
 //        var upMinutes = getMinutesButton(element, true);
@@ -621,10 +621,10 @@ void timepickerTests() {
 //        _scope.rootScope.apply();
 //      });
       
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['meridian'] = false;
 //       _scope.context['time'] = newTime(14, 10);
-//        Element element = _.compile('<timepicker ng-model="time" show-meridian="meridian"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" show-meridian="meridian"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -637,7 +637,7 @@ void timepickerTests() {
 //      }
 //  
 //      it('initially displays correct time when `show-meridian` is false', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element, true)).toEqual(['14', '10']);
 //        expect(getModelState()).toEqual([14, 10]);
@@ -645,7 +645,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('toggles correctly between different modes', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element, true)).toEqual(['14', '10']);
 //  
@@ -663,7 +663,7 @@ void timepickerTests() {
 //      })));
 //  
 ////      it('handles correctly initially empty model on parent element', async(inject(() {
-////        Element element = createTimepicker();
+////        dom.Element element = createTimepicker();
 ////        
 ////        _scope.context['time'] = null;
 ////        element = $compile('<span ng-model="time"><timepicker show-meridian="meridian"></timepicker></span>')($rootScope);
@@ -680,9 +680,9 @@ void timepickerTests() {
 ////        _scope.rootScope.apply();
 ////      }));
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['meridiansArray'] = ['am', 'pm'];
-//        Element element = _.compile('<timepicker ng-model="time" meridians="meridiansArray"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" meridians="meridiansArray"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -691,13 +691,13 @@ void timepickerTests() {
 //      }
 //  
 //      it('displays correctly', async(inject( () {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element)[2]).toBe('pm');
 //      })));
 //  
 //      it('toggles correctly', async(inject( () {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = newTime(2, 40);
 //        _scope.rootScope.apply();
@@ -717,9 +717,9 @@ void timepickerTests() {
 //      }));
 //      
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['meridiansArray'] = ['am', 'pm'];
-//        Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -733,14 +733,14 @@ void timepickerTests() {
 //      }));
 //  
 //      it('does not affect the initial value', async(inject( () {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element, true)).toEqual(['14', '40']);
 //        expect(getModelState()).toEqual([14, 40]);
 //      })));
 //  
 //      it('increases / decreases hours with configured step', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var up = getHoursButton(element, true);
 //        var down = getHoursButton(element, false);
@@ -755,7 +755,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('increases / decreases minutes with configured step', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var up = getMinutesButton(element, true);
 //        var down = getMinutesButton(element, false);
@@ -780,9 +780,9 @@ void timepickerTests() {
 //        _scope.rootScope.apply();
 //      }));
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['meridiansArray'] = ['am', 'pm'];
-//        Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -796,14 +796,14 @@ void timepickerTests() {
 //      }));
 //  
 //      it('displays correctly', async(inject( () {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element)).toEqual(['02', '40', 'μ.μ.']);
 //        expect(getModelState()).toEqual([14, 40]);
 //      })));
 //  
 //      it('toggles correctly', async(inject( () {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = newTime(2, 40);
 //        _scope.rootScope.apply();
@@ -833,14 +833,14 @@ void timepickerTests() {
 //      }
 //  
 //      it('has initially the correct time & meridian', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(getTimeState(element)).toEqual(['02', '40', 'PM']);
 //        expect(getModelState()).toEqual([14, 40]);
 //      })));
 //  
 //      it('updates hours & pads on input change & pads on blur', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var el = getHoursInputEl();
 //  
@@ -854,7 +854,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('updates minutes & pads on input change & pads on blur', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var el = getMinutesInputEl();
 //  
@@ -868,7 +868,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('clears model when input hours is invalid & alerts the UI', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var el = getHoursInputEl();
 //  
@@ -887,7 +887,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('clears model when input minutes is invalid & alerts the UI', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var el = getMinutesInputEl();
 //  
@@ -906,7 +906,7 @@ void timepickerTests() {
 //      it('handles 12/24H mode change', async(inject(() {
 //        _scope.context['meridian'] = true;
 ////        element = $compile('<timepicker ng-model="time" show-meridian="meridian"></timepicker>')($rootScope);
-//        Element element = _.compile('<timepicker ng-model="time" meridians="meridiansArray"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" meridians="meridiansArray"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -931,9 +931,9 @@ void timepickerTests() {
 ////        eelement = $compile('<timepicker ng-model="time"></timepicker>')($rootScope);
 ////      }));
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['meridiansArray'] = ['am', 'pm'];
-//        Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time"></timepicker>', scope:_scope);
 //
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -942,7 +942,7 @@ void timepickerTests() {
 //      }
 //  
 //      it('should not be invalid when the model is null', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = null;
 //        _scope.rootScope.apply();
@@ -950,7 +950,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should not be invalid when the model is undefined', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = undefined;
 //        _scope.rootScope.apply();
@@ -958,7 +958,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should not be invalid when the model is a valid string date representation', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = 'September 30, 2010 15:30:00';
 //        _scope.rootScope.apply();
@@ -967,7 +967,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should be invalid when the model is not a valid string date representation', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = 'pizza';
 //        _scope.rootScope.apply();
@@ -975,7 +975,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should return valid when the model becomes valid', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = 'pizza';
 //        _scope.rootScope.apply();
@@ -987,7 +987,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should return valid when the model is cleared', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = 'pizza';
 //        _scope.rootScope.apply();
@@ -1006,9 +1006,9 @@ void timepickerTests() {
 ////        _scope.rootScope.apply();
 ////      }));
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['time'] = null;
-//        Element element = _.compile('<timepicker ng-model="time" ng-required="true"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" ng-required="true"></timepicker>', scope:_scope);
 //  
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -1017,13 +1017,13 @@ void timepickerTests() {
 //      }
 //  
 //      it('should be invalid initially', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(element.hasClass('ng-invalid')).toBe(true);
 //      })));
 //  
 //      it('should be valid if model has been specified', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = new Date();
 //        _scope.rootScope.apply();
@@ -1039,10 +1039,10 @@ void timepickerTests() {
 ////        _scope.rootScope.apply();
 ////      }));
 //      
-//      Element createTimepicker() {
+//      dom.Element createTimepicker() {
 //        _scope.context['changeHandler'] = jasmine.createSpy('changeHandler');
 //       _scope.context['time'] = new Date();
-//        Element element = _.compile('<timepicker ng-model="time" ng-change="changeHandler()"></timepicker>', scope:_scope);
+//        dom.Element element = _.compile('<timepicker ng-model="time" ng-change="changeHandler()"></timepicker>', scope:_scope);
 //  
 //        microLeap();
 //        _scope.rootScope.apply();
@@ -1051,13 +1051,13 @@ void timepickerTests() {
 //      }
 //  
 //      it('should not be called initially', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        expect(_scope.context['changeHandler']).not.toHaveBeenCalled();
 //      })));
 //  
 //      it('should be called when hours / minutes buttons clicked', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        var btn1 = getHoursButton(element, true);
 //        var btn2 = getMinutesButton(element, false);
@@ -1069,7 +1069,7 @@ void timepickerTests() {
 //      })));
 //  
 //      it('should not be called when model changes programatically', async(inject(() {
-//        Element element = createTimepicker();
+//        dom.Element element = createTimepicker();
 //        
 //        _scope.context['time'] = new Date();
 //        _scope.rootScope.apply();

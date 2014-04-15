@@ -75,7 +75,7 @@ class Timepicker implements NgShadowRootAware {
       _scope.parentScope.watch(_parser(_attrs['showMeridian']), (value, oldValue) {
         _scope.context['showMeridian'] = !!value;
 
-        if (_ngModel.errors['time'] != null) {
+        if (_ngModel.errorStates['time'] != null) {
           // Evaluate from template
           var hours = getHoursFromTemplate(), 
               minutes = getMinutesFromTemplate();
@@ -123,7 +123,7 @@ class Timepicker implements NgShadowRootAware {
     if (!_scope.context['readonlyInput']) {
       var invalidate = (invalidHours, invalidMinutes) {
         _ngModel.viewValue = null;
-        _ngModel.setValidity('time', false);
+//        _ngModel.setValidity('time', false);
         if (invalidHours != null) {
           _scope.context['invalidHours'] = invalidHours;
         }
@@ -191,7 +191,7 @@ class Timepicker implements NgShadowRootAware {
       } 
       
       if (date == null) {
-        _ngModel.setValidity('time', false);
+//        _ngModel.setValidity('time', false);
 //        $log.error('Timepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
       } else {
         selected = date;
@@ -293,7 +293,7 @@ class Timepicker implements NgShadowRootAware {
   }
   
   void makeValid() {
-    _ngModel.setValidity('time', true);
+//    _ngModel.setValidity('time', true);
     _scope.context['invalidHours'] = false;
     _scope.context['invalidMinutes'] = false;
   }

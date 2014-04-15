@@ -12,19 +12,23 @@ void alertTests() {
     Scope scope;
     dom.Element element;
     TemplateCache cache;
-    
-    beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new AlertModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-    beforeEach(inject((TemplateCache c) => cache = c));
+
+    beforeEach(() {
+      setUpInjector();
+      module((Module module) {
+        module.install(new AlertModule());
+      });
+      inject((TestBed tb, Scope s, TemplateCache c) {
+        _ = tb;
+        scope = s;
+        cache = c;
+        addToTemplateCache(cache, 'packages/angular_ui/alert/alert.html');
+      });
+    });
     
     afterEach(tearDownInjector);
     
     List<dom.Element> createAlerts() {
-      addToTemplateCache(cache, 'packages/angular_ui/alert/alert.html');
       element = _.compile("<div>" + 
           "<alert ng-repeat='alert in alerts' type='alert.type'" +
             "close='removeAlert(\$index)'>{{alert.msg}}" +
@@ -35,7 +39,10 @@ void alertTests() {
         { 'msg':'bar', 'type':'error'},
         { 'msg':'baz'}
       ];
+
+      microLeap();
       scope.rootScope.apply();
+      
       return element.querySelectorAll('alert');
     };
     
@@ -55,8 +62,9 @@ void alertTests() {
     it('should show the alert content', () {
       var alerts = createAlerts();
 
-      for (var i = 0, n = alerts.length; i < n; i++) {
-        expect(findContent(i).text).toEqual(scope.context['alerts'][i]['msg']);
+      for (var i = 0; i < alerts.length; i++) {
+        dom.Element el = findContent(i);
+        expect(el.text).toEqual(scope.context['alerts'][i]['msg']);
       }
     });
   });
