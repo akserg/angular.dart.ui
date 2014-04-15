@@ -64,7 +64,7 @@ packages:
   mock:
     description: mock
     source: hosted
-    version: "0.10.0+1"
+    version: "0.10.0"
   path:
     description: path
     source: hosted
@@ -76,7 +76,7 @@ packages:
   route_hierarchical:
     description: route_hierarchical
     source: hosted
-    version: "0.4.18"
+    version: "0.4.15"
   shadow_dom:
     description: shadow_dom
     source: hosted
@@ -88,7 +88,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "0.9.3+1"
+    version: "0.9.3"
   unittest:
     description: unittest
     source: hosted
