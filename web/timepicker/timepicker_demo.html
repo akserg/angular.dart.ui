@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+https://github.com/akserg/angular.dart.ui
+All rights reserved.  Please see the LICENSE.md file.
+-->
+<div timepicker-demo-controller>
+
+  <div style="display:inline-block;">
+        <timepicker hour-step="timepickerCtrl.hstep" minute-step="timepickerCtrl.mstep" show-meridian="timepickerCtrl.ismeridian"
+                    ng-model="timepickerCtrl.mytime" ng-change="timepickerCtrl.changed()"></timepicker>
+  </div>
+
+
+<!--    <pre class="alert alert-info">Time is: {{timepickerCtrl.mytime | date:'shortTime' }}</pre> -->
+
+<!--   <div class="row">  -->
+<!--     <div class="col-xs-6"> -->
+<!--         Hours step is: -->
+<!--       <select class="form-control" ng-model="timepickerCtrl.hstep" ng-options="opt for opt in timepickerCtrl.options['hstep']"></select> -->
+<!--     </div> -->
+<!--     <div class="col-xs-6"> -->
+<!--         Minutes step is: -->
+<!--       <select class="form-control" ng-model="timepickerCtrl.mstep" ng-options="opt for opt in timepickerCtrl.options['mstep']"></select> -->
+<!--     </div> -->
+<!--   </div> -->
+
+<!--   <hr> -->
+
+<!--   <button class="btn btn-info" ng-click="timepickerCtrl.toggleMode()">12H / 24H</button> -->
+<!--   <button class="btn btn-default" ng-click="timepickerCtrl.update()">Set to 14:00</button> -->
+<!--   <button class="btn btn-danger" ng-click="timepickerCtrl.clear()">Clear</button> -->
+
+</div>

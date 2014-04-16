@@ -6,16 +6,16 @@ part of angular.ui.test;
 
 void tabsTests() {
   
-  List<Element> titles(Element elm) {
+  List<dom.Element> titles(dom.Element elm) {
     return elm.children[0].shadowRoot.querySelectorAll('ul.nav-tabs li');
   }
   
-  List<Element> contents(Element elm) {
+  List<dom.Element> contents(dom.Element elm) {
     return ngQuery( elm , '.tab-pane' );
   }
 
-  void expectTitles(Element elm, titlesArray) {
-    List<Element> t = titles(elm);
+  void expectTitles(dom.Element elm, titlesArray) {
+    List<dom.Element> t = titles(elm);
     expect(t.length).toEqual(titlesArray.length);
     for (int i=0; i<t.length; i++) {
       expect(ngQuery(t[i] ,'tab-heading')[0].innerHtml.trim()).toEqual(titlesArray[i]);
@@ -76,7 +76,7 @@ void tabsTests() {
     };
     
     it('should create clickable titles', async(inject(() {
-      ElementList<Element> t = titles(createElement());
+      dom.ElementList<dom.Element> t = titles(createElement());
       expect(t.length).toBe(2);
       expect(renderedText( ngQuery(t[0] ,'a')[0] )).toEqual('First Tab 1');
       //It should put the tab-heading element into the 'a' title
@@ -85,7 +85,7 @@ void tabsTests() {
     })));
 
     it('should bind tabs content and set first tab active', async(inject(() {
-      Element elems = createElement();
+      dom.Element elems = createElement();
       
       expect(contents(elems).length).toBe(1);
       expect(contents(elems)[0]).toHaveClass('active');
@@ -94,7 +94,7 @@ void tabsTests() {
     })));
     
     it('should change active on click', async(inject(() {
-      Element elems = createElement();
+      dom.Element elems = createElement();
       ngQuery(titles(elems)[1] , 'a')[0].click();
       microLeap();
       scope.rootScope.apply();
@@ -104,7 +104,7 @@ void tabsTests() {
     })));
     
     it('should call select callback on select', async(inject(() {
-      Element elems = createElement();
+      dom.Element elems = createElement();
       ngQuery(titles(elems)[1] , 'a')[0].click();
       expect(scope.context['selectSecond']).toHaveBeenCalled();
       ngQuery(titles(elems)[0] , 'a')[0].click();
@@ -113,7 +113,7 @@ void tabsTests() {
 
    
     it('should call deselect callback on deselect', async(inject(() {
-      Element elems = createElement();
+      dom.Element elems = createElement();
       expect(scope.context['deselectSecond']).not.toHaveBeenCalled();
       ngQuery(titles(elems)[1] , 'a')[0].click();
       ngQuery(titles(elems)[0] , 'a')[0].click();

@@ -10,8 +10,6 @@ library angular.ui.test;
 
 import 'dart:html' as dom;
 import 'dart:async';
-import 'package:logging/logging.dart' as logging;
-import 'package:logging_handlers/logging_handlers_shared.dart';
 
 import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
@@ -30,7 +28,9 @@ import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/rating/rating.dart';
 
 part 'tests/accordion_tests.dart';
@@ -45,15 +45,11 @@ part 'tests/tabs_tests.dart';
 part 'tests/timeout_tests.dart';
 part 'tests/transition_tests.dart';
 part 'tests/modal_tests.dart';
+part 'tests/datepicker_tests.dart';
+part 'tests/timepicker_tests.dart';
 part 'tests/rating_tests.dart';
 
-final _log = new logging.Logger('test');
-
 void main() {
-  startQuickLogging();
-  logging.Logger.root.level = logging.Level.FINEST;
-  _log.fine('Running unit tests for Angular UI library.');
-
   useHtmlEnhancedConfiguration();
   group('All Tests:', () {
     group('Acoordion', () => accordionTests());
@@ -69,6 +65,8 @@ void main() {
     group('Transition', () => transitionTests());
     group('Modal', () => modalTests());
     group('Rating', () => ratingTests());
+//    group('Timepicker', () => timepickerTests());
+    group('Datepicker', () => datepickerTests());
   });
 }
 
@@ -76,7 +74,7 @@ void main() {
  * It adds an html template into the TemplateCache.
  */
 void addToTemplateCache(TemplateCache cache, String path) {
-  HttpRequest request = new HttpRequest();
+  dom.HttpRequest request = new dom.HttpRequest();
   request.open("GET", path, async : false);
   request.send();
   cache.put(path, new HttpResponse(200, request.responseText));

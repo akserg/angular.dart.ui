@@ -4,6 +4,7 @@
 library angular.ui.utils;
 
 import 'dart:html' as dom;
+import 'package:intl/intl.dart' as intl;
 import "package:angular/angular.dart";
 
 part 'ng_pseudo.dart';
@@ -24,3 +25,57 @@ int toInt(x) {
 dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isDiv);
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
+
+/**
+ * Convert an [html] String to a [List] of [Element]s.
+ */
+List<dom.Element> toNodeList(html) {
+  var div = new dom.DivElement();
+  div.setInnerHtml(html, treeSanitizer: new NullTreeSanitizer());
+  var nodes = [];
+  for(var node in div.nodes) {
+    nodes.add(node);
+  }
+  return nodes;
+}
+
+// Split array into smaller arrays
+List split(List arr, int size) {
+  var arrays = [];
+  for (int b = 0, e = size;;b += size, e += size) {
+    if (e < arr.length) {
+      arrays.add(arr.getRange(b, e).toList());
+    } else {
+      arrays.add(arr.getRange(b, arr.length).toList());
+      break;
+    }
+  }
+  return arrays;
+}
+
+/**
+ * Try treat [model] as [String], [int] or [DateTime] to convert to [DateTime]
+ * or return null. If specified the [DateFormat] will be used to parse date.
+ */
+DateTime parseDate(model, [intl.DateFormat format = null]) {
+  DateTime date;
+  
+  if (model != null) {
+    try {
+      if (model is String) {
+        if (format != null) {
+          date = format.parse(model);
+        } else {
+          date = DateTime.parse(model);
+        }
+      } else if (model is int) {
+        date = new DateTime.fromMillisecondsSinceEpoch(model);
+      } else {
+        date = model as DateTime;
+      }
+    } on Exception catch(e) {
+      print(e);
+    }
+  }
+  return date;
+}

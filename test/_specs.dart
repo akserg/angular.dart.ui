@@ -23,19 +23,20 @@
 library ng_specs;
 
 import 'dart:html';
-import 'dart:mirrors' as mirror;
 import 'package:unittest/unittest.dart' as unit;
 import 'package:angular/angular.dart';
 import 'package:angular/mock/module.dart';
+import 'package:collection/wrappers.dart' show DelegatingList;
 
 import 'jasmine_syntax.dart';
 
-export 'dart:html';
+//export 'dart:html';
 export 'jasmine_syntax.dart' hide main;
 export 'package:unittest/unittest.dart';
 export 'package:mock/mock.dart';
 export 'package:di/dynamic_injector.dart';
 export 'package:angular/angular.dart';
+export 'package:angular/animate/module.dart';
 export 'package:angular/mock/module.dart';
 export 'package:perf_api/perf_api.dart';
 
@@ -82,7 +83,7 @@ class Expect {
   toEqual(expected) => unit.expect(actual, unit.equals(expected));
   toContain(expected) => unit.expect(actual, unit.contains(expected));
   toBe(expected) => unit.expect(actual,
-  unit.predicate((actual) => identical(expected, actual), '$expected'));
+      unit.predicate((actual) => identical(expected, actual), '$expected'));
   toThrow([exception]) => unit.expect(actual, exception == null ? unit.throws : unit.throwsA(new ExceptionContains(exception)));
   toBeFalsy() => unit.expect(actual, (v) => v == null ? true : v is bool ? v == false : false);
   toBeTruthy() => unit.expect(actual, (v) => v is bool ? v == true : true);
@@ -93,19 +94,19 @@ class Expect {
   toHaveBeenCalled() => unit.expect(actual.called, true, reason: 'method not called');
   toHaveBeenCalledOnce() => unit.expect(actual.count, 1, reason: 'method invoked ${actual.count} expected once');
   toHaveBeenCalledWith([a,b,c,d,e,f]) =>
-  unit.expect(actual.firstArgsMatch(a,b,c,d,e,f), true,
-  reason: 'method invoked with correct arguments');
+      unit.expect(actual.firstArgsMatch(a,b,c,d,e,f), true,
+      reason: 'method invoked with correct arguments');
   toHaveBeenCalledOnceWith([a,b,c,d,e,f]) =>
-  unit.expect(actual.count == 1 && actual.firstArgsMatch(a,b,c,d,e,f),
-  true,
-  reason: 'method invoked once with correct arguments. (Called ${actual.count} times)');
+      unit.expect(actual.count == 1 && actual.firstArgsMatch(a,b,c,d,e,f),
+                 true,
+                 reason: 'method invoked once with correct arguments. (Called ${actual.count} times)');
 
   toHaveClass(cls) => unit.expect(actual.classes.contains(cls), true, reason: ' Expected ${actual} to have css class ${cls}');
 
   toEqualSelect(options) {
     var actualOptions = [];
 
-    for(var option in actual.querySelectorAll('option')) {
+    for (var option in actual.querySelectorAll('option')) {
       if (option.selected) {
         actualOptions.add([option.value]);
       } else {
@@ -116,16 +117,16 @@ class Expect {
   }
 
   toEqualValid() {
-// TODO: implement onece we have forms
+    // TODO: implement onece we have forms
   }
   toEqualInvalid() {
-// TODO: implement onece we have forms
+    // TODO: implement onece we have forms
   }
   toEqualPristine() {
-// TODO: implement onece we have forms
+    // TODO: implement onece we have forms
   }
   toEqualDirty() {
-// TODO: implement onece we have forms
+    // TODO: implement onece we have forms
   }
 }
 
@@ -139,11 +140,11 @@ class NotExpect {
 
   toHaveClass(cls) => unit.expect(actual.classes.contains(cls), false, reason: ' Expected ${actual} to not have css class ${cls}');
   toBe(expected) => unit.expect(actual,
-  unit.predicate((actual) => !identical(expected, actual), '$expected'));
+      unit.predicate((actual) => !identical(expected, actual), 'not $expected'));
   toEqual(expected) => unit.expect(actual,
-  unit.predicate((actual) => expected != actual, '$expected'));
+      unit.predicate((actual) => expected != actual, 'not $expected'));
   toContain(expected) => unit.expect(actual,
-  unit.predicate((actual) => !actual.contains(expected), '$expected'));
+      unit.predicate((actual) => !actual.contains(expected), 'not $expected'));
 }
 
 class ExceptionContains extends unit.Matcher {
@@ -160,12 +161,12 @@ class ExceptionContains extends unit.Matcher {
   }
 
   unit.Description describe(unit.Description description) =>
-  description.add('exception contains ').addDescriptionOf(_expected);
+      description.add('exception contains ').addDescriptionOf(_expected);
 
   unit.Description describeMismatch(item, unit.Description mismatchDescription,
-                                    Map matchState, bool verbose) {
-    return super.describeMismatch('$item', mismatchDescription, matchState,
-    verbose);
+                               Map matchState, bool verbose) {
+      return super.describeMismatch('$item', mismatchDescription, matchState,
+          verbose);
   }
 }
 
@@ -180,24 +181,20 @@ class GetterSetter {
 }
 var getterSetter = new GetterSetter();
 
-class JQuery implements List<Node> {
-  List<Node> _list = [];
-
-  JQuery([selector]) {
+class JQuery extends DelegatingList<Node> {
+  JQuery([selector]) : super([]) {
     if (selector == null) {
-// do nothing;
+      // do nothing;
     } else if (selector is String) {
-      _list.addAll(es(selector));
+      addAll(es(selector));
     } else if (selector is List) {
-      _list.addAll(selector);
+      addAll(selector);
     } else if (selector is Node) {
       add(selector);
     } else {
       throw selector;
     }
   }
-
-  noSuchMethod(Invocation invocation) => mirror.reflect(_list).delegate(invocation);
 
   _toHtml(node, [bool outer = false]) {
     if (node is Comment) {
@@ -208,10 +205,10 @@ class JQuery implements List<Node> {
   }
 
   accessor(Function getter, Function setter, [value, single=false]) {
-// TODO(dart): ?value does not work, since value was passed. :-(
+    // TODO(dart): ?value does not work, since value was passed. :-(
     var setterMode = value != null;
     var result = setterMode ? this : '';
-    _list.forEach((node) {
+    forEach((node) {
       if (setterMode) {
         setter(node, value);
       } else {
@@ -224,7 +221,7 @@ class JQuery implements List<Node> {
   html([String html]) => accessor(
           (n) => _toHtml(n),
           (n, v) => n.setInnerHtml(v, treeSanitizer: new NullTreeSanitizer()),
-      html);
+          html);
   val([String text]) => accessor((n) => n.value, (n, v) => n.value = v);
   text([String text]) => accessor((n) => n.text, (n, v) => n.text = v, text);
   contents() => fold(new JQuery(), (jq, node) => jq..addAll(node.nodes));
@@ -234,22 +231,22 @@ class JQuery implements List<Node> {
   attr([String name, String value]) => accessor(
           (n) => n.attributes[name],
           (n, v) => n.attributes[name] = v,
-      value,
-      true);
+          value,
+          true);
   prop([String name]) => accessor(
           (n) => getterSetter.getter(name)(n),
           (n, v) => getterSetter.setter(name)(n, v),
-      null,
-      true);
+          null,
+          true);
   textWithShadow() => fold('', (t, n) => '${t}${renderedText(n)}');
   find(selector) => fold(new JQuery(), (jq, n) => jq..addAll(
       (n is Element ? (n as Element).querySelectorAll(selector) : [])));
   hasClass(String name) => fold(false, (hasClass, node) =>
-  hasClass || (node is Element && (node as Element).classes.contains(name)));
-  addClass(String name) => _list.forEach((node) =>
-  (node is Element) ? (node as Element).classes.add(name) : null);
-  removeClass(String name) => _list.forEach((node) =>
-  (node is Element) ? (node as Element).classes.remove(name) : null);
+      hasClass || (node is Element && (node as Element).classes.contains(name)));
+  addClass(String name) => forEach((node) =>
+      (node is Element) ? (node as Element).classes.add(name) : null);
+  removeClass(String name) => forEach((node) =>
+      (node is Element) ? (node as Element).classes.remove(name) : null);
   css(String name, [String value]) => accessor(
           (Element n) => n.style.getPropertyValue(name),
           (Element n, v) => n.style.setProperty(name, value), value);

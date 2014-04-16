@@ -18,6 +18,8 @@ import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
+import 'package:angular_ui/datepicker/datepicker.dart';
+import 'package:angular_ui/timepicker/timepicker.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -39,6 +41,8 @@ class AngularUIModule extends Module {
     install(new TimeoutModule());
     install(new TransitionModule());
     install(new ModalModule());
+    install(new DatepickerModule());
+    install(new TimepickerModule());
   }
 }
 

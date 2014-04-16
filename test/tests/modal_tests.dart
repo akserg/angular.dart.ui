@@ -35,25 +35,25 @@ void modalTests() {
     afterEach(tearDownInjector);
     
     /**
-     * Trigger / listen for event on document.body.
+     * Trigger / listen for event on dom.document.body.
      * Seems doesn't work at all. Need to find the way how fire keyboard events.
      */
     void triggerKeyDown(dom.EventTarget element, int keyCode) {
-      var streamDown = KeyEvent.keyUpEvent.forTarget(element);
+      var streamDown = dom.KeyEvent.keyUpEvent.forTarget(element);
       var subscription4 = streamDown.listen(
           (e) => print('streamDown listener ${e.keyCode}'));
-      streamDown.add(new KeyEvent('keydown', keyCode: keyCode));
+      streamDown.add(new dom.KeyEvent('keydown', keyCode: keyCode));
     };
     
     void houskeepking() {
-      document.body.querySelectorAll("modal-window").forEach((el) {
+      dom.document.body.querySelectorAll("modal-window").forEach((el) {
         modal.hide();
         el.remove();
       });
     }
     
     bool toHaveModalOpenWithContent({String content:'', String selector:null}) {
-      return document.body.querySelectorAll("modal-window").any((el) {
+      return dom.document.body.querySelectorAll("modal-window").any((el) {
         if (el.style.display == 'block') {
           if (selector != null) {
             el = el.querySelector(selector);
@@ -66,11 +66,11 @@ void modalTests() {
       });
     }
     
-    bool toHaveBackdrop() => document.body.querySelector('.modal-backdrop') != null;
+    bool toHaveBackdrop() => dom.document.body.querySelector('.modal-backdrop') != null;
     
     int toHaveModalOpen() {
       int res = 0;
-      document.body.querySelectorAll("modal-window").forEach((dom.Element el){
+      dom.document.body.querySelectorAll("modal-window").forEach((dom.Element el){
         if (el.style.display == 'block') {
           res++;
         }
@@ -91,7 +91,7 @@ void modalTests() {
     
     void clickOnBackdrop() {
       // Find last backdrop
-      dom.Element el = document.body.querySelectorAll('.modal-backdrop').last;
+      dom.Element el = dom.document.body.querySelectorAll('.modal-backdrop').last;
       if (el != null) {
         _.triggerEvent(el, 'click');
         timeout.flush();
@@ -143,7 +143,7 @@ void modalTests() {
         //
         expect(toHaveModalOpen()).toEqual(1);
         // Trigger click event on backdrop
-        _.triggerEvent(document.body.querySelector('.modal-backdrop'), 'click');
+        _.triggerEvent(dom.document.body.querySelector('.modal-backdrop'), 'click');
         timeout.flush();
         rootScope.rootScope.apply();
         //
@@ -233,7 +233,7 @@ void modalTests() {
       Future f = Future.wait([inst.opened, inst2.opened])..then((values) {
         expect(toHaveModalOpen()).toEqual(2);
         
-        triggerKeyDown(document, 27);
+        triggerKeyDown(dom.document, 27);
         rootScope.rootScope.apply();
         
         expect(toHaveModalOpen()).toEqual(2);

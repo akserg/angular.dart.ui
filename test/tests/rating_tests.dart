@@ -15,10 +15,10 @@ void ratingTests() {
       module((Module module) {
         module.install(new RatingModule());
       });
-      inject((TestBed tb, Scope s, TemplateCache c) { 
+      inject((TestBed tb, Scope s, TemplateCache cache) { 
         _ = tb;
         scope = s;
-        addToTemplateCache(c, 'packages/angular_ui/rating/rating.html');
+        addToTemplateCache(cache, 'packages/angular_ui/rating/rating.html');
       });
     });
     
@@ -26,7 +26,7 @@ void ratingTests() {
 
     dom.Element createElement([String html = null]) {
       scope.context['rate'] = 3;
-      List<Node> elements = $(html != null ? html : '<rating ng-model="rate"></rating>');
+      List<dom.Node> elements = $(html != null ? html : '<rating ng-model="rate"></rating>');
       dom.Element element =_.compile(elements, scope:scope);
       
       microLeap();
@@ -35,19 +35,19 @@ void ratingTests() {
       return element;
     }
     
-    Element getSpan(Element element) {
+    dom.Element getSpan(dom.Element element) {
       return ngQuery(element, 'span')[0];
     }
     
-    List<Element> getStars(Element element) {
+    List<dom.Element> getStars(dom.Element element) {
       return ngQuery(element, 'i');
     }
     
-    Element getStar(Element element, int number) {
+    dom.Element getStar(dom.Element element, int number) {
       return getStars(element)[number - 1];
     }
     
-    List getState(Element element, [String classOn = null, String classOff = null]) {
+    List getState(dom.Element element, [String classOn = null, String classOff = null]) {
       var stars = getStars(element);
       var state = [];
       for (var i = 0, n = stars.length; i < n; i++) {
@@ -57,19 +57,19 @@ void ratingTests() {
     }
     
     it('contains the default number of icons', async(inject(() {
-      Element element = createElement();
+      dom.Element element = createElement();
       
       expect(getStars(element).length).toBe(5);
     })));
     
     it('initializes the default star icons as selected', async(inject(() {
-      Element element = createElement();
+      dom.Element element = createElement();
       
       expect(getState(element)).toEqual([true, true, true, false, false]);
     })));
     
     it('handles correctly the click event', async(inject(() {
-      Element element = createElement();
+      dom.Element element = createElement();
       
       getStar(element, 2).click();
       scope.apply();
@@ -83,7 +83,7 @@ void ratingTests() {
     })));
     
     it('handles correctly the hover event', async(inject(() {
-      Element element = createElement();
+      dom.Element element = createElement();
       
       _.triggerEvent(getStar(element, 2), 'mouseover');
       expect(getState(element)).toEqual([true, true, false, false, false]);
@@ -93,7 +93,7 @@ void ratingTests() {
       expect(getState(element)).toEqual([true, true, true, true, true]);
       expect(scope.context['rate']).toBe(3);
 
-      Element span = getSpan(element);
+      dom.Element span = getSpan(element);
       _.triggerEvent(span, 'mouseleave');
       expect(getState(element)).toEqual([true, true, true, false, false]);
       expect(scope.context['rate']).toBe(3);
@@ -102,7 +102,7 @@ void ratingTests() {
     //***************
     
     it('changes the number of selected icons when value changes', async(inject(() {
-      Element element = createElement();
+      dom.Element element = createElement();
       
       scope.context['rate'] = 2;
       scope.apply();
@@ -111,21 +111,21 @@ void ratingTests() {
     })));
 
     it('shows different number of icons when `max` attribute is set', async(inject(() {
-      Element element = createElement('<rating ng-model="rate" max="7"></rating>');
+      dom.Element element = createElement('<rating ng-model="rate" max="7"></rating>');
 
       expect(getStars(element).length).toBe(7);
     })));
 
     it('shows different number of icons when `max` attribute is from scope variable', async(inject(() {
       scope.context['max'] = 15;
-      Element element = createElement('<rating ng-model="rate" max="max"></rating>');
+      dom.Element element = createElement('<rating ng-model="rate" max="max"></rating>');
       
       expect(getStars(element).length).toBe(15);
     })));
 
     it('handles readonly attribute', async(inject(() {
       scope.context['isReadonly'] = true;
-      Element element = createElement('<rating ng-model="rate" readonly="isReadonly"></rating>');
+      dom.Element element = createElement('<rating ng-model="rate" readonly="isReadonly"></rating>');
 
       expect(getState(element)).toEqual([true, true, true, false, false]);
 
@@ -142,7 +142,7 @@ void ratingTests() {
 
     it('should fire onHover', async(inject(() {
       scope.context['hoveringOver'] = jasmine.createSpy('hoveringOver');
-      Element element = createElement('<rating ng-model="rate" on-hover="hoveringOver(value)"></rating>');
+      dom.Element element = createElement('<rating ng-model="rate" on-hover="hoveringOver(value)"></rating>');
 
       _.triggerEvent(getStar(element, 3), 'mouseover');
       expect(scope.context['hoveringOver']).toHaveBeenCalledWith(3);
@@ -150,9 +150,9 @@ void ratingTests() {
 
     it('should fire onLeave', async(inject(() {
       scope.context['leaving'] = jasmine.createSpy('leaving');
-      Element element = createElement('<rating ng-model="rate" on-leave="leaving()"></rating>');
+      dom.Element element = createElement('<rating ng-model="rate" on-leave="leaving()"></rating>');
 
-      Element span = getSpan(element);
+      dom.Element span = getSpan(element);
       _.triggerEvent(span, 'mouseleave');
       expect(scope.context['leaving']).toHaveBeenCalled();
     })));
@@ -162,7 +162,7 @@ void ratingTests() {
         scope.context['rate'] = 3;
         scope.context['classOn'] = 'icon-ok-sign';
         scope.context['classOff'] = 'icon-ok-circle';
-        List<Node> elements = $('<rating ng-model="rate" state-on="classOn" state-off="classOff"></rating>');
+        List<dom.Node> elements = $('<rating ng-model="rate" state-on="classOn" state-off="classOff"></rating>');
         dom.Element element =_.compile(elements, scope:scope);
         
         microLeap();
@@ -172,7 +172,7 @@ void ratingTests() {
       }
 
       it('changes the default icons', async(inject(() {
-        Element element = createElement();
+        dom.Element element = createElement();
         
         expect(getState(element, scope.context['classOn'], scope.context['classOff'])).toEqual([true, true, true, false, false]);
       })));
@@ -187,7 +187,7 @@ void ratingTests() {
           {'stateOn': 'heart'},
           {'stateOff': 'off'}
         ];
-        List<Node> elements = $('<rating ng-model="rate" rating-states="states"></rating>');
+        List<dom.Node> elements = $('<rating ng-model="rate" rating-states="states"></rating>');
         dom.Element element =_.compile(elements, scope:scope);
         
         microLeap();
@@ -197,13 +197,13 @@ void ratingTests() {
       }
       
       it('should define number of icon elements', async(inject(() {
-        Element element = createElement();
+        dom.Element element = createElement();
         
         expect(getStars(element).length).toBe(scope.context['states'].length);
       })));
 
       it('handles each icon', async(inject(() {
-        Element element = createElement();
+        dom.Element element = createElement();
         
         var stars = getStars(element);
 
@@ -241,7 +241,7 @@ void ratingTests() {
       }));
 
       it('should change number of icon elements', async(inject(() {
-        Element element = createElement();
+        dom.Element element = createElement();
         scope.context['rate'] = 5;
         scope.apply();
         
@@ -249,7 +249,7 @@ void ratingTests() {
       })));
 
       it('should change icon states', async(inject(() {
-        Element element = createElement();
+        dom.Element element = createElement();
         scope.context['rate'] = 5;
         scope.apply();
         

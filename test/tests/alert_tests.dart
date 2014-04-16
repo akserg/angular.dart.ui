@@ -63,7 +63,7 @@ void alertTests() {
       var alerts = createAlerts();
 
       for (var i = 0; i < alerts.length; i++) {
-        Element el = findContent(i);
+        dom.Element el = findContent(i);
         expect(el.text).toEqual(scope.context['alerts'][i]['msg']);
       }
     });

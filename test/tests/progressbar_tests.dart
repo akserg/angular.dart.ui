@@ -15,7 +15,7 @@ void porgressbarTests() {
     beforeEach(setUpInjector);
 
     dom.Element compileElement(String htmlText) {
-      List<Node> elements = $(htmlText);
+      List<dom.Node> elements = $(htmlText);
       compile(elements, injector.get(DirectiveMap))(injector, elements);
       rootScope.rootScope.apply();
       microLeap();
