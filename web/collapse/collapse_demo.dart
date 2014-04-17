@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Collapse controller.
  */
-@NgController(selector: '[collapse-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[collapse-ctrl]', publishAs: 'ctrl')
 class CollapseCtrl {
   
   var isCollapsed = true;

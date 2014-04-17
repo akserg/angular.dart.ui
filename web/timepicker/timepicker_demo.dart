@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@NgController(
+@Controller(
     selector: '[timepicker-demo-controller]',
     publishAs: 'timepickerCtrl')
 class TimepickerDemoCtrl {

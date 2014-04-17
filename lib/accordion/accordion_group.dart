@@ -3,14 +3,14 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.accordion;
 
-@NgComponent(
+@Component(
     selector: 'accordion-group',
     publishAs: 'ctrl',
-    visibility: NgDirective.CHILDREN_VISIBILITY,
+    visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion_group.html',
     applyAuthorStyles: true
 )
-class AccordionGroupComponent implements NgDetachAware {
+class AccordionGroupComponent implements DetachAware {
   bool _isOpen = false;
   @NgAttr('heading') String heading;
   Scope scope;
@@ -40,7 +40,7 @@ class AccordionGroupComponent implements NgDetachAware {
  *   <accordion-heading>Heading containing HTML - <img src="..."></accordion-heading>
  * </accordion-group>
  */
-@NgComponent(
+@Component(
     selector: 'accordion-heading',
     publishAs: 'ctrl',
     template: '<content></content>',

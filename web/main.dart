@@ -6,6 +6,7 @@ library angular.ui.demo;
 import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
+import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
 
 @MirrorsUsed(targets: const[
@@ -43,7 +44,9 @@ part 'rating/rating_demo.dart';
  * Entry point into app.
  */
 main() {
-  ngBootstrap(module: new DemoModule());
+  applicationFactory()
+    .addModule(new DemoModule())
+    .run();
 }
 
 /**

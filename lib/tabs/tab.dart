@@ -3,14 +3,14 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.tabs;
 
-@NgComponent(
+@Component(
     selector: 'tab',
-    visibility: NgDirective.CHILDREN_VISIBILITY,
+    visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/tabs/tab.html',
     publishAs: 'tabCtrl',
     applyAuthorStyles: true
 )
-class TabComponent implements NgDetachAware {
+class TabComponent implements DetachAware {
   
   final TabsetComponent tabsetCtrl; 
   final Element element;

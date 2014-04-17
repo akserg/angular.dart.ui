@@ -4,6 +4,7 @@
 library angular.ui.alert;
 
 import "package:angular/angular.dart";
+import "package:angular/core/parser/syntax.dart";
 
 /**
  * Alert Module.
@@ -17,9 +18,9 @@ class AlertModule extends Module {
 /**
  * Alert component.
  */
-@NgComponent(selector: 'alert', publishAs: 't', applyAuthorStyles: true, 
+@Component(selector: 'alert', publishAs: 't', applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/alert/alert.html')
-@NgComponent(selector: '[alert]', publishAs: 't', applyAuthorStyles: true, 
+@Component(selector: '[alert]', publishAs: 't', applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/alert/alert.html')
 class Alert {
   @NgOneWay('type')

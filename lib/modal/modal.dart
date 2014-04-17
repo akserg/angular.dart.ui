@@ -23,17 +23,17 @@ class ModalModule extends Module {
 /**
  * Modal Window component.
  */
-@NgComponent(
+@Component(
     selector: 'modal-window',
     publishAs: 'm',
     applyAuthorStyles: true,
     templateUrl: 'packages/angular_ui/modal/window.html')
-@NgComponent(
+@Component(
     selector: '[modal-window]',
     publishAs: 'm',
     applyAuthorStyles: true,
     templateUrl: 'packages/angular_ui/modal/window.html')
-class ModalWindow implements NgAttachAware {
+class ModalWindow implements AttachAware {
 
   @NgAttr('windowClass')
   String windowClass = '';
@@ -146,7 +146,7 @@ class ModalInstance {
 /**
  * Modal service.
  */
-@NgInjectableService()
+@Injectable()
 class Modal {
   static const _backdropClass = 'modal-backdrop';
   static List<ModalInstance> openedWindows = [];

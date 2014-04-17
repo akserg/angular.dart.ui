@@ -25,6 +25,7 @@ library ng_specs;
 import 'dart:html';
 import 'package:unittest/unittest.dart' as unit;
 import 'package:angular/angular.dart';
+import 'package:angular/core/parser/parser.dart';
 import 'package:angular/mock/module.dart';
 import 'package:collection/wrappers.dart' show DelegatingList;
 

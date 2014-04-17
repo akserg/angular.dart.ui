@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Modal controller with template.
  */
-@NgController(selector: '[modal-ctrl-tmpl]', publishAs: 'ctrl')
+@Controller(selector: '[modal-ctrl-tmpl]', publishAs: 'ctrl')
 class ModalCtrlTemplate {
   List<String> items = ["1111", "2222", "3333", "4444"];
   String selected;
@@ -64,7 +64,7 @@ class ModalCtrlTemplate {
 /**
  * Modal controller with template from file.
  */
-@NgController(selector: '[modal-ctrl-tag-tmpl]', publishAs: 'ctrl')
+@Controller(selector: '[modal-ctrl-tag-tmpl]', publishAs: 'ctrl')
 class ModalCtrlTagTemplate {
   List<String> items = ["Java", "Dart", "JavaScript", "Ruby"];
   
@@ -98,7 +98,7 @@ class ModalCtrlTagTemplate {
 /**
  * Modal controller with template from file.
  */
-@NgController(selector: '[modal-ctrl-file-tmpl]', publishAs: 'ctrl')
+@Controller(selector: '[modal-ctrl-file-tmpl]', publishAs: 'ctrl')
 class ModalCtrlFileTemplate {
   List<String> items = ["Sun", "Moon", "Star", "Planet"];
   
@@ -131,7 +131,7 @@ class ModalCtrlFileTemplate {
 /**
  * Modal controller with template from file for other.
  */
-@NgController(selector: '[modal-ctrl-other-tmpl]', publishAs: 'ctrl2')
+@Controller(selector: '[modal-ctrl-other-tmpl]', publishAs: 'ctrl2')
 class ModalCtrlOtherTemplate {
   List<String> items = ["Hydrogen", "Lithium", "Oxygen", "Chromium"];
   

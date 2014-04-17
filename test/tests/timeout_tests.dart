@@ -122,7 +122,7 @@ void timeoutTests() {
   });
 }
 
-@NgInjectableService()
+@Injectable()
 class TestExceptionHandler implements ExceptionHandler {
   var errors = [];
   

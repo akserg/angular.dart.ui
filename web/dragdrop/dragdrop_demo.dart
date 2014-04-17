@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@NgController(
+@Controller(
     selector: '[dd-shopping-demo-controller]',
     publishAs: 'shoppingCtrl')
 class DragDropShoppingBasketDemoController {
@@ -54,7 +54,7 @@ class Product {
 }
 
 
-@NgController(
+@Controller(
     selector: '[dd-list-demo-controller]',
     publishAs: 'listCtrl')
 class DragDropListDemoController {
@@ -73,7 +73,7 @@ class DragDropListDemoController {
 }
 
 
-@NgController(
+@Controller(
     selector: '[dd-custom-image-demo-controller]',
     publishAs: 'customImageCtrl')
 class DragDropCustomImageDemoController {
@@ -89,7 +89,7 @@ class DragDropCustomImageDemoController {
 }
 
 
-@NgController(
+@Controller(
     selector: '[dd-handler-demo-controller]',
     publishAs: 'listCtrl')
 class DragDropHandlerDemoController {

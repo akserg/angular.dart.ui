@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Datepicker controller.
  */
-@NgController(selector: '[date-picker-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[date-picker-ctrl]', publishAs: 'ctrl')
 class DatepickerCtrl {
   
   var dt;
@@ -20,7 +20,7 @@ class DatepickerCtrl {
   List formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
   String format;
   
-  DateFilter filter;
+  Date filter;
   
   DatepickerCtrl(this.filter ) {
     toggleMin();

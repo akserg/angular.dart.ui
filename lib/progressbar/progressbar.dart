@@ -5,6 +5,7 @@ library angular.ui.progressbar;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
+import "package:angular/core_dom/module_internal.dart";
 import 'package:angular_ui/utils/utils.dart';
 import 'package:angular_ui/utils/transition.dart';
 
@@ -32,7 +33,7 @@ class ProgressbarConfig {
   ProgressbarConfig({this.animate, this.max});
 }
 
-@NgComponent(
+@Component(
     selector: 'progressbar',
     templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
     publishAs: 'ctrl',
@@ -40,7 +41,7 @@ class ProgressbarConfig {
       'value': '=>value',
       'type': '@type'
     })
-@NgComponent(
+@Component(
     selector: '[progressbar]',
     templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
     publishAs: 'ctrl',
@@ -77,13 +78,13 @@ class ProgressBar extends _ProgressbarBase {
   bool get isAnimate => animate;
 }
 
-@NgComponent(
+@Component(
     selector: 'stackedProgress',
     templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
-@NgComponent(
+@Component(
     selector: '[stackedProgress]',
     templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
-class Progress implements NgShadowRootAware, NgAttachAware {
+class Progress implements ShadowRootAware, AttachAware {
   Scope _scope;
   dom.Element _element;
   Progress(this._scope, this._element);
@@ -97,15 +98,15 @@ class Progress implements NgShadowRootAware, NgAttachAware {
   }
 }
 
-@NgComponent(
-    selector: 'bar',
+@Component(
+   selector: 'bar',
     templateUrl: 'packages/angular_ui/progressbar/bar.html',
     publishAs: 'ctrl',
     map: const {
       'value': '=>value',
       'type': '@type'
     })
-@NgComponent(
+@Component(
     selector: '[bar]',
     templateUrl: 'packages/angular_ui/progressbar/bar.html',
     publishAs: 'ctrl',
@@ -156,7 +157,7 @@ class Bar extends _ProgressbarBase {
   bool get isAnimate => _animate;
 }
 
-abstract class _ProgressbarBase implements NgShadowRootAware, NgAttachAware {
+abstract class _ProgressbarBase implements ShadowRootAware, AttachAware {
   dom.Element _element;
   Scope _scope;
   Transition _transistion;

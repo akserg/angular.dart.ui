@@ -9,14 +9,14 @@ import 'dart:html' as html;
 part 'draggable.dart';
 part 'droppable.dart';
 
-@NgInjectableService()
+@Injectable()
 class DragDropDataService {
   Function onDragSuccessCallback;
   var draggableData;
   List<String> allowedDropZones = [];
 }
 
-@NgInjectableService()
+@Injectable()
 class DragDropConfigService {
   DragDropConfig config = new DragDropConfig();
 }

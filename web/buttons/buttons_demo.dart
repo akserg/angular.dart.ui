@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Buttons controller.
  */
-@NgController(selector: '[buttons-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[buttons-ctrl]', publishAs: 'ctrl')
 class ButtonsCtrl {
   
   var singleModel = 1;

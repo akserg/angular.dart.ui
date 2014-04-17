@@ -20,9 +20,9 @@ class TabsModule extends Module {
   }
 }
 
-@NgComponent(
+@Component(
     selector: 'tabset',
-    visibility: NgDirective.CHILDREN_VISIBILITY,
+    visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/tabs/tabset.html',
     publishAs: 'tabsetCtrl',
     applyAuthorStyles: true

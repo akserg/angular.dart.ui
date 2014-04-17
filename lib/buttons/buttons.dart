@@ -30,7 +30,7 @@ class ButtonConfig {
 /**
  * Radio button directive.
  */
-@NgDirective(selector:'[btn-radio]')
+@Decorator(selector:'[btn-radio]')
 class BtnRadio {
   
   @NgAttr("btn-radio")
@@ -61,7 +61,7 @@ class BtnRadio {
 /**
  * Checkbox button directive
  */
-@NgDirective(selector:'[btn-checkbox]')
+@Decorator(selector:'[btn-checkbox]')
 class BtnCheckbox {
   ButtonConfig config;
   NgModel ngModel;

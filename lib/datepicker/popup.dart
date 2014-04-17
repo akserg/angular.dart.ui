@@ -21,8 +21,8 @@ class DatepickerPopupConfig {
  * Datapicker Popup directive.
  */
 
-@NgDirective(selector: 'datepicker-popup[ng-model]')
-@NgDirective(selector: '[datepicker-popup][ng-model]')
+@Decorator(selector: 'datepicker-popup[ng-model]')
+@Decorator(selector: '[datepicker-popup][ng-model]')
 class DatepickerPopup  {
 
   String _dateFormat;
@@ -35,7 +35,7 @@ class DatepickerPopup  {
   Scope _originalScope;
   Scope _scope;
   dom.Element _element;
-  DateFilter _dateFilter;
+  Date _dateFilter;
   NodeAttrs _attrs;
   NgModel _ngModel;
   Parser _parser;
@@ -260,10 +260,10 @@ class DatepickerPopup  {
   }
 }
 
-@NgComponent(selector: 'datepicker-popup-wrap', publishAs: 'd',
+@Component(selector: 'datepicker-popup-wrap', publishAs: 'd',
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/datepicker/popup.html')
-@NgComponent(selector: '[datepicker-popup-wrap]', publishAs: 'd', 
+@Component(selector: '[datepicker-popup-wrap]', publishAs: 'd', 
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/datepicker/popup.html')
 class DatepickerPopupWrap {

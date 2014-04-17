@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Progress bar controller.
  */
-@NgController(selector: '[progress-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[progress-ctrl]', publishAs: 'ctrl')
 class ProgressCtrl {
 
   math.Random _random = new math.Random();

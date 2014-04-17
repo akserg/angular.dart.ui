@@ -21,22 +21,22 @@ class AccordionModule extends Module {
   }
 }
 
-@NgInjectableService()
+@Injectable()
 class AccordionConfig {
   bool closeOthers = true;
 }
 
-@NgComponent(
+@Component(
     selector: 'accordion',
     publishAs: 'ctrl',
-    visibility: NgDirective.CHILDREN_VISIBILITY,
+    visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion.html',
     applyAuthorStyles: true
 )
-@NgComponent(
+@Component(
     selector: '[accordion]',
     publishAs: 'ctrl',
-    visibility: NgDirective.CHILDREN_VISIBILITY,
+    visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion.html',
     applyAuthorStyles: true
 )

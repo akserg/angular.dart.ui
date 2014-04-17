@@ -5,6 +5,7 @@ library angular.ui.timepicker;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
+import "package:angular/core_dom/module_internal.dart";
 
 /**
  * Timepicker Module.
@@ -30,13 +31,13 @@ const List AMPMS = const ['AM','PM'];
 /**
  * Datepicker.
  */
-@NgComponent(selector: 'timepicker[ng-model]', publishAs: 't',
+@Component(selector: 'timepicker[ng-model]', publishAs: 't',
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
-@NgComponent(selector: '[timepicker][ng-model]', publishAs: 't', 
+@Component(selector: '[timepicker][ng-model]', publishAs: 't', 
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
-class Timepicker implements NgShadowRootAware {
+class Timepicker implements ShadowRootAware {
   
   DateTime selected;
   List meridians;

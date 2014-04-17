@@ -3,11 +3,11 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.tabs;
 
-@NgComponent(
+@Component(
     selector: 'tab-heading-transclude',
     applyAuthorStyles: true
 )
-class TabHeadingTranscludeComponent implements NgShadowRootAware {
+class TabHeadingTranscludeComponent implements ShadowRootAware {
   
   @NgOneWay('tab')
   TabComponent tab;

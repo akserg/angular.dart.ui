@@ -1117,7 +1117,7 @@ void datepickerTests() {
         
         Datepicker ctrl;
         
-        beforeEach(inject((DatepickerConfig datepickerConfig, Scope scope, Injector injector, DateFilter dateFilter) {
+        beforeEach(inject((DatepickerConfig datepickerConfig, Scope scope, Injector injector, Date dateFilter) {
           var element = new dom.DivElement();
           var attrs = new NodeAttrs(element);
           ctrl = new Datepicker.forTests(element, datepickerConfig, attrs, scope, dateFilter);

@@ -31,7 +31,7 @@ class TimeoutModule extends Module {
  * In tests you can use {@link ngMock.$timeout `$timeout.flush()`} to
  * synchronously flush the queue of deferred functions.
  */
-@NgInjectableService()
+@Injectable()
 class Timeout {
   static Map<async.Completer, Function> deferreds = {};
 

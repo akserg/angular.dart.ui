@@ -5,6 +5,7 @@ library angular.ui.rating;
 
 import 'dart:html' as dom;
 import 'package:angular/angular.dart';
+import "package:angular/core_dom/module_internal.dart";
 
 import 'package:angular_ui/utils/extend.dart';
 import 'package:angular_ui/utils/injectable_service.dart';
@@ -26,13 +27,13 @@ class RatingConfig {
   String stateOff = null;
 }
 
-@NgComponent(
+@Component(
     selector: 'rating[ng-model]',
     publishAs: 'ctrl',
     templateUrl: 'packages/angular_ui/rating/rating.html',
     applyAuthorStyles: true
 )
-@NgComponent(
+@Component(
     selector: '[rating][ng-model]',
     publishAs: 'ctrl',
     templateUrl: 'packages/angular_ui/rating/rating.html',

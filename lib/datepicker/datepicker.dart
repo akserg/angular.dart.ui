@@ -5,6 +5,7 @@ library angular.ui.datepicker;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
+import "package:angular/core_dom/module_internal.dart";
 import "package:angular_ui/utils/position.dart";
 import 'package:angular_ui/utils/utils.dart';
 
@@ -90,13 +91,13 @@ class _Mode {
 /**
  * Datepicker.
  */
-@NgComponent(selector: 'datepicker[ng-model]', publishAs: 'd',
+@Component(selector: 'datepicker[ng-model]', publishAs: 'd',
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
-@NgComponent(selector: '[datepicker][ng-model]', publishAs: 'd', 
+@Component(selector: '[datepicker][ng-model]', publishAs: 'd', 
     applyAuthorStyles: true, 
     templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
-class Datepicker implements NgShadowRootAware {
+class Datepicker implements ShadowRootAware {
 
   int mode = 0;
   DateTime selected = new DateTime.now();
@@ -198,7 +199,7 @@ class Datepicker implements NgShadowRootAware {
   NodeAttrs _attrs;
   NgModel _ngModel;
   Scope _scope;
-  DateFilter _dateFilter;
+  Date _dateFilter;
   
   List rows;
   List labels;
@@ -595,7 +596,7 @@ class Datepicker implements NgShadowRootAware {
 /**
  * Filter to show week number
  */
-@NgFilter(name:'weekNumber')
+@Formatter(name:'weekNumber')
 class WeekNumberFilter {
   call(valueToFilter, datepicker) {
     if (valueToFilter != null && valueToFilter is List) {
@@ -604,34 +605,3 @@ class WeekNumberFilter {
     return null;
   }
 }
-
-//@NgFilter(name:'toTitle')
-//class ToTitleFilter {
-//  String call(_VisibleDates value) {
-//    String res = value == null ? '' : value.title;
-//    print('toTitle $res');
-//    return res;
-//  }
-//}
-//
-//@NgFilter(name:'toLabels')
-//class ToLabelsFilter {
-//  List call(_VisibleDates value) {
-//    return value == null ? const [] : value.labels;
-//  }
-//}
-//
-//@NgFilter(name:'toRows')
-//class ToRowsFilter {
-//  List call(_VisibleDates value, int splitValue) {
-//    return value == null ? const [] : split(value.objects, splitValue);
-//  }
-//}
-//
-//@NgFilter(name:'toColsSpan')
-//class ToColsSpanFilter {
-//  int call(_VisibleDates value, int splitValue, bool showWeekNumbers) {
-//    List res = split(value.objects, splitValue);
-//    return res[0].length - 2 + (showWeekNumbers ? 1 : 0);
-//  }
-//}

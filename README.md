@@ -3,7 +3,7 @@
 
 Port of Angular-UI to Dart.
 
-###Bootstrap directives and components
+##Bootstrap directives and components
 
 - Checkbox and RadioButton
 - DropdownToggle
@@ -11,6 +11,11 @@ Port of Angular-UI to Dart.
 - Alert
 - ProgressBar
 - Modal
+- Accordion
+- Rating
+- Datepicker (partially implemented)
+- Tabs
+- Drag and Drop support
 
 ##Credits
 - Sergey Akopkokhyants (https://github.com/akserg)

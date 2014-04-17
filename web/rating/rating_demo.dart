@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Rating bar controller.
  */
-@NgController(selector: '[rating-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[rating-ctrl]', publishAs: 'ctrl')
 class RatingCtrl {
   int rate = 7;
   int max = 10;

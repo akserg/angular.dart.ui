@@ -13,7 +13,7 @@ import 'dart:async';
 
 import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
-import 'package:angular/core_dom/module.dart';
+import 'package:angular/core_dom/module_internal.dart';
 
 import 'package:angular_ui/utils/utils.dart';
 

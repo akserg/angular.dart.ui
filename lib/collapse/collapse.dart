@@ -25,7 +25,7 @@ class CollapseModule extends Module {
 /**
  * The collapsible directive indicates a block of html that will expand and collapse.
  */
-@NgDirective(selector:'[collapse]')
+@Decorator(selector:'[collapse]')
 class Collapse {
 
   @NgOneWay("collapse")

@@ -3,8 +3,8 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
-@NgDirective(selector: '[ui-draggable]',
-  visibility: NgDirective.CHILDREN_VISIBILITY)
+@Decorator(selector: '[ui-draggable]',
+  visibility: Directive.CHILDREN_VISIBILITY)
 class DraggableComponent {
 
   html.Element _draggableElement;

@@ -6,7 +6,7 @@ part of angular.ui.demo;
 /**
  * Dropdown controller.
  */
-@NgController(selector: '[dropdown-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[dropdown-ctrl]', publishAs: 'ctrl')
 class DropdownCtrl {
   
   var items = [

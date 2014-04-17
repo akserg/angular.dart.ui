@@ -23,7 +23,7 @@ class TransitionModule extends Module {
   }
 }
 
-@NgInjectableService()
+@Injectable()
 class Transition {
 
   Timeout timeout;

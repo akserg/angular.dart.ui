@@ -29,21 +29,21 @@ class CarouselModule extends Module {
 /**
  * Carousel component.
  */
-@NgComponent(
+@Component(
     selector: 'carousel',
     publishAs: 'c',
     applyAuthorStyles: true,
-    visibility: NgDirective.CHILDREN_VISIBILITY, /*
+    visibility: Directive.CHILDREN_VISIBILITY, /*
     cssUrl: 'packages/angular_ui/carousel/carousel.css', */
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
-@NgComponent(
+@Component(
     selector: '[carousel]',
     publishAs: 'c',
     applyAuthorStyles: true,
-    visibility: NgDirective.CHILDREN_VISIBILITY, /*
+    visibility: Directive.CHILDREN_VISIBILITY, /*
     cssUrl: 'packages/angular_ui/carousel/carousel.css', */
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
-class Carousel implements NgDetachAware {
+class Carousel implements DetachAware {
 
   @NgOneWay('no-transition') bool noTransition = false;
   int _interval = 0;
@@ -266,13 +266,13 @@ class Carousel implements NgDetachAware {
 }
 
 
-@NgComponent(
+@Component(
     selector: 'slide',
     publishAs: 's',
     applyAuthorStyles: true,
     templateUrl: 'packages/angular_ui/carousel/slide.html',
     cssUrl: 'packages/angular_ui/carousel/slide.css')
-class Slide implements NgShadowRootAware, NgDetachAware {
+class Slide implements ShadowRootAware, DetachAware {
   bool _active = false;
   @NgTwoWay('active')
   set active(bool value) {

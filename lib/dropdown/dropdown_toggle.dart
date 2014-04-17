@@ -16,10 +16,10 @@ class DropdownToggleModule extends Module {
   }
 }
 
-@NgDirective(
+@Decorator(
     selector: '[dropdown-toggle]'
 )
-@NgDirective(
+@Decorator(
     selector: '.dropdown-toggle'
 )
 class DropdownToggle {
