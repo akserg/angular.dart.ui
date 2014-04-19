@@ -151,9 +151,9 @@ void datepickerTests() {
       it('is a \'<table>\' element', async(inject(() {
         dom.Element element = createDatapicker();
         
-        expect(element.shadowRoot.children.length).toBe(2);
-        expect(element.shadowRoot.children[1].tagName).toEqual('TABLE');
-        expect(element.shadowRoot.children[1].querySelectorAll('thead > tr').length).toBe(2);
+        expect(element.shadowRoot.children.length).toBe(1);
+        expect(element.shadowRoot.children[0].tagName).toEqual('TABLE');
+        expect(element.shadowRoot.children[0].querySelectorAll('thead > tr').length).toBe(2);
       })));
       
       it('shows the correct title', async(inject(() {

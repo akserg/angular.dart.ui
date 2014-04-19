@@ -17,6 +17,8 @@ Port of Angular-UI to Dart.
 - Tabs
 - Drag and Drop support
 
+*Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.*
+
 ##Credits
 - Sergey Akopkokhyants (https://github.com/akserg)
 - Tõnis Pool (https://github.com/poolik).

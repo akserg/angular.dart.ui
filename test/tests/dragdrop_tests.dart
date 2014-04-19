@@ -106,7 +106,7 @@ void dragdropTests() {
       })));
  
       it('Drop events should add/remove the expected classes to the target element', async(inject(() {
-        Function dropSuccessCallback = (){};
+        Function dropSuccessCallback = jasmine.createSpy('drop callback');
         dom.Element dropElem = ngQuery(createElement(dropSuccessCallback:dropSuccessCallback), '#dropId')[0];
         
         expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
