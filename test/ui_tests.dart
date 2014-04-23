@@ -65,8 +65,8 @@ void main() {
     group('Transition', () => transitionTests());
     group('Modal', () => modalTests());
     group('Rating', () => ratingTests());
-//    group('Timepicker', () => timepickerTests());
     group('Datepicker', () => datepickerTests());
+    group('Timepicker', () => timepickerTests());
   });
 }
 

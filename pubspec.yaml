@@ -1,5 +1,5 @@
 name: angular_ui
-version: 0.3.0
+version: 0.4.0
 authors:
 - Sergey Akopkokhyants <akserg@gmail.com>
 - Tonis Pool <tonis.pool@gmail.com>
@@ -13,5 +13,5 @@ dependencies:
   angular: '>=0.10.0 <0.11.0'
   js: '>=0.2.2 <0.3.0'
 dev_dependencies:
-  unittest: '>=0.10.1+2 <0.11.0'
   mock: '>=0.10.0+1 <0.11.0'
+  unittest: '>=0.10.1+2 <0.11.0'

@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
-//import 'dart:html' as dom;
+import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
