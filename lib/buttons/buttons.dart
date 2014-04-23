@@ -24,7 +24,7 @@ class ButtonConfig {
   String activeClass;
   String toggleEvent;
   
-  ButtonConfig({this.activeClass, this.toggleEvent});
+  ButtonConfig({this.activeClass:'active', this.toggleEvent:'click'});
 }
 
 /**
@@ -51,6 +51,7 @@ class BtnRadio {
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
       if (!element.classes.contains(config.activeClass)) {
+        ngModel.markAsTouched();
         ngModel.viewValue = scope.eval(btnRadioAttr);
         ngModel.render(ngModel.modelValue);
       }
@@ -92,8 +93,14 @@ class BtnCheckbox {
   
     // ui -> model
     element.on[config.toggleEvent].listen((dom.Event event) {
+      // We need remove focus out of the element because it doesn't change the state
+      element.blur();
+      ngModel.markAsTouched();
       ngModel.viewValue = element.classes.contains(config.activeClass) ? falseValue : trueValue;
       ngModel.render(ngModel.modelValue);
+    });
+    element.onBlur.listen((e) {
+      ngModel.markAsTouched();
     });
   }
 }

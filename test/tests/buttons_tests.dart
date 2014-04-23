@@ -56,14 +56,14 @@ void buttonsTests() {
     
     //UI-> model
     it('should toggle default model values on click', () {
-      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>');
       scope.context['model'] = false;
+      var btn = compileButton('<button ng-model="model" btn-checkbox>click</button>');
 
-      _.triggerEvent(btn, 'click', 'MouseEvent');
+      _.triggerEvent(btn, 'click');
       expect(scope.context['model']).toEqual(true);
       expect(btn).toHaveClass('active');
 
-      _.triggerEvent(btn, 'click', 'MouseEvent');
+      _.triggerEvent(btn, 'click');
       expect(scope.context['model']).toEqual(false);
       expect(btn).not.toHaveClass('active');
     });
@@ -72,11 +72,11 @@ void buttonsTests() {
       scope.context['model'] = 0;
       var btn = compileButton('<button ng-model="model" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">click</button>');
 
-      _.triggerEvent(btn, 'click', 'MouseEvent');
+      _.triggerEvent(btn, 'click');
       expect(scope.context['model']).toEqual(1);
       expect(btn).toHaveClass('active');
 
-      _.triggerEvent(btn, 'click', 'MouseEvent');
+      _.triggerEvent(btn, 'click');
       expect(scope.context['model']).toEqual(0);
       expect(btn).not.toHaveClass('active');
     });
