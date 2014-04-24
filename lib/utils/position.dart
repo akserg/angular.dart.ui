@@ -77,7 +77,7 @@ class Position {
    * Provides read-only equivalent of jQuery's position function:
    * http://api.jquery.com/position/
    */
-  dynamic position(dom.Element element) {
+  Rect position(dom.Element element) {
 //    var elBCR = offset(element);
 //    var offsetParentBCR = { top: 0, left: 0 };
 //    var offsetParentEl = parentOffsetEl(element[0]);

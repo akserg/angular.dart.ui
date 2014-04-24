@@ -20,6 +20,7 @@ import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
+import 'package:angular_ui/tooltip/tooltip.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -43,6 +44,7 @@ class AngularUIModule extends Module {
     install(new ModalModule());
     install(new DatepickerModule());
     install(new TimepickerModule());
+    install(new TooltipModule());
   }
 }
 
