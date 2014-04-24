@@ -33,25 +33,29 @@ class CarouselModule extends Module {
     selector: 'carousel',
     publishAs: 'c',
     applyAuthorStyles: true,
-    visibility: Directive.CHILDREN_VISIBILITY, /*
-    cssUrl: 'packages/angular_ui/carousel/carousel.css', */
+    visibility: Directive.CHILDREN_VISIBILITY, 
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
 @Component(
     selector: '[carousel]',
     publishAs: 'c',
     applyAuthorStyles: true,
-    visibility: Directive.CHILDREN_VISIBILITY, /*
-    cssUrl: 'packages/angular_ui/carousel/carousel.css', */
+    visibility: Directive.CHILDREN_VISIBILITY, 
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
 class Carousel implements DetachAware {
 
-  @NgOneWay('no-transition') bool noTransition = false;
+  @NgOneWay('no-transition') 
+  bool noTransition = false;
+  
   int _interval = 0;
-  @NgOneWay('interval') set interval(int interval) {
+  @NgOneWay('interval') 
+  set interval(int interval) {
     _interval = interval;
     restartTimer();
   }
-  @NgOneWay('no-pause') bool noPause = false;
+  
+  @NgOneWay('no-pause') 
+  bool noPause = false;
+  
   List<Slide> slides = [];
   int _currentIndex = -1;
   async.Completer _currentTimeout;
@@ -218,16 +222,20 @@ class Carousel implements DetachAware {
   void timerFn() {
     // this is called from timeout. restart async so the previous can properly
     // switch to completed before restarting
-
-    //_log.fine('timerFn');
-    new async.Future(() {
-      if (_isPlaying) {
-        next();
-        restartTimer();
-      } else {
-        pause();
-      }
+    bool attached = slides.any((Slide slide) {
+      return slide.element.parent != null && slide.element.parent.parent != null;
     });
+    //_log.fine('timerFn');
+    if (attached) {
+      new async.Future(() {
+        if (_isPlaying) {
+          next();
+          restartTimer();
+        } else {
+          pause();
+        }
+      });
+    }
   }
 
   void addSlide(Slide slide, dom.Element element) {

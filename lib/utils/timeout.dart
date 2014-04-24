@@ -18,6 +18,13 @@ class TimeoutModule extends Module {
   }
 }
 
+class _TimeItem {
+  Function fn;
+  async.Timer timer;
+  
+  _TimeItem(this.fn, this.timer);
+}
+
 /**
  * Angular's UI wrapper for `window.setTimeout`. The `fn` function is wrapped into a try/catch
  * block and delegates any exceptions to
@@ -33,7 +40,7 @@ class TimeoutModule extends Module {
  */
 @Injectable()
 class Timeout {
-  static Map<async.Completer, Function> deferreds = {};
+  Map<async.Completer, _TimeItem> deferreds = new Map<async.Completer, _TimeItem>();
 
   Scope scope;
   ExceptionHandler exceptionHandler;
@@ -78,7 +85,7 @@ class Timeout {
       }
     });
 
-    deferreds[deferred] = fn;
+    deferreds[deferred] = new _TimeItem(fn, timeoutId);
 
     return deferred;
   }
@@ -89,6 +96,7 @@ class Timeout {
    */
   bool cancel([async.Completer promise = null]) {
     if (promise != null && deferreds.containsKey(promise)) {
+      deferreds[promise].timer.cancel();
       promise.completeError('canceled');
       deferreds.remove(promise);
       return true;
@@ -100,12 +108,14 @@ class Timeout {
    * Call all functions in [deferreds].
    */
   void flush() {
-    deferreds.forEach((async.Completer deferred, Function fn) {
+    deferreds.forEach((async.Completer deferred, _TimeItem timeItem) {
       try {
-        deferred.complete(fn());
+        deferred.complete(timeItem.fn());
       } catch(e, s) {
         deferred.completeError(e);
         exceptionHandler(e, s);
+      } finally {
+        timeItem.timer.cancel();
       }
     });
     deferreds.clear();

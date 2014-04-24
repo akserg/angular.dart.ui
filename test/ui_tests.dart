@@ -32,6 +32,7 @@ import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/tabs/tabset.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/rating/rating.dart';
+import 'package:angular_ui/carousel/carousel.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -48,6 +49,7 @@ part 'tests/modal_tests.dart';
 part 'tests/datepicker_tests.dart';
 part 'tests/timepicker_tests.dart';
 part 'tests/rating_tests.dart';
+part 'tests/carousel_tests.dart';
 
 void main() {
   useHtmlEnhancedConfiguration();
@@ -67,6 +69,7 @@ void main() {
     group('Rating', () => ratingTests());
     group('Datepicker', () => datepickerTests());
     group('Timepicker', () => timepickerTests());
+    group('Carousel', () => carouselTests());
   });
 }
 
