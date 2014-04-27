@@ -11,6 +11,7 @@ import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/carousel/carousel.dart';
 import 'package:angular_ui/collapse/collapse.dart';
 import 'package:angular_ui/dropdown/dropdown_toggle.dart';
+import 'package:angular_ui/pagination/pagination.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/tabs/tabset.dart';
@@ -35,6 +36,7 @@ class AngularUIModule extends Module {
     install(new CollapseModule());
     install(new DragDropModule());
     install(new DropdownToggleModule());
+    install(new PaginationModule());
     install(new ProgressbarModule());
     install(new RatingModule());
     install(new TabsModule());
