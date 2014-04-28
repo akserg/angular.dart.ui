@@ -35,6 +35,7 @@ part 'dragdrop/dragdrop_demo.dart';
 part 'datepicker/datepicker_demo.dart';
 part 'dropdown_toggle/dropdown_toggle_demo.dart';
 part 'modal/modal_demo.dart';
+part 'pagination/pagination_demo.dart';
 part 'progressbar/progressbar_demo.dart';
 part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
@@ -65,6 +66,7 @@ class DemoModule extends Module {
     type(AlertCtrl);
     type(CollapseCtrl);
     type(DropdownCtrl);
+    type(PaginationController);
     type(ProgressCtrl);
     type(ButtonsCtrl);
     type(CarouselDemoController);

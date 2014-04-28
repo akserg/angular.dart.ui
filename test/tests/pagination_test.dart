@@ -37,7 +37,7 @@ void paginationTests() {
         rootScope = injector.get(Scope);
         cache = injector.get(TemplateCache);
         loadTemplatesToCache();
-        rootScope.context['total '] = 47;
+        rootScope.context['total'] = 47;
         rootScope.context['currentPage'] = 3;
         element = compileElement('<pager total-items="total" ng-model="currentPage"></pager>');
         microLeap();
@@ -52,7 +52,7 @@ void paginationTests() {
       return shadowElement.querySelectorAll('li').length;
     }
 
-    Element getPaginationEl(index) {
+    dom.Element getPaginationEl(index) {
       return shadowElement.querySelectorAll('li').elementAt(index);
     }
 
@@ -124,7 +124,7 @@ void paginationTests() {
     })));
 
     it('does not changes the number of pages when `total-items` changes', async(inject(() {
-      rootScope.context['total '] = 47; // 8 pages
+      rootScope.context['total'] = 73; // 8 pages
       rootScope.rootScope.apply();
 
       expect(getPaginationBarSize()).toBe(2);
@@ -134,9 +134,13 @@ void paginationTests() {
 
     describe('`items-per-page`', () {
       beforeEach(module((Module module) {
-        rootScope.context['perpage '] = 5;
-        element = compileElement('<pager total-items="total" items-per-page="perpage" ng-model="currentPage"></pager>');
-        shadowElement = getFirstUList(element.shadowRoot);
+        return (Injector _injector) {
+          rootScope.context['perpage'] = 5;
+          element = compileElement('<pager total-items="total" items-per-page="perpage" ng-model="currentPage"></pager>');
+          microLeap();
+          rootScope.rootScope.apply();
+          shadowElement = getFirstUList(element.shadowRoot);
+        };
       }));
 
       it('does not change the number of pages', async(inject(() {
@@ -144,6 +148,37 @@ void paginationTests() {
         expect(getPaginationEl(0).firstChild.text).toEqual('« Previous');
         expect(getPaginationEl(1).firstChild.text).toEqual('Next »');
       })));
+
+      it('selects the last page when it is too big', async(inject(() {
+        rootScope.context['perpage'] = 30;
+        rootScope.rootScope.apply();
+
+        expect(rootScope.context['currentPage']).toBe(2);
+        expect(getPaginationBarSize()).toBe(2);
+        expect(getPaginationEl(0)).not.toHaveClass('disabled');
+        expect(getPaginationEl(1)).toHaveClass('disabled');
+      })));
+    });
+
+    describe('when `page` is not a number', () {
+      it('handles string', async(inject(() {
+        updateCurrentPage('1');
+        expect(getPaginationEl(0)).toHaveClass('disabled');
+
+        updateCurrentPage('05');
+        expect(getPaginationEl(1)).toHaveClass('disabled');
+      })));
+    });
+
+    describe('`num-pages`', () {
+      it('equals to total number of pages', () {
+        rootScope.context['numpg'] = null;
+        element = compileElement('<pager total-items="total" num-pages="numpg" ng-model="currentPage"></pager>');
+        microLeap();
+        rootScope.rootScope.apply();
+
+        expect(rootScope.context['numpg']).toBe(5);
+      });
     });
   });
 
