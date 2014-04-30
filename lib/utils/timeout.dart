@@ -58,7 +58,7 @@ class Timeout {
    */
   async.Completer call(Function fn, {int delay:0, bool invokeApply:true}) {
     assert(fn != null);
-    async.Completer<async.Timer> deferred = new async.Completer<async.Timer>();
+    async.Completer deferred = new async.Completer();
     deferred.future.catchError((e, s) {
       //_log.fine('call error $e, $s'); // enabled for hard to find error source
       });

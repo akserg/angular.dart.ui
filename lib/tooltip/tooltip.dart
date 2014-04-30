@@ -4,6 +4,7 @@
 library angular.ui.tooltip;
 
 import 'dart:html' as dom;
+import 'dart:async' as async;
 import "package:angular/angular.dart";
 import "package:angular/core_dom/module_internal.dart";
 import 'package:angular_ui/utils/timeout.dart';
@@ -63,30 +64,69 @@ class TooltipConfig {
   /**
    * This is a helper function for translating camel-case to snake-case.
    */
-  String snakeCase(name){
+  String snakeCase(String name){
    var regexp = new RegExp('/[A-Z]/');
    var separator = '-';
-   return name.replace(regexp, (letter, pos) {
-     return (pos ? separator : '') + letter.toLowerCase();
+//   return name.replace(regexp, (letter, pos) {
+//     return (pos ? separator : '') + letter.toLowerCase();
+//   });
+   return name.replaceAllMapped(regexp, (Match match) {
+     return (match != null ? separator : '') + match.group(0).toLowerCase();
    });
   }
 }
 
-class TooltipBase {
+@Decorator(selector:'[tooltip]') 
+@Decorator(selector:'tooltip')
+class Tooltip extends TooltipBase {
+  
+  var template = '<div><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
+  
+  Tooltip(Scope scope, dom.Element element, NodeAttrs attrs, Timeout timeout, TooltipConfig config, Interpolate interpolate, Position position, Injector injector, Compiler compiler) : 
+    super("tooltip", 'tooltip', 'mouseenter', scope, element, attrs, timeout, config, interpolate, position, injector, compiler);
+  
+  void render() {
+    tooltip.classes.clear();
+    tooltip.classes.add('tooltip');
+    //
+    var _placement = _scope.context['tt_placement'];
+    if (_placement != null && _placement.length > 0) {
+      tooltip.classes.add(_placement);
+    }
+    //
+    var _in = toBool(eval(_scope, _scope.context['tt_isOpen']));
+    if (_in) {
+      tooltip.classes.add('in');
+    }
+    //
+    var _fade = toBool(eval(_scope, _scope.context['tt_animation']));
+    if (_fade) {
+      tooltip.classes.add('fade');
+    }
+    //
+    dom.Element innerTooltip = tooltip.children[1];
+    print('Content is ${_scope.context['tt_content']}');
+    innerTooltip.setInnerHtml(_scope.context['tt_content']);
+  }
+}
+
+/**
+ * Base class for all tooltipable components.
+ */
+abstract class TooltipBase {
   
   Map options;
   
   var directiveName;
-  var startSym = "{{";
-  var endSym = "}}";
   
   var template;
         
   dom.Element tooltip;
+  
   var transitionTimeout;
-  var popupTimeout;
+  async.Completer popupTimeout;
   bool appendToBody = false;
-  var triggers;
+  Map triggers;
   bool hasEnableExp = false;      
       
   Scope _scope;
@@ -95,29 +135,24 @@ class TooltipBase {
   
   Timeout _timeout;
   TooltipConfig _config;
-  String defaultTriggerShow = '';
-  String _type = "tooltip";
+  String defaultTriggerShow;
+  String _type;
   Interpolate _interpolate;
   String prefix = '';
   Position _position;
+  Injector _injector;
+  Compiler _compiler;
   
-  TooltipBase(this._scope, this._element, this._attrs, this._timeout, this._config, this._interpolate, this._position) {
+  TooltipBase(this._type, this.prefix, this.defaultTriggerShow, 
+      this._scope, this._element, this._attrs, this._timeout, this._config, 
+      this._interpolate, this._position, this._injector, this._compiler) {
     options = new Map.from(_config.defaultOptions)..addAll(_config.globalOptions);
     
     directiveName = _config.snakeCase(_type);
-    
-    template = '''
-      <div ${directiveName}-popup 
-        title="${startSym}tt_title${endSym}"
-        content="${startSym}tt_content${endSym}"
-        placement="${startSym}tt_placement${endSym}"
-        animation="tt_animation"
-        is-open="tt_isOpen">
-      </div>''';
-      
+
     appendToBody = options.containsKey('append-to-body') ? options['append-to-body'] : false;
     triggers = getTriggers();
-    hasEnableExp = _attrs.containsKey('${prefix}Enable');
+    hasEnableExp = _attrs.containsKey('${prefix}-enable');
       
       
     // By default, the tooltip is not open.
@@ -135,20 +170,20 @@ class TooltipBase {
       }
     });
     
-    _attrs.observe('${prefix}Title', (val) {
+    _attrs.observe('${prefix}-title', (val) {
       _scope.context['tt_title'] = val;
     });
     
-    _attrs.observe('${prefix}Placement', (val) {
+    _attrs.observe('${prefix}-placement', (val) {
       _scope.context['tt_placement'] = val != null ? val : options['placement'];
     });
     
-    _attrs.observe('${prefix}PopupDelay', (val) {
-      var delay = toInt(val);
-      _scope.context['tt_popupDelay'] = delay != null ? delay : options['popupDelay'];
+    _attrs.observe('${prefix}-popup-delay', (val) {
+      var delay = eval(_scope, val, options['popupDelay']);
+      _scope.context['tt_popupDelay'] = delay is int ? delay : options['popupDelay'];
     });
    
-    _attrs.observe('${prefix}Trigger', (val) {
+    _attrs.observe('${prefix}-trigger', (val) {
       unregisterTriggers();
   
       triggers = getTriggers( val );
@@ -161,10 +196,10 @@ class TooltipBase {
       }
     });
     
-    bool animation = _scope.eval(_attrs['${prefix}Animation']);
-    _scope.context['tt_animation'] = animation != null ? animation : options['animation'];
+    bool attrAnimation = toBool(_scope.eval(_attrs['${prefix}-animation']));
+    _scope.context['tt_animation'] = attrAnimation != null ? attrAnimation : options['animation'];
     
-    _attrs.observe('${prefix}AppendToBody', (val) {
+    _attrs.observe('${prefix}-append-to-body', (val) {
       appendToBody = val != null ? _scope.eval(val) : appendToBody;
     });
     
@@ -177,15 +212,14 @@ class TooltipBase {
           hide();
         }
      });
-      
-      // Make sure tooltip is destroyed and removed.
-      _scope.on('destroy').listen((evt) {
-        _timeout.cancel(transitionTimeout);
-        _timeout.cancel(popupTimeout);
-        unregisterTriggers();
-        removeTooltip();
-      });
     }
+    // Make sure tooltip is destroyed and removed.
+    _scope.on(ScopeEvent.DESTROY).listen((evt) {
+      _timeout.cancel(transitionTimeout);
+      _timeout.cancel(popupTimeout);
+      unregisterTriggers();
+      removeTooltip();
+    });
   }
 
   /**
@@ -212,10 +246,11 @@ class TooltipBase {
   }  
   
   // Show the tooltip popup element.
-  dynamic show() {
+  void show() {
 
+    String scopeContent = _scope.context['tt_content'];
     // Don't show empty tooltips.
-    if (!_scope.context['tt_content']) {
+    if (scopeContent == null || scopeContent.length == 0 ) {
       return null; //angular.noop;
     }
     
@@ -230,25 +265,26 @@ class TooltipBase {
     // Set the initial positioning.
     tooltip.style.top = "0";
     tooltip.style.left = "0";
-    tooltip.style.display = 'block';
+    tooltip.style.display = 'inline';
     
     // Now we add it to the DOM because need some info about it. But it's not 
     // visible yet anyway.
     if (appendToBody) {
         dom.document.body.append(tooltip);
     } else {
-      _element.append(tooltip);
+      _element.insertAdjacentElement('afterEnd', tooltip);
+      //_element.append(tooltip);
     }
-    
+
     positionTooltip();
     
     // And show the tooltip.
     _scope.context['tt_isOpen'] = true;
     _scope.apply(); // digest required as $apply is not called
     
-    // Return positioning function as promise callback for correct
-    // positioning after draw.
-    return positionTooltip;
+    render();
+    
+    positionTooltip();
   }
   
   // Hide the tooltip popup element.
@@ -273,10 +309,8 @@ class TooltipBase {
     // There can only be one tooltip element per directive shown at once.
     removeTooltip();
     
-    tooltip = tooltipLinker(scope, () {});
-    
-    // Get contents rendered into the tooltip
-    _scope.apply();
+    //tooltip = tooltipLinker(scope, () {});
+    tooltip = compile(template, _injector, _compiler);
   }
   
   void removeTooltip() {
@@ -289,14 +323,15 @@ class TooltipBase {
   
   // Show the tooltip with delay if specified, otherwise show it immediately
   void showTooltipBind([dom.Event evt]) {
-     if(hasEnableExp && !_scope.eval(_attrs['${prefix}Enable'])) {
+     if(hasEnableExp && !_scope.eval(_attrs['${prefix}-enable'])) {
        return;
      }
-     if (_scope.context['tt_popupDelay']) {
-       popupTimeout = _timeout(show, delay:_scope.context['tt_popupDelay'], invokeApply:false);
-       popupTimeout.then((reposition){reposition();});
+
+     int delay = _scope.context['tt_popupDelay'];
+     if (delay != null && delay > 0) {
+       popupTimeout = _timeout(show, delay:delay, invokeApply:false);
      } else {
-       show()();
+       show();
      }
    }
   
@@ -316,62 +351,57 @@ class TooltipBase {
   }
 
   void positionTooltip() {
-    Rect position;
     int ttWidth, ttHeight;
     Map ttPosition;
     // Get the position of the directive element.
-    position = appendToBody ? _position.offset(_element) : _position.position(_element);
+    //position = appendToBody ? _position.offset(_element) : _position.position(_element);
+    dom.Rectangle position = appendToBody ? _element.offset : _element.offset;
 
     // Get the height and width of the tooltip so we can center it.
     ttWidth = tooltip.offsetWidth;
     ttHeight = tooltip.offsetHeight;
-
+    
     // Calculate the tooltip's top and left coordinates to center it with
     // this directive.
     switch (_scope.context['tt_placement']) {
       case 'right':
         ttPosition = {
-          'top': position.top + position.height / 2 - ttHeight / 2,
+          'top': position.top + (position.height - ttHeight) / 2,
           'left': position.left + position.width
         };
         break;
       case 'bottom':
         ttPosition = {
           'top': position.top + position.height,
-          'left': position.left + position.width / 2 - ttWidth / 2
+          'left': position.left + (position.width - ttWidth) / 2
         };
         break;
       case 'left':
         ttPosition = {
-          'top': position.top + position.height / 2 - ttHeight / 2,
+          'top': position.top + (position.height - ttHeight) / 2,
           'left': position.left - ttWidth
         };
         break;
       default:
         ttPosition = {
           'top': position.top - ttHeight,
-          'left': position.left + position.width / 2 - ttWidth / 2
+          'left': position.left + (position.width - ttWidth) / 2
         };
         break;
     }
 
-    ttPosition['top'] += 'px';
-    ttPosition['left'] += 'px';
-
     // Now set the calculated positioning.
-    tooltip.style.top = ttPosition['top'];
-    tooltip.style.left = ttPosition['left'];
+    tooltip.style.top = "${ttPosition['top']}px";
+    tooltip.style.left = "${ttPosition['left']}px";
   }
 
   void unregisterTriggers() {
-    _element.removeEventListener(triggers.show, showTooltipBind);
-    _element.removeEventListener(triggers.hide, hideTooltipBind);
+    _element.removeEventListener(triggers['show'], showTooltipBind);
+    _element.removeEventListener(triggers['hide'], hideTooltipBind);
   }
-}
-
-@Decorator(selector:'[tooltip]')
-@Decorator(selector:'tooltip')
-class Tooltip extends TooltipBase {
-  Tooltip(Scope scope, dom.Element element, NodeAttrs attrs, Timeout timeout, TooltipConfig config, Interpolate interpolate, Position position) : 
-    super(scope, element, attrs, timeout, config, interpolate, position);
+ 
+  /**
+   * Rendering function.
+   */
+  void render();
 }

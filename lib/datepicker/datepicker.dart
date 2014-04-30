@@ -438,15 +438,15 @@ class Datepicker implements ShadowRootAware {
 
   void init() {
     format = new _Format()
-    ..day = getValue(_attrs['day-format'], _datepickerConfig.dayFormat)
-    ..month = getValue(_attrs['month-format'], _datepickerConfig.monthFormat)
-    ..year = getValue(_attrs['year-format'], _datepickerConfig.yearFormat)
-    ..dayHeader = getValue(_attrs['day-header-format'], _datepickerConfig.dayHeaderFormat)
-    ..dayTitle = getValue(_attrs['day-title-format'], _datepickerConfig.dayTitleFormat)
-    ..monthTitle = getValue(_attrs['month-title-format'], _datepickerConfig.monthTitleFormat);
+    ..day = eval(_scope, _attrs['day-format'], _datepickerConfig.dayFormat)
+    ..month = eval(_scope, _attrs['month-format'], _datepickerConfig.monthFormat)
+    ..year = eval(_scope, _attrs['year-format'], _datepickerConfig.yearFormat)
+    ..dayHeader = eval(_scope, _attrs['day-header-format'], _datepickerConfig.dayHeaderFormat)
+    ..dayTitle = eval(_scope, _attrs['day-title-format'], _datepickerConfig.dayTitleFormat)
+    ..monthTitle = eval(_scope, _attrs['month-title-format'], _datepickerConfig.monthTitleFormat);
 
-    startingDay = getValue(_attrs['starting-day'], _datepickerConfig.startingDay);
-    yearRange = getValue(_attrs['year-rRange'], _datepickerConfig.yearRange);
+    startingDay = eval(_scope, _attrs['starting-day'], _datepickerConfig.startingDay);
+    yearRange = eval(_scope, _attrs['year-rRange'], _datepickerConfig.yearRange);
 
     minDate = _datepickerConfig.minDate != null ? DateTime.parse(_datepickerConfig.minDate) : null;
     maxDate = _datepickerConfig.maxDate != null ? DateTime.parse(_datepickerConfig.maxDate) : null;
@@ -540,14 +540,6 @@ class Datepicker implements ShadowRootAware {
         }];
   }
 
-
-  dynamic getValue(value, defaultValue) {
-    var val = null;
-    if (value != null) {
-      val = _scope.eval(value is String ? value : value.toString());
-    }
-    return val != null ? val : defaultValue;
-  }
 
   int getDaysInMonth(year, month) {
     return new DateTime(year, month, 0).day;

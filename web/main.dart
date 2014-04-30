@@ -39,6 +39,7 @@ part 'progressbar/progressbar_demo.dart';
 part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
+part 'tooltip/tooltip_demo.dart';
 
 /**
  * Entry point into app.
@@ -56,6 +57,7 @@ class DemoModule extends Module {
   DemoModule() {
     install(new AngularUIModule());
     //
+    type(TooltipDemoCtrl);
     type(TimepickerDemoCtrl);
     type(DatepickerCtrl);
     type(ModalCtrlTemplate);

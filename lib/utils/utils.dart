@@ -22,6 +22,14 @@ int toInt(x) {
   throw new Exception("Can't translate $x to int");
 }
 
+dynamic eval(Scope scope, value, [defaultValue = null]) {
+  var val = null;
+  if (value != null) {
+    val = scope.eval(value is String ? value : value.toString());
+  }
+  return val != null ? val : defaultValue;
+}
+
 dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isDiv);
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
@@ -79,3 +87,40 @@ DateTime parseDate(model, [intl.DateFormat format = null]) {
   }
   return date;
 }
+
+/**
+ * Use to compile HTML and activate its directives.
+ *
+ * If [html] parameter is:
+ *
+ *   - [String] then treat it as HTML
+ *   - [Node] then treat it as the root node
+ *   - [List<Node>] then treat it as a collection of nods
+ *
+ * After the compilation the [rootElements] contains an array of compiled root nodes,
+ * and [rootElement] contains the first element from the [rootElemets].
+ *
+ * An option [scope] parameter can be supplied to link it with non root scope.
+ */
+dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, DirectiveMap directives}) {
+  List<dom.Node> rootElements;
+  if (scope != null) {
+    injector = injector.createChild([new Module()..value(Scope, scope)]);
+  }
+  if (html is String) {
+    rootElements = toNodeList(html.trim());
+  } else if (html is dom.Node) {
+    rootElements = [html];
+  } else if (html is List<dom.Node>) {
+    rootElements = html;
+  } else {
+    throw 'Expecting: String, Node, or List<Node> got $html.';
+  }
+  dom.Element rootElement = rootElements.length > 0 && rootElements[0] is dom.Element ? rootElements[0] : null;
+  if (directives == null) {
+    directives = injector.get(DirectiveMap);
+  }
+  View rootView = compiler(rootElements, directives)(injector, rootElements);
+  return rootElement;
+}
+  

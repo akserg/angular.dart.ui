@@ -14,9 +14,6 @@ void timepickerTests() {
   describe('Testing timepicker:', () {
     TestBed _;
     Scope _scope;
-    TemplateCache cache;
-    
-    
     
     beforeEach(() {
       setUpInjector();
