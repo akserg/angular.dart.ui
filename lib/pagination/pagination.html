@@ -1,14 +1,16 @@
 <ul class="pagination">
-    <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href
-                                                                     ng-click="selectPage(1)">{{getText('first')}}</a>
+    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noPrevious}"><a href
+                                                                             ng-click="ctrl.selectPage(1)">{{ctrl.firstText}}</a>
     </li>
-    <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)">{{getText('previous')}}</a>
+    <li ng-if="ctrl.directionLinks" ng-class="{disabled: ctrl.noPrevious}"><a href
+                                                                              ng-click="ctrl.selectPage(ctrl.currentPage - 1)">{{ctrl.previousText}}</a>
     </li>
-    <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href
-                                                                                      ng-click="selectPage(page.number)">{{page.text}}</a>
+    <li ng-repeat="page in ctrl.pages" ng-class="{active: page.isActive}"><a href
+                                                                                      ng-click="ctrl.selectPage(page.number)">{{page.text}}</a>
     </li>
-    <li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)">{{getText('next')}}</a>
+    <li ng-if="ctrl.directionLinks" ng-class="{disabled: ctrl.noNext}"><a href
+                                                                          ng-click="ctrl.selectPage(ctrl.currentPage + 1)">{{ctrl.nextText}}</a>
     </li>
-    <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)">{{getText('last')}}</a>
+    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noNext}"><a href ng-click="ctrl.selectPage(ctrl.totalPages)">{{getText('last')}}</a>
     </li>
 </ul>

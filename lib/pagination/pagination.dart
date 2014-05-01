@@ -4,6 +4,7 @@
 library angular.ui.pagination;
 
 import 'dart:html' as dom;
+import 'dart:math' as Math;
 
 import 'package:angular/angular.dart';
 import "package:angular/core_dom/module_internal.dart";
@@ -16,6 +17,8 @@ class PaginationModule extends Module {
   PaginationModule() {
     value(PagerConfig, new PagerConfig(10, '« Previous', 'Next »', true));
     type(PagerComponent);
+    value(PaginationConfig, new PaginationConfig(10, 'Previous', 'Next', true));
+    type(PaginationComponent);
   }
 }
 
@@ -78,13 +81,13 @@ class PagerComponent implements AttachAware, DetachAware {
   int _totalPages;
 
   PagerComponent(this.ngModel, this.scope, this.config) {
-    ngModel.render = _render;
+    ngModel.render = render;
   }
 
   set totalItems(String value) {
     _totalItemsWatch = scope.parentScope.watch(value, (newValue, previousValue) {
-      _totalItems = newValue;
-      _calculatePages();
+      _totalItems = newValue == null? 0 : newValue;
+      calculatePages();
     });
   }
 
@@ -94,7 +97,7 @@ class PagerComponent implements AttachAware, DetachAware {
     }
     _itemsPerPageWatch = scope.parentScope.watch(value, (newValue, previousValue) {
       _itemsPerPage = newValue;
-      _calculatePages();
+      calculatePages();
     });
   }
 
@@ -111,7 +114,7 @@ class PagerComponent implements AttachAware, DetachAware {
 
   void attach() {
     _itemsPerPage = 10;
-    _calculatePages();
+    calculatePages();
   }
 
   void detach() {
@@ -127,8 +130,13 @@ class PagerComponent implements AttachAware, DetachAware {
     }
   }
 
-  void _calculatePages() {
-    _totalPages = (_totalItems / _itemsPerPage).ceil();
+  int _calculateTotalPages() {
+    var totalPages = (_totalItems / _itemsPerPage).ceil();
+    return Math.max(totalPages, 1);
+  }
+
+  void calculatePages() {
+    _totalPages = _calculateTotalPages();
     if(_setNumPages != null && _setNumPages.expression.isAssignable) {
       _setNumPages.assign(_totalPages);
     }
@@ -140,11 +148,117 @@ class PagerComponent implements AttachAware, DetachAware {
   }
 
 
-  void _render(value) {
+  void render(value) {
     int intValue = toInt(value);
     if (intValue != _currentPage) {
       _currentPage = intValue;
     }
   }
 
+}
+
+class PageInfo {
+  int number;
+  String text;
+  bool isActive;
+
+  PageInfo(this.number, this.text, this.isActive);
+}
+
+class PaginationConfig extends PagerConfig {
+
+
+  PaginationConfig(int itemsPerPage, String previousText, String nextText, bool align) :super(itemsPerPage, previousText, nextText, align);
+}
+
+@Component(
+    selector: 'pagination[ng-model]',
+    templateUrl: 'packages/angular_ui/pagination/pagination.html',
+    publishAs: 'ctrl',
+    applyAuthorStyles: true,
+    map: const {
+        'total-items' : '@totalItems',
+        'items-per-page': '@itemsPerPage',
+        'num-pages': '&setNumPages',
+        'on-select-page': '&onSelectChange',
+        'align': '@align',
+        'previous-text': '@previousText',
+        'next-text': '@nextText'
+    })
+
+class PaginationComponent extends PagerComponent {
+
+  List<PageInfo> _pages;
+
+  PaginationComponent(NgModel ngModel, Scope scope, PaginationConfig config) : super(ngModel, scope, config) {
+  }
+
+  String get firstText => '';
+  String get lastText => '';
+  bool get boundaryLinks => false;
+  bool get directionLinks => true;
+  List<PageInfo> get pages => _pages;
+
+  var _maxSize = null;
+  bool _rotate = true;
+
+  calculatePages() {
+    super.calculatePages();
+    _pages = _getPages(currentPage, totalPages);
+  }
+
+  void render(value) {
+    super.render(value);
+    _pages = _getPages(currentPage, totalPages);
+  }
+
+  List<PageInfo> _getPages(int currentPage, int totalPages) {
+    var pages = new List<PageInfo>();
+
+    // Default page limits
+    int startPage = 1, endPage = totalPages;
+    bool isMaxSized = ( (_maxSize != null) && _maxSize < totalPages );
+
+    // recompute if maxSize
+    if ( isMaxSized ) {
+      if ( _rotate ) {
+        // Current page is displayed in the middle of the visible ones
+        startPage = Math.max(currentPage - ((_maxSize/2).floor()), 1);
+        endPage   = startPage + _maxSize - 1;
+
+        // Adjust if limit is exceeded
+        if (endPage > totalPages) {
+          endPage   = totalPages;
+          startPage = endPage - _maxSize + 1;
+        }
+      } else {
+        // Visible pages are paginated with maxSize
+        startPage = (((currentPage / _maxSize).ceil() - 1) * _maxSize) + 1;
+
+        // Adjust last page if limit is exceeded
+        endPage = Math.min(startPage + _maxSize - 1, totalPages);
+      }
+    }
+
+    // Add page number links
+    for (var number = startPage; number <= endPage; number++) {
+      var page = new PageInfo(number, '$number', number == currentPage);
+      pages.add(page);
+    }
+
+    // Add links to move between page sets
+    if ( isMaxSized && ! _rotate ) {
+      if ( startPage > 1 ) {
+        var previousPageSet = new PageInfo(startPage - 1, '...', false);
+        pages.insert(0, previousPageSet);
+      }
+
+      if ( endPage < totalPages ) {
+        var nextPageSet = new PageInfo(endPage + 1, '...', false);
+        pages.add(nextPageSet);
+      }
+    }
+
+    return pages;
+  }
 }
