@@ -187,7 +187,6 @@ void paginationTests() {
       })));
     });
 
-
     describe('setting `pagerConfig`', () {
       beforeEach(module((Module module) {
         module.value(PagerConfig, new PagerConfig(10, 'PR', 'NE', false));
@@ -198,9 +197,46 @@ void paginationTests() {
         expect(getPaginationEl(1).firstChild.text).toEqual('NE');
       })));
 
-      it('should not align previous & next page link', async(inject(()  {
+      it('should not align previous & next page link', async(inject(() {
         expect(getPaginationEl(0)).not.toHaveClass('previous');
         expect(getPaginationEl(1)).not.toHaveClass('next');
+      })));
+    });
+
+    describe('override configuration from attributes', () {
+      beforeEach(module((Module module){
+        return (Injector injector) {
+          element = compileElement('<pager align="false" previous-text="<" next-text=">" total-items="total" ng-model="currentPage"></pager>');
+          microLeap();
+          rootScope.rootScope.apply();
+          shadowElement = getFirstUList(element.shadowRoot);
+        };
+      }));
+
+      it('contains 2 li elements', async(inject(() {
+        expect(getPaginationBarSize()).toBe(2);
+      })));
+
+      it('should change paging text from attributes', async(inject(() {
+        expect(getPaginationEl(0).firstChild.text).toEqual('<');
+        expect(getPaginationEl(1).firstChild.text).toEqual('>');
+      })));
+
+      it('should not align previous & next page link', async(inject(() {
+        expect(getPaginationEl(0)).not.toHaveClass('previous');
+        expect(getPaginationEl(1)).not.toHaveClass('next');
+      })));
+
+      it('changes "previous" & "next" text from interpolated attributes', async(inject(() {
+        rootScope.context['previousText'] = '<<';
+        rootScope.context['nextText'] = '>>';
+        element = compileElement('<pager align="false" previous-text="{{previousText}}" next-text="{{nextText}}" total-items="total" ng-model="currentPage"></pager>');
+        microLeap();
+        rootScope.rootScope.apply();
+        shadowElement = getFirstUList(element.shadowRoot);
+
+        expect(getPaginationEl(0).firstChild.text).toEqual('<<');
+        expect(getPaginationEl(1).firstChild.text).toEqual('>>');
       })));
     });
   });

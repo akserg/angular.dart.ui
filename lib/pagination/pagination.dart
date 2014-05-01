@@ -38,7 +38,10 @@ class PagerConfig {
     'total-items' : '@totalItems',
     'items-per-page': '@itemsPerPage',
     'num-pages': '&setNumPages',
-    'on-select-page': '&onSelectChange'
+    'on-select-page': '&onSelectChange',
+    'align': '@align',
+    'previous-text': '@previousText',
+    'next-text': '@nextText'
 })
 
 class PagerComponent implements AttachAware, DetachAware {
@@ -55,6 +58,13 @@ class PagerComponent implements AttachAware, DetachAware {
       _setNumPages.assign(_totalPages);
     }
   }
+
+  String _previousText;
+  String _nextText;
+  bool _align;
+  set previousText(String value) => _previousText = (value == null? config.previousText : value);
+  set nextText(String value) => _nextText = (value == null? config.nextText : value);
+  set align(String value) => _align = (value == null? config.align : toBool(value) );
 
   BoundExpression onSelectChange;
 
@@ -88,9 +98,9 @@ class PagerComponent implements AttachAware, DetachAware {
     });
   }
 
-  bool get align => config.align;
-  String get previousText => config.previousText;
-  String get nextText => config.nextText;
+  bool get align => _align;
+  String get previousText => _previousText;
+  String get nextText => _nextText;
 
   int get totalPages => _totalPages;
 
