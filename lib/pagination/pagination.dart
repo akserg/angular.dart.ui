@@ -14,7 +14,7 @@ import "package:angular_ui/utils/utils.dart";
 class PaginationModule extends Module {
 
   PaginationModule() {
-    value(PagerConfig, new PagerConfig(itemsPerPage:10, previousText: '« Previous', nextText:'Next »', align: true));
+    value(PagerConfig, new PagerConfig(10, '« Previous', 'Next »', true));
     type(PagerComponent);
   }
 }
@@ -26,7 +26,7 @@ class PagerConfig {
   String nextText;
   bool align;
 
-  PagerConfig({this.itemsPerPage, this.previousText, this.nextText, this.align});
+  PagerConfig(this.itemsPerPage, this.previousText, this.nextText, this.align);
 }
 
 @Component(
@@ -44,6 +44,7 @@ class PagerConfig {
 class PagerComponent implements AttachAware, DetachAware {
   final NgModel ngModel;
   final Scope scope;
+  final PagerConfig config;
 
   BoundExpression _setNumPages;
 
@@ -66,7 +67,7 @@ class PagerComponent implements AttachAware, DetachAware {
 
   int _totalPages;
 
-  PagerComponent(this.ngModel, this.scope) {
+  PagerComponent(this.ngModel, this.scope, this.config) {
     ngModel.render = _render;
   }
 
@@ -87,9 +88,16 @@ class PagerComponent implements AttachAware, DetachAware {
     });
   }
 
+  bool get align => config.align;
+  String get previousText => config.previousText;
+  String get nextText => config.nextText;
+
   int get totalPages => _totalPages;
 
   int get currentPage => _currentPage;
+
+  bool get noPrevious => _currentPage <= 1;
+  bool get noNext => _currentPage >= _totalPages;
 
   void attach() {
     _itemsPerPage = 10;

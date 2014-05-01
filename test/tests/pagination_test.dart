@@ -6,7 +6,7 @@ part of angular.ui.test;
 
 void paginationTests() {
 
-  describe('Testing pagination:', () {
+  describe('Testing pager:', () {
 
     Scope rootScope;
     Injector injector;
@@ -64,6 +64,7 @@ void paginationTests() {
       rootScope.context['currentPage'] = value;
       rootScope.rootScope.apply();
     }
+
 
     it('has a "pager" css class', async(inject(() {
       expect(shadowElement).toHaveClass('pager');
@@ -171,14 +172,36 @@ void paginationTests() {
     });
 
     describe('`num-pages`', () {
-      it('equals to total number of pages', () {
-        rootScope.context['numpg'] = null;
-        element = compileElement('<pager total-items="total" num-pages="numpg" ng-model="currentPage"></pager>');
-        microLeap();
-        rootScope.rootScope.apply();
+      beforeEach(module((Module module) {
+        return (Injector _injector) {
+          rootScope.context['numpg'] = null;
+          element = compileElement('<pager total-items="total" num-pages="numpg" ng-model="currentPage"></pager>');
+          microLeap();
+          rootScope.rootScope.apply();
+          shadowElement = getFirstUList(element.shadowRoot);
+        };
+      }));
 
+      it('equals to total number of pages', async(inject(() {
         expect(rootScope.context['numpg']).toBe(5);
-      });
+      })));
+    });
+
+
+    describe('setting `pagerConfig`', () {
+      beforeEach(module((Module module) {
+        module.value(PagerConfig, new PagerConfig(10, 'PR', 'NE', false));
+      }));
+
+      it('should change paging text', async(inject(() {
+        expect(getPaginationEl(0).firstChild.text).toEqual('PR');
+        expect(getPaginationEl(1).firstChild.text).toEqual('NE');
+      })));
+
+      it('should not align previous & next page link', async(inject(()  {
+        expect(getPaginationEl(0)).not.toHaveClass('previous');
+        expect(getPaginationEl(1)).not.toHaveClass('next');
+      })));
     });
   });
 
