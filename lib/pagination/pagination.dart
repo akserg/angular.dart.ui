@@ -87,7 +87,12 @@ class PagerComponent {
   int get currentPage => _currentPage;
 
   set currentPage(int value) {
-    var newIntValue = toInt(value);
+    var newIntValue;
+    try {
+      newIntValue = toInt(value);
+    } catch(FormatException){
+      newIntValue = 1;
+    }
     if(_currentPage != newIntValue) {
       _currentPage = newIntValue;
       generatePages(_currentPage, _totalPages);
@@ -126,6 +131,8 @@ class PagerComponent {
 
   bool get align => _align;
   set align(bool value) => _align = (value == null? pagerConfig.align : value);
+
+  int get totalPages => _totalPages;
 
   void selectPage(int newPage) {
     if((newPage >= DEFAULT_FIRST_PAGE) &&(newPage <= _totalPages)) {
@@ -176,8 +183,9 @@ class PaginationConfig extends PagerConfig {
     applyAuthorStyles: true,
     map: const {
         'page': '<=>currentPage',
-        'total-items' : '=>totalItems',
-        'items-per-page' : '=>itemsPerPage',
+        'total-items': '=>totalItems',
+        'items-per-page': '=>itemsPerPage',
+        'max-size': '=>maxSize',
         'num-pages': '&setNumPagesListener',
         'on-select-page': '&onSelectChangeExtEventHandler',
         'align': '@align',
@@ -189,19 +197,28 @@ class PaginationComponent extends PagerComponent {
 
   PaginationGenerator paginationGenerator;
 
+  // Bound attributes
   List<PageInfo> pages;
 
+  // Bound attributes store fields
+  int _maxSize;
+
+
   PaginationComponent(Scope scope, PaginationConfig paginationConfig, this.paginationGenerator): super(scope, paginationConfig);
+  int get maxSize => _maxSize;
+  set maxSize(int value) {
+    _maxSize = value;
+    _generatePages(currentPage, totalPages, maxSize);
+  }
 
   String get firstText => '';
   String get lastText => '';
   bool get boundaryLinks => false;
   bool get directionLinks => true;
 
+  generatePages(int currentPage, int totalPages) => _generatePages(currentPage, totalPages, maxSize);
 
-
-  // Do nothing on currentPageChange
-  generatePages(int currentPage, int totalPages) => pages = paginationGenerator.getPages(currentPage, totalPages, null, false);
+  _generatePages(int currentPage, int totalPages, int maxSize) => pages = paginationGenerator.getPages(currentPage, totalPages, maxSize, true);
 
 }
 

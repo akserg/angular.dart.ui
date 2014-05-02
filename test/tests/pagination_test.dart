@@ -18,7 +18,7 @@ void pagerTests() {
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
 
-    afterEach((){
+    afterEach(() {
       shadowElement = null;
       element = null;
       rootScope = null;
@@ -36,11 +36,12 @@ void pagerTests() {
       shadowElement = getFirstUList(element.shadowRoot);
     }
 
-    void loadTemplatesToCache() =>  addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
+    void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
 
     void setTotalItems(value) => rootScope.context['total'] = value;
 
     int getCurrentPage() => rootScope.context['currentPage'];
+
     void setCurrentPage(value) => rootScope.context['currentPage'] = value;
 
     void setItemsPerPage(int value) => rootScope.context['perPage'] = value;
@@ -77,7 +78,7 @@ void pagerTests() {
     }
 
     void updateCurrentPage(value) {
-      rootScope.apply(()=> setCurrentPage(value));
+      rootScope.apply(() => setCurrentPage(value));
     }
 
 
@@ -139,7 +140,7 @@ void pagerTests() {
     })));
 
     it('does not changes the number of pages when `total-items` changes', async(inject(() {
-      rootScope.apply(()=>setTotalItems(73)); // 8 pages
+      rootScope.apply(() => setTotalItems(73)); // 8 pages
 
       expect(getPaginationBarSize()).toBe(2);
       expect(getPaginationElText(0)).toEqual('« Previous');
@@ -163,7 +164,7 @@ void pagerTests() {
 
       it('selects the last page when it is too big', async(inject(() {
 
-        rootScope.apply(()=>setItemsPerPage(30));
+        rootScope.apply(() => setItemsPerPage(30));
 
         expect(rootScope.context['selectedPage']).toBe(2);
         expect(getPaginationBarSize()).toBe(2);
@@ -214,7 +215,7 @@ void pagerTests() {
     });
 
     describe('override configuration from attributes', () {
-      beforeEach(module((Module module){
+      beforeEach(module((Module module) {
         return (Injector injector) {
           compileElement('<pager align="false" previous-text="<" next-text=">" total-items="total" page="currentPage"></pager>');
         };
@@ -408,7 +409,10 @@ void paginationTests() {
     })));
 
     it('does not change the current page when `total-items` changes but is valid', async(inject(() {
-      rootScope.apply(() { setCurrentPage(1); setTotalItems(18);}); // 2 pages
+      rootScope.apply(() {
+        setCurrentPage(1);
+        setTotalItems(18);
+      }); // 2 pages
 
       expect(getCurrentPage()).toBe(1);
     })));
@@ -429,7 +433,7 @@ void paginationTests() {
       })));
 
       it('changes the number of pages when changes', async(inject(() {
-        rootScope.apply(()=>setItemsPerPage(20));
+        rootScope.apply(() => setItemsPerPage(20));
 
         expect(getPaginationBarSize()).toBe(5);
         expect(getPaginationElText(0)).toEqual('Previous');
@@ -437,7 +441,7 @@ void paginationTests() {
       })));
 
       it('selects the last page when current page is too big', async(inject(() {
-        rootScope.apply(()=>setItemsPerPage(30));
+        rootScope.apply(() => setItemsPerPage(30));
 
         expect(rootScope.context['selectedPage']).toBe(2);
         expect(getPaginationBarSize()).toBe(4);
@@ -452,6 +456,100 @@ void paginationTests() {
         expect(getPaginationElText(0)).toEqual('Previous');
         expect(getPaginationElText(1)).toEqual('1');
         expect(getPaginationElText(2)).toEqual('Next');
+      })));
+    });
+
+    describe('executes  `on-select-page` expression', () {
+      beforeEach(module((Module module){
+        return (Injector injector) {
+          rootScope.context['selectPageHandler'] = jasmine.createSpy('selectPageHandler');
+          compileElement('<pagination total-items="total" page="currentPage" on-select-page="selectPageHandler()"></pagination>');
+        };
+      }));
+
+      it('when an element is clicked', async(inject(() {
+        clickPaginationEl(2);
+        expect(rootScope.context['selectPageHandler']).toHaveBeenCalled();
+      })));
+    });
+
+    describe('when `page` is not a number', (){
+      it('handles numerical string', async(inject((){
+        updateCurrentPage('2');
+        expect(getPaginationEl(2)).toHaveClass('active');
+
+        updateCurrentPage('04');
+        expect(getPaginationEl(4)).toHaveClass('active');
+      })));
+
+      it('defaults to 1 if non-numeric', async(inject((){
+        updateCurrentPage('pizza');
+        expect(getPaginationEl(1)).toHaveClass('active');
+      })));
+    });
+
+    describe('with `max-size` option', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          setTotalItems(98); //10 pages
+          setCurrentPage(3);
+          rootScope.context['maxSize'] = 5;
+          compileElement('<pagination total-items="total" page="currentPage" max-size="maxSize"></pagination>');
+        };
+      }));
+
+      it('contains maxsize + 2 li elements', async(inject((){
+        expect(getPaginationBarSize()).toBe(7);
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(6)).toEqual('Next');
+      })));
+
+      it('shows the page number even if it can\'t be shown in the middle', async(inject((){
+        updateCurrentPage(1);
+        expect(getPaginationEl(1)).toHaveClass('active');
+
+        updateCurrentPage(10);
+        expect(getPaginationEl(5)).toHaveClass('active');
+      })));
+
+      it('shows the page number in middle after the next link is clicked', async(inject((){
+        updateCurrentPage(6);
+        clickPaginationEl(6);
+
+        expect(getCurrentPage()).toBe(7);
+        expect(getPaginationEl(3)).toHaveClass('active');
+        expect(getPaginationElText(3)).toEqual(getCurrentPage().toString());
+      })));
+
+      it('shows the page number in middle after the prev link is clicked', async(inject((){
+        updateCurrentPage(7);
+        clickPaginationEl(0);
+
+        expect(getCurrentPage()).toBe(6);
+        expect(getPaginationEl(3)).toHaveClass('active');
+        expect(getPaginationElText(3)).toEqual(getCurrentPage().toString());
+      })));
+
+      it('changes pagination bar size when max-size value changed', async(inject((){
+        rootScope.apply(() => rootScope.context['maxSize'] = 7);
+        expect(getPaginationBarSize()).toBe(9);
+      })));
+
+      it('sets the pagination bar size to num-pages, if max-size is greater than num-pages', async(inject((){
+        rootScope.apply(() => rootScope.context['maxSize'] = 15);
+        expect(getPaginationBarSize()).toBe(12);
+      })));
+
+      it('should not change value of max-size expression, if max-size is greater than num-pages', async(inject((){
+        rootScope.apply(() => rootScope.context['maxSize'] = 15);
+        expect(rootScope.context['maxSize']).toBe(15);
+      })));
+
+      it('should not display page numbers, if max-size is zero', async(inject((){
+        rootScope.apply(() => rootScope.context['maxSize'] = 0);
+        expect(getPaginationBarSize()).toBe(2);
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(1)).toEqual('Next');
       })));
     });
   });
