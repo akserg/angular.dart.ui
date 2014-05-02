@@ -62,6 +62,7 @@ void main() {
     group('Collapse', () => collapseTests());
     group('Drag&Drop', () => dragdropTests());
     group('DropdownToggle', () => dropdownToggleTests());
+    group('Pager', () => pagerTests());
     group('Pagination', () => paginationTests());
     group('Position', () => positionTests());
     group('Progressbar', () => porgressbarTests());

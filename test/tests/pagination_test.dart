@@ -4,7 +4,7 @@
 
 part of angular.ui.test;
 
-void paginationTests() {
+void pagerTests() {
 
   describe('Testing pager:', () {
 
@@ -16,18 +16,34 @@ void paginationTests() {
     dom.Element element;
 
     beforeEach(setUpInjector);
+    afterEach(tearDownInjector);
 
-    dom.Element compileElement(String htmlText) {
+    afterEach((){
+      shadowElement = null;
+      element = null;
+      rootScope = null;
+      cache = null;
+      compile = null;
+      injector = null;
+    });
+
+    void compileElement(String htmlText) {
       List<dom.Node> elements = $(htmlText);
       compile(elements, injector.get(DirectiveMap))(injector, elements);
-      rootScope.rootScope.apply();
       microLeap();
-      return elements[0];
+      rootScope.rootScope.apply();
+      element = elements[0];
+      shadowElement = getFirstUList(element.shadowRoot);
     }
 
-    void loadTemplatesToCache() {
-      addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
-    }
+    void loadTemplatesToCache() =>  addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
+
+    void setTotalItems(value) => rootScope.context['total'] = value;
+
+    int getCurrentPage() => rootScope.context['currentPage'];
+    void setCurrentPage(value) => rootScope.context['currentPage'] = value;
+
+    void setItemsPerPage(int value) => rootScope.context['perPage'] = value;
 
     beforeEach(module((Module module) {
       module.install(new PaginationModule());
@@ -37,16 +53,12 @@ void paginationTests() {
         rootScope = injector.get(Scope);
         cache = injector.get(TemplateCache);
         loadTemplatesToCache();
-        rootScope.context['total'] = 47;
-        rootScope.context['currentPage'] = 3;
-        element = compileElement('<pager total-items="total" ng-model="currentPage"></pager>');
-        microLeap();
-        rootScope.rootScope.apply();
-        shadowElement = getFirstUList(element.shadowRoot);
+        setTotalItems(47);
+        setCurrentPage(3);
+        compileElement('<pager total-items="total" page="currentPage"></pager>');
       };
     }));
 
-    afterEach(tearDownInjector);
 
     int getPaginationBarSize() {
       return shadowElement.querySelectorAll('li').length;
@@ -56,13 +68,16 @@ void paginationTests() {
       return shadowElement.querySelectorAll('li').elementAt(index);
     }
 
+    String getPaginationElText(index) {
+      return getPaginationEl(index).firstChild.text;
+    }
+
     void clickPaginationEl(index) {
       getPaginationEl(index).querySelector('a').click();
     }
 
     void updateCurrentPage(value) {
-      rootScope.context['currentPage'] = value;
-      rootScope.rootScope.apply();
+      rootScope.apply(()=> setCurrentPage(value));
     }
 
 
@@ -72,8 +87,8 @@ void paginationTests() {
 
     it('contains 2 li elements', async(inject(() {
       expect(getPaginationBarSize()).toBe(2);
-      expect(getPaginationEl(0).firstChild.text).toEqual('« Previous');
-      expect(getPaginationEl(1).firstChild.text).toEqual('Next »');
+      expect(getPaginationElText(0)).toEqual('« Previous');
+      expect(getPaginationElText(1)).toEqual('Next »');
     })));
 
     it('aligns previous & next page', async(inject(() {
@@ -96,69 +111,66 @@ void paginationTests() {
 
     it('changes currentPage if the "previous" link is clicked', async(inject(() {
       clickPaginationEl(0);
-      expect(rootScope.context['currentPage']).toBe(2);
+      expect(getCurrentPage()).toBe(2);
     })));
 
     it('changes currentPage if the "next" link is clicked', async(inject(() {
       clickPaginationEl(1);
-      expect(rootScope.context['currentPage']).toBe(4);
+      expect(getCurrentPage()).toBe(4);
     })));
 
     it('does not change the current page on "previous" click if already at first page', async(inject(() {
       updateCurrentPage(1);
       clickPaginationEl(0);
-      expect(rootScope.context['currentPage']).toBe(1);
+      expect(getCurrentPage()).toBe(1);
     })));
 
     it('does not change the current page on "next" click if already at last page', async(inject(() {
       updateCurrentPage(5);
       clickPaginationEl(1);
-      expect(rootScope.context['currentPage']).toBe(5);
+      expect(getCurrentPage()).toBe(5);
     })));
 
-    it('executes the `ng-change` expression when an element is clicked', async(inject(() {
+    it('executes the `on-select-page` expression when an element is clicked', async(inject(() {
       rootScope.context['selectPageHandler'] = jasmine.createSpy('selectPageHandler');
-      element = compileElement('<pager total-items="total" ng-model="currentPage" on-select-page="selectPageHandler()"></pager>');
-      shadowElement = getFirstUList(element.shadowRoot);
+      compileElement('<pager total-items="total" page="currentPage" on-select-page="selectPageHandler()"></pager>');
       clickPaginationEl(1);
       expect(rootScope.context['selectPageHandler']).toHaveBeenCalled();
     })));
 
     it('does not changes the number of pages when `total-items` changes', async(inject(() {
-      rootScope.context['total'] = 73; // 8 pages
-      rootScope.rootScope.apply();
+      rootScope.apply(()=>setTotalItems(73)); // 8 pages
 
       expect(getPaginationBarSize()).toBe(2);
-      expect(getPaginationEl(0).firstChild.text).toEqual('« Previous');
-      expect(getPaginationEl(1).firstChild.text).toEqual('Next »');
+      expect(getPaginationElText(0)).toEqual('« Previous');
+      expect(getPaginationElText(1)).toEqual('Next »');
     })));
 
     describe('`items-per-page`', () {
       beforeEach(module((Module module) {
         return (Injector _injector) {
-          rootScope.context['perpage'] = 5;
-          element = compileElement('<pager total-items="total" items-per-page="perpage" ng-model="currentPage"></pager>');
-          microLeap();
-          rootScope.rootScope.apply();
-          shadowElement = getFirstUList(element.shadowRoot);
+          setItemsPerPage(5);
+          rootScope.context['selectedPage'] = 3;
+          compileElement('<pager total-items="total" items-per-page="perPage" page="selectedPage"></pager>');
         };
       }));
 
       it('does not change the number of pages', async(inject(() {
         expect(getPaginationBarSize()).toBe(2);
-        expect(getPaginationEl(0).firstChild.text).toEqual('« Previous');
-        expect(getPaginationEl(1).firstChild.text).toEqual('Next »');
+        expect(getPaginationElText(0)).toEqual('« Previous');
+        expect(getPaginationElText(1)).toEqual('Next »');
       })));
 
       it('selects the last page when it is too big', async(inject(() {
-        rootScope.context['perpage'] = 30;
-        rootScope.rootScope.apply();
 
-        expect(rootScope.context['currentPage']).toBe(2);
+        rootScope.apply(()=>setItemsPerPage(30));
+
+        expect(rootScope.context['selectedPage']).toBe(2);
         expect(getPaginationBarSize()).toBe(2);
         expect(getPaginationEl(0)).not.toHaveClass('disabled');
         expect(getPaginationEl(1)).toHaveClass('disabled');
       })));
+
     });
 
     describe('when `page` is not a number', () {
@@ -169,16 +181,14 @@ void paginationTests() {
         updateCurrentPage('05');
         expect(getPaginationEl(1)).toHaveClass('disabled');
       })));
+
     });
 
     describe('`num-pages`', () {
       beforeEach(module((Module module) {
         return (Injector _injector) {
           rootScope.context['numpg'] = null;
-          element = compileElement('<pager total-items="total" num-pages="numpg" ng-model="currentPage"></pager>');
-          microLeap();
-          rootScope.rootScope.apply();
-          shadowElement = getFirstUList(element.shadowRoot);
+          compileElement('<pager total-items="total" num-pages="numpg" page="currentPage"></pager>');
         };
       }));
 
@@ -193,8 +203,8 @@ void paginationTests() {
       }));
 
       it('should change paging text', async(inject(() {
-        expect(getPaginationEl(0).firstChild.text).toEqual('PR');
-        expect(getPaginationEl(1).firstChild.text).toEqual('NE');
+        expect(getPaginationElText(0)).toEqual('PR');
+        expect(getPaginationElText(1)).toEqual('NE');
       })));
 
       it('should not align previous & next page link', async(inject(() {
@@ -206,10 +216,7 @@ void paginationTests() {
     describe('override configuration from attributes', () {
       beforeEach(module((Module module){
         return (Injector injector) {
-          element = compileElement('<pager align="false" previous-text="<" next-text=">" total-items="total" ng-model="currentPage"></pager>');
-          microLeap();
-          rootScope.rootScope.apply();
-          shadowElement = getFirstUList(element.shadowRoot);
+          compileElement('<pager align="false" previous-text="<" next-text=">" total-items="total" page="currentPage"></pager>');
         };
       }));
 
@@ -218,8 +225,8 @@ void paginationTests() {
       })));
 
       it('should change paging text from attributes', async(inject(() {
-        expect(getPaginationEl(0).firstChild.text).toEqual('<');
-        expect(getPaginationEl(1).firstChild.text).toEqual('>');
+        expect(getPaginationElText(0)).toEqual('<');
+        expect(getPaginationElText(1)).toEqual('>');
       })));
 
       it('should not align previous & next page link', async(inject(() {
@@ -230,16 +237,17 @@ void paginationTests() {
       it('changes "previous" & "next" text from interpolated attributes', async(inject(() {
         rootScope.context['previousText'] = '<<';
         rootScope.context['nextText'] = '>>';
-        element = compileElement('<pager align="false" previous-text="{{previousText}}" next-text="{{nextText}}" total-items="total" ng-model="currentPage"></pager>');
-        microLeap();
-        rootScope.rootScope.apply();
-        shadowElement = getFirstUList(element.shadowRoot);
+        compileElement('<pager align="false" previous-text="{{previousText}}" next-text="{{nextText}}" total-items="total" page="currentPage"></pager>');
 
-        expect(getPaginationEl(0).firstChild.text).toEqual('<<');
-        expect(getPaginationEl(1).firstChild.text).toEqual('>>');
+        expect(getPaginationElText(0)).toEqual('<<');
+        expect(getPaginationElText(1)).toEqual('>>');
       })));
     });
   });
+
+}
+
+void paginationTests() {
 
   describe('Testing pagination:', () {
 
@@ -251,18 +259,35 @@ void paginationTests() {
     dom.Element element;
 
     beforeEach(setUpInjector);
+    afterEach(tearDownInjector);
 
-    dom.Element compileElement(String htmlText) {
+    afterEach(() {
+      shadowElement = null;
+      element = null;
+      rootScope = null;
+      cache = null;
+      compile = null;
+      injector = null;
+    });
+
+    void compileElement(String htmlText) {
       List<dom.Node> elements = $(htmlText);
       compile(elements, injector.get(DirectiveMap))(injector, elements);
-      rootScope.rootScope.apply();
       microLeap();
-      return elements[0];
+      rootScope.rootScope.apply();
+      element = elements[0];
+      shadowElement = getFirstUList(element.shadowRoot);
     }
 
-    void loadTemplatesToCache() {
-      addToTemplateCache(cache, 'packages/angular_ui/pagination/pagination.html');
-    }
+    void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pagination.html');
+
+    void setTotalItems(value) => rootScope.context['total'] = value;
+
+    int getCurrentPage() => rootScope.context['currentPage'];
+
+    void setCurrentPage(value) => rootScope.context['currentPage'] = value;
+
+    void setItemsPerPage(int value) => rootScope.context['perPage'] = value;
 
     beforeEach(module((Module module) {
       module.install(new PaginationModule());
@@ -272,16 +297,12 @@ void paginationTests() {
         rootScope = injector.get(Scope);
         cache = injector.get(TemplateCache);
         loadTemplatesToCache();
-        rootScope.context['total'] = 47;
-        rootScope.context['currentPage'] = 3;
-        element = compileElement('<pagination total-items="total" ng-model="currentPage"></pagination>');
-        microLeap();
-        rootScope.rootScope.apply();
-        shadowElement = getFirstUList(element.shadowRoot);
+        setTotalItems(47);
+        setCurrentPage(3);
+        compileElement('<pagination total-items="total" page="currentPage"></pagination>');
       };
     }));
 
-    afterEach(tearDownInjector);
 
     int getPaginationBarSize() {
       return shadowElement.querySelectorAll('li').length;
@@ -291,13 +312,16 @@ void paginationTests() {
       return shadowElement.querySelectorAll('li').elementAt(index);
     }
 
+    String getPaginationElText(index) {
+      return getPaginationEl(index).firstChild.text;
+    }
+
     void clickPaginationEl(index) {
       getPaginationEl(index).querySelector('a').click();
     }
 
     void updateCurrentPage(value) {
-      rootScope.context['currentPage'] = value;
-      rootScope.rootScope.apply();
+      rootScope.apply(() => setCurrentPage(value));
     }
 
     it('has a "pagination" css class', async(inject(() {
@@ -306,18 +330,18 @@ void paginationTests() {
 
     it('contains num-pages + 2 li elements', async(inject(() {
       expect(getPaginationBarSize()).toBe(7);
-      expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-      expect(getPaginationEl(6).firstChild.text).toEqual('Next');
+      expect(getPaginationElText(0)).toEqual('Previous');
+      expect(getPaginationElText(6)).toEqual('Next');
     })));
 
     it('has the number of the page as text in each page item', async(inject(() {
       for (var i = 1; i <= 5; i++) {
-        expect(getPaginationEl(i).firstChild.text).toEqual('$i');
+        expect(getPaginationElText(i)).toEqual('$i');
       }
     })));
 
     it('sets the current page to be active', async(inject(() {
-      expect(getPaginationEl(rootScope.context['currentPage'])).toHaveClass('active');
+      expect(getPaginationEl(getCurrentPage())).toHaveClass('active');
     })));
 
     it('disables the "previous" link if current page is 1', async(inject(() {
@@ -332,43 +356,41 @@ void paginationTests() {
 
     it('changes currentPage if a page link is clicked', async(inject(() {
       clickPaginationEl(2);
-      expect(rootScope.context['currentPage']).toBe(2);
+      expect(getCurrentPage()).toBe(2);
     })));
 
     it('changes currentPage if the "previous" link is clicked', async(inject(() {
       clickPaginationEl(0);
-      expect(rootScope.context['currentPage']).toBe(2);
+      expect(getCurrentPage()).toBe(2);
     })));
 
     it('changes currentPage if the "next" link is clicked', async(inject(() {
       clickPaginationEl(6);
-      expect(rootScope.context['currentPage']).toBe(4);
+      expect(getCurrentPage()).toBe(4);
     })));
 
     it('does not change the current page on "previous" click if already at first page', async(inject(() {
       updateCurrentPage(1);
       clickPaginationEl(0);
-      expect(rootScope.context['currentPage']).toBe(1);
+      expect(getCurrentPage()).toBe(1);
     })));
 
     it('does not change the current page on "next" click if already at last page', async(inject(() {
       updateCurrentPage(5);
       clickPaginationEl(6);
-      expect(rootScope.context['currentPage']).toBe(5);
+      expect(getCurrentPage()).toBe(5);
     })));
 
     it('changes the number of pages when `total-items` changes', async(inject(() {
-      rootScope.context['total'] = 78; // 8 pages
-      rootScope.rootScope.apply();
+      rootScope.apply(() => setTotalItems(78)); // 8 pages
 
       expect(getPaginationBarSize()).toBe(10);
-      expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-      expect(getPaginationEl(9).firstChild.text).toEqual('Next');
+      expect(getPaginationElText(0)).toEqual('Previous');
+      expect(getPaginationElText(9)).toEqual('Next');
     })));
 
     it('does not "break" when `total-items` is undefined', async(inject(() {
-      rootScope.context['total'] = null;
-      rootScope.rootScope.apply();
+      rootScope.apply(() => setTotalItems(null));
 
       expect(getPaginationBarSize()).toBe(3); // Previous, 1, Next
       expect(getPaginationEl(0)).toHaveClass('disabled');
@@ -377,8 +399,7 @@ void paginationTests() {
     })));
 
     it('does not "break" when `total-items` is negative', async(inject(() {
-      rootScope.context['total'] = -1;
-      rootScope.rootScope.apply();
+      rootScope.apply(() => setTotalItems(-1));
 
       expect(getPaginationBarSize()).toBe(3); // Previous, 1, Next
       expect(getPaginationEl(0)).toHaveClass('disabled');
@@ -387,60 +408,51 @@ void paginationTests() {
     })));
 
     it('does not change the current page when `total-items` changes but is valid', async(inject(() {
-      rootScope.context['currentPage'] = 1;
-      rootScope.rootScope.apply();
-      rootScope.context['total'] = 18; // 2 pages
-      rootScope.rootScope.apply();
+      rootScope.apply(() { setCurrentPage(1); setTotalItems(18);}); // 2 pages
 
-      expect(rootScope.context['currentPage']).toBe(1);
+      expect(getCurrentPage()).toBe(1);
     })));
 
     describe('`items-per-page`', () {
-      beforeEach(module((Module module){
+      beforeEach(module((Module module) {
         return (Injector injector) {
-          rootScope.context['perpage'] = 5;
-          element = compileElement('<pagination total-items="total" items-per-page="perpage" ng-model="currentPage"></pagination>');
-          microLeap();
-          rootScope.rootScope.apply();
-          shadowElement = getFirstUList(element.shadowRoot);
+          setItemsPerPage(5);
+          rootScope.context['selectedPage'] = 3;
+          compileElement('<pagination total-items="total" items-per-page="perPage" page="selectedPage"></pagination>');
         };
       }));
 
       it('changes the number of pages', async(inject(() {
         expect(getPaginationBarSize()).toBe(12);
-        expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-        expect(getPaginationEl(11).firstChild.text).toEqual('Next');
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(11)).toEqual('Next');
       })));
 
       it('changes the number of pages when changes', async(inject(() {
-        rootScope.context['perpage'] = 20;
-        rootScope.rootScope.apply();
+        rootScope.apply(()=>setItemsPerPage(20));
 
         expect(getPaginationBarSize()).toBe(5);
-        expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-        expect(getPaginationEl(4).firstChild.text).toEqual('Next');
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(4)).toEqual('Next');
       })));
 
       it('selects the last page when current page is too big', async(inject(() {
-        rootScope.context['perpage'] = 30;
-        rootScope.rootScope.apply();
+        rootScope.apply(()=>setItemsPerPage(30));
 
-        expect(rootScope.context['currentPage']).toBe(2);
+        expect(rootScope.context['selectedPage']).toBe(2);
         expect(getPaginationBarSize()).toBe(4);
-        expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-        expect(getPaginationEl(3).firstChild.text).toEqual('Next');
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(3)).toEqual('Next');
       })));
 
       it('displays a single page when it is negative', async(inject(() {
-        rootScope.context['perpage'] = -1;
-        rootScope.rootScope.apply();
+        rootScope.apply(() => setItemsPerPage(-1));
 
         expect(getPaginationBarSize()).toBe(3);
-        expect(getPaginationEl(0).firstChild.text).toEqual('Previous');
-        expect(getPaginationEl(1).firstChild.text).toEqual('1');
-        expect(getPaginationEl(2).firstChild.text).toEqual('Next');
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(1)).toEqual('1');
+        expect(getPaginationElText(2)).toEqual('Next');
       })));
     });
   });
-
 }

@@ -19,6 +19,7 @@ class PaginationModule extends Module {
     type(PagerComponent);
     value(PaginationConfig, new PaginationConfig(10, 'Previous', 'Next', true));
     type(PaginationComponent);
+    type(PaginationGenerator, implementedBy: BasicPaginationGenerator);
   }
 }
 
@@ -33,127 +34,174 @@ class PagerConfig {
 }
 
 @Component(
-    selector: 'pager[ng-model]',
+    selector: 'pager[page][total-items]',
     templateUrl: 'packages/angular_ui/pagination/pager.html',
     publishAs: 'ctrl',
     applyAuthorStyles: true,
     map: const {
-    'total-items' : '@totalItems',
-    'items-per-page': '@itemsPerPage',
-    'num-pages': '&setNumPages',
-    'on-select-page': '&onSelectChange',
-    'align': '@align',
-    'previous-text': '@previousText',
-    'next-text': '@nextText'
-})
-
-class PagerComponent implements AttachAware, DetachAware {
-  final NgModel ngModel;
-  final Scope scope;
-  final PagerConfig config;
-
-  BoundExpression _setNumPages;
-
-  set setNumPages(value) {
-    _setNumPages = value;
-
-    if(_setNumPages != null && _setNumPages.expression.isAssignable) {
-      _setNumPages.assign(_totalPages);
+      'page': '<=>currentPage',
+      'total-items' : '=>totalItems',
+      'items-per-page' : '=>itemsPerPage',
+      'num-pages': '&setNumPagesListener',
+      'on-select-page': '&onSelectChangeExtEventHandler',
+      'align': '@align',
+      'previous-text': '@previousText',
+      'next-text': '@nextText'
     }
-  }
+)
+class PagerComponent {
+  // Paging always starts with 1st page.
+  static const int DEFAULT_FIRST_PAGE = 1;
 
+  final Scope scope;
+  final PagerConfig pagerConfig;
+
+  // Bound attributes
+  BoundExpression onSelectChangeExtEventHandler;
+
+  // Bound attributes store fields
+  int _currentPage;
+  int _itemsPerPage;
+  BoundExpression _setNumPagesListener;
+  int _totalItems;
+  bool _align;
   String _previousText;
   String _nextText;
-  bool _align;
-  set previousText(String value) => _previousText = (value == null? config.previousText : value);
-  set nextText(String value) => _nextText = (value == null? config.nextText : value);
-  set align(String value) => _align = (value == null? config.align : toBool(value) );
 
-  BoundExpression onSelectChange;
-
-  Watch _totalItemsWatch;
-  Watch _itemsPerPageWatch;
-
-  int _currentPage = 0;
-  int _totalItems = 0;
-  int _itemsPerPage;
-
+  // Computed Fields
   int _totalPages;
 
-  PagerComponent(this.ngModel, this.scope, this.config) {
-    ngModel.render = render;
+
+  PagerComponent(this.scope, this.pagerConfig) {
+    // By default there is one page
+    _currentPage = DEFAULT_FIRST_PAGE;
+    _totalPages = DEFAULT_FIRST_PAGE;
+
+    // load default config
+    _itemsPerPage = pagerConfig.itemsPerPage;
+    _align = pagerConfig.align;
+    _previousText = pagerConfig.previousText;
+    _nextText = pagerConfig.nextText;
   }
-
-  set totalItems(String value) {
-    _totalItemsWatch = scope.parentScope.watch(value, (newValue, previousValue) {
-      _totalItems = newValue == null? 0 : newValue;
-      calculatePages();
-    });
-  }
-
-  set itemsPerPage(String value) {
-    if (value == null) {
-      return;
-    }
-    _itemsPerPageWatch = scope.parentScope.watch(value, (newValue, previousValue) {
-      _itemsPerPage = newValue;
-      calculatePages();
-    });
-  }
-
-  bool get align => _align;
-  String get previousText => _previousText;
-  String get nextText => _nextText;
-
-  int get totalPages => _totalPages;
 
   int get currentPage => _currentPage;
 
-  bool get noPrevious => _currentPage <= 1;
-  bool get noNext => _currentPage >= _totalPages;
-
-  void attach() {
-    _itemsPerPage = 10;
-    calculatePages();
-  }
-
-  void detach() {
-    if (_totalItemsWatch != null)_totalItemsWatch.remove();
-    if (_itemsPerPageWatch != null)_itemsPerPageWatch.remove();
-  }
-
-  void selectPage(int selectedPage) {
-    if (_currentPage != selectedPage && selectedPage > 0 && selectedPage <= totalPages) {
-      _currentPage = selectedPage;
-      scope.apply(() => ngModel.viewValue = selectedPage);
-      onSelectChange(null);
+  set currentPage(int value) {
+    var newIntValue = toInt(value);
+    if(_currentPage != newIntValue) {
+      _currentPage = newIntValue;
+      generatePages(_currentPage, _totalPages);
     }
   }
 
-  int _calculateTotalPages() {
-    var totalPages = (_totalItems / _itemsPerPage).ceil();
+  set totalItems(int value) {
+    var newIntValue = value == null? 0 : value;
+    if(_totalItems != newIntValue) {
+      _totalItems = newIntValue;
+      _reevaluateTotalPages();
+    }
+  }
+
+  set itemsPerPage(int value) {
+    if(_itemsPerPage != value) {
+      _itemsPerPage = value;
+      _reevaluateTotalPages();
+    }
+  }
+
+  set setNumPagesListener(value) {
+    _setNumPagesListener = value;
+
+    _invokeNumPagesListener(_totalPages);
+  }
+
+  bool get noPrevious => currentPage <= DEFAULT_FIRST_PAGE;
+  bool get noNext => currentPage >= _totalPages;
+
+  String get previousText => _previousText;
+  set previousText(String value) => _previousText = (value == null? pagerConfig.previousText : value);
+
+  String get nextText => _nextText;
+  set nextText(String value) => _nextText = (value == null? pagerConfig.nextText : value);
+
+  bool get align => _align;
+  set align(bool value) => _align = (value == null? pagerConfig.align : value);
+
+  void selectPage(int newPage) {
+    if((newPage >= DEFAULT_FIRST_PAGE) &&(newPage <= _totalPages)) {
+      scope.apply(() => currentPage = newPage);
+
+      onSelectChangeExtEventHandler();
+    }
+  }
+
+  // Do nothing on currentPageChange
+  generatePages(int currentPage, int totalPages) => null;
+
+  int _calculateTotalPages(int totalItems, int itemsPerPage) {
+    var totalPages = (totalItems / itemsPerPage).ceil();
     return Math.max(totalPages, 1);
   }
 
-  void calculatePages() {
-    _totalPages = _calculateTotalPages();
-    if(_setNumPages != null && _setNumPages.expression.isAssignable) {
-      _setNumPages.assign(_totalPages);
-    }
+  void _reevaluateTotalPages() {
+    _totalPages = _calculateTotalPages(_totalItems, _itemsPerPage);
+    _invokeNumPagesListener(_totalPages);
+    _validateCurrentPage();
+    generatePages(currentPage, _totalPages);
+  }
 
-    if (_currentPage > _totalPages) {
-      _currentPage = _totalPages;
-      ngModel.viewValue = _currentPage;
+  void _validateCurrentPage() {
+    if(currentPage > _totalPages) {
+      currentPage = _totalPages;
     }
   }
 
-
-  void render(value) {
-    int intValue = toInt(value);
-    if (intValue != _currentPage) {
-      _currentPage = intValue;
+  void _invokeNumPagesListener(int totalPages) {
+    if(_setNumPagesListener != null && _setNumPagesListener.expression.isAssignable) {
+      _setNumPagesListener.assign(totalPages);
     }
   }
+}
+
+
+class PaginationConfig extends PagerConfig {
+
+  PaginationConfig(int itemsPerPage, String previousText, String nextText, bool align) :super(itemsPerPage, previousText, nextText, align);
+}
+
+@Component(
+    selector: 'pagination[page][total-items]',
+    templateUrl: 'packages/angular_ui/pagination/pagination.html',
+    publishAs: 'ctrl',
+    applyAuthorStyles: true,
+    map: const {
+        'page': '<=>currentPage',
+        'total-items' : '=>totalItems',
+        'items-per-page' : '=>itemsPerPage',
+        'num-pages': '&setNumPagesListener',
+        'on-select-page': '&onSelectChangeExtEventHandler',
+        'align': '@align',
+        'previous-text': '@previousText',
+        'next-text': '@nextText'
+    }
+)
+class PaginationComponent extends PagerComponent {
+
+  PaginationGenerator paginationGenerator;
+
+  List<PageInfo> pages;
+
+  PaginationComponent(Scope scope, PaginationConfig paginationConfig, this.paginationGenerator): super(scope, paginationConfig);
+
+  String get firstText => '';
+  String get lastText => '';
+  bool get boundaryLinks => false;
+  bool get directionLinks => true;
+
+
+
+  // Do nothing on currentPageChange
+  generatePages(int currentPage, int totalPages) => pages = paginationGenerator.getPages(currentPage, totalPages, null, false);
 
 }
 
@@ -165,78 +213,37 @@ class PageInfo {
   PageInfo(this.number, this.text, this.isActive);
 }
 
-class PaginationConfig extends PagerConfig {
-
-
-  PaginationConfig(int itemsPerPage, String previousText, String nextText, bool align) :super(itemsPerPage, previousText, nextText, align);
+abstract class PaginationGenerator {
+  List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate);
 }
 
-@Component(
-    selector: 'pagination[ng-model]',
-    templateUrl: 'packages/angular_ui/pagination/pagination.html',
-    publishAs: 'ctrl',
-    applyAuthorStyles: true,
-    map: const {
-        'total-items' : '@totalItems',
-        'items-per-page': '@itemsPerPage',
-        'num-pages': '&setNumPages',
-        'on-select-page': '&onSelectChange',
-        'align': '@align',
-        'previous-text': '@previousText',
-        'next-text': '@nextText'
-    })
+class BasicPaginationGenerator implements PaginationGenerator {
 
-class PaginationComponent extends PagerComponent {
-
-  List<PageInfo> _pages;
-
-  PaginationComponent(NgModel ngModel, Scope scope, PaginationConfig config) : super(ngModel, scope, config) {
-  }
-
-  String get firstText => '';
-  String get lastText => '';
-  bool get boundaryLinks => false;
-  bool get directionLinks => true;
-  List<PageInfo> get pages => _pages;
-
-  var _maxSize = null;
-  bool _rotate = true;
-
-  calculatePages() {
-    super.calculatePages();
-    _pages = _getPages(currentPage, totalPages);
-  }
-
-  void render(value) {
-    super.render(value);
-    _pages = _getPages(currentPage, totalPages);
-  }
-
-  List<PageInfo> _getPages(int currentPage, int totalPages) {
+  List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate) {
     var pages = new List<PageInfo>();
 
     // Default page limits
     int startPage = 1, endPage = totalPages;
-    bool isMaxSized = ( (_maxSize != null) && _maxSize < totalPages );
+    bool isMaxSized = ( (maxSize != null) && maxSize < totalPages );
 
     // recompute if maxSize
     if ( isMaxSized ) {
-      if ( _rotate ) {
+      if ( rotate ) {
         // Current page is displayed in the middle of the visible ones
-        startPage = Math.max(currentPage - ((_maxSize/2).floor()), 1);
-        endPage   = startPage + _maxSize - 1;
+        startPage = Math.max(currentPage - ((maxSize/2).floor()), 1);
+        endPage   = startPage + maxSize - 1;
 
         // Adjust if limit is exceeded
         if (endPage > totalPages) {
           endPage   = totalPages;
-          startPage = endPage - _maxSize + 1;
+          startPage = endPage - maxSize + 1;
         }
       } else {
         // Visible pages are paginated with maxSize
-        startPage = (((currentPage / _maxSize).ceil() - 1) * _maxSize) + 1;
+        startPage = (((currentPage / maxSize).ceil() - 1) * maxSize) + 1;
 
         // Adjust last page if limit is exceeded
-        endPage = Math.min(startPage + _maxSize - 1, totalPages);
+        endPage = Math.min(startPage + maxSize - 1, totalPages);
       }
     }
 
@@ -247,7 +254,7 @@ class PaginationComponent extends PagerComponent {
     }
 
     // Add links to move between page sets
-    if ( isMaxSized && ! _rotate ) {
+    if ( isMaxSized && ! rotate ) {
       if ( startPage > 1 ) {
         var previousPageSet = new PageInfo(startPage - 1, '...', false);
         pages.insert(0, previousPageSet);
