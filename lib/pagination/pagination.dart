@@ -17,7 +17,7 @@ class PaginationModule extends Module {
   PaginationModule() {
     value(PagerConfig, new PagerConfig(10, '« Previous', 'Next »', true));
     type(PagerComponent);
-    value(PaginationConfig, new PaginationConfig(10, 'Previous', 'Next', true));
+    value(PaginationConfig, new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
     type(PaginationComponent);
     type(PaginationGenerator, implementedBy: BasicPaginationGenerator);
   }
@@ -172,8 +172,14 @@ class PagerComponent {
 
 
 class PaginationConfig extends PagerConfig {
+  bool boundaryLinks;
+  bool directionLinks;
+  String firstText;
+  String lastText;
 
-  PaginationConfig(int itemsPerPage, String previousText, String nextText, bool align) :super(itemsPerPage, previousText, nextText, align);
+  int maxSize;
+
+  PaginationConfig(int itemsPerPage, this.boundaryLinks, this.directionLinks, this.firstText, String previousText, String nextText, this.lastText, bool align) :super(itemsPerPage, previousText, nextText, align);
 }
 
 @Component(
@@ -186,39 +192,68 @@ class PaginationConfig extends PagerConfig {
         'total-items': '=>totalItems',
         'items-per-page': '=>itemsPerPage',
         'max-size': '=>maxSize',
+        'rotate': '=>rotate',
         'num-pages': '&setNumPagesListener',
         'on-select-page': '&onSelectChangeExtEventHandler',
+        'boundary-links': '=>boundaryLinks',
+        'direction-links': '=>directionLinks',
         'align': '@align',
         'previous-text': '@previousText',
-        'next-text': '@nextText'
+        'next-text': '@nextText',
+        'first-text': '@firstText',
+        'last-text': '@lastText'
     }
 )
 class PaginationComponent extends PagerComponent {
 
+  PaginationConfig paginationConfig;
   PaginationGenerator paginationGenerator;
 
   // Bound attributes
+  bool boundaryLinks;
+  bool directionLinks;
   List<PageInfo> pages;
+  String _firstText;
+  String _lastText;
 
   // Bound attributes store fields
   int _maxSize;
+  bool _rotate;
 
 
-  PaginationComponent(Scope scope, PaginationConfig paginationConfig, this.paginationGenerator): super(scope, paginationConfig);
+  PaginationComponent(Scope scope, PaginationConfig paginationConfig, this.paginationGenerator): super(scope, paginationConfig) {
+    _rotate = true;
+    this.paginationConfig = paginationConfig;
+
+    // config
+    boundaryLinks = paginationConfig.boundaryLinks;
+    directionLinks = paginationConfig.directionLinks;
+    _firstText = paginationConfig.firstText;
+    _lastText = paginationConfig.nextText;
+    _maxSize = paginationConfig.maxSize;
+  }
+
   int get maxSize => _maxSize;
   set maxSize(int value) {
     _maxSize = value;
-    _generatePages(currentPage, totalPages, maxSize);
+    _generatePages(currentPage, totalPages, maxSize, rotate);
   }
 
-  String get firstText => '';
-  String get lastText => '';
-  bool get boundaryLinks => false;
-  bool get directionLinks => true;
+  bool get rotate => _rotate;
+  set rotate(bool value) {
+    _rotate = value;
+    _generatePages(currentPage, totalPages, maxSize, rotate);
+  }
 
-  generatePages(int currentPage, int totalPages) => _generatePages(currentPage, totalPages, maxSize);
+  String get firstText => _firstText;
+  set firstText(String value) => _firstText = (value == null? paginationConfig.firstText : value);
 
-  _generatePages(int currentPage, int totalPages, int maxSize) => pages = paginationGenerator.getPages(currentPage, totalPages, maxSize, true);
+  String get lastText => _lastText;
+  set lastText(String value) => _lastText = (value == null? paginationConfig.lastText : value);
+
+  generatePages(int currentPage, int totalPages) => _generatePages(currentPage, totalPages, maxSize, rotate);
+
+  _generatePages(int currentPage, int totalPages, int maxSize, bool rotate) => pages = paginationGenerator.getPages(currentPage, totalPages, maxSize, rotate);
 
 }
 
@@ -257,7 +292,7 @@ class BasicPaginationGenerator implements PaginationGenerator {
         }
       } else {
         // Visible pages are paginated with maxSize
-        startPage = (((currentPage / maxSize).ceil() - 1) * maxSize) + 1;
+        startPage = maxSize == 0? 0 : ((((currentPage / maxSize).ceil() - 1) * maxSize) + 1);
 
         // Adjust last page if limit is exceeded
         endPage = Math.min(startPage + maxSize - 1, totalPages);
@@ -277,7 +312,7 @@ class BasicPaginationGenerator implements PaginationGenerator {
         pages.insert(0, previousPageSet);
       }
 
-      if ( endPage < totalPages ) {
+      if ( (endPage > 1) && (endPage < totalPages) ) {
         var nextPageSet = new PageInfo(endPage + 1, '...', false);
         pages.add(nextPageSet);
       }

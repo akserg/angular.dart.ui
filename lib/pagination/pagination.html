@@ -11,6 +11,6 @@
     <li ng-if="ctrl.directionLinks" ng-class="{disabled: ctrl.noNext}"><a href
                                                                           ng-click="ctrl.selectPage(ctrl.currentPage + 1)">{{ctrl.nextText}}</a>
     </li>
-    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noNext}"><a href ng-click="ctrl.selectPage(ctrl.totalPages)">{{getText('last')}}</a>
+    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noNext}"><a href ng-click="ctrl.selectPage(ctrl.totalPages)">{{ctrl.lastText}}</a>
     </li>
 </ul>

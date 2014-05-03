@@ -552,5 +552,295 @@ void paginationTests() {
         expect(getPaginationElText(1)).toEqual('Next');
       })));
     });
+
+    describe('with `max-size` option & no `rotate`', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          setTotalItems(115); //12 pages
+          setCurrentPage(7);
+          rootScope.context['maxSize'] = 5;
+          rootScope.context['rotate'] = false;
+          compileElement('<pagination total-items="total" page="currentPage" max-size="maxSize" rotate="rotate"></pagination>');
+        };
+      }));
+
+      it('contains maxsize + 4 elements', async(inject((){
+        expect(getPaginationBarSize()).toBe(9);
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(1)).toEqual('...');
+        expect(getPaginationElText(2)).toEqual('6');
+        expect(getPaginationElText(6)).toEqual('10');
+        expect(getPaginationElText(7)).toEqual('...');
+        expect(getPaginationElText(8)).toEqual('Next');
+      })));
+
+      it('shows only the next ellipsis element on first page set', async(inject((){
+        updateCurrentPage(3);
+        expect(getPaginationElText(1)).toEqual('1');
+        expect(getPaginationElText(5)).toEqual('5');
+        expect(getPaginationElText(6)).toEqual('...');
+      })));
+
+      it('shows only the previous ellipsis element on last page set', async(inject((){
+        updateCurrentPage(12);
+        expect(getPaginationElText(1)).toEqual('...');
+        expect(getPaginationElText(2)).toEqual('11');
+        expect(getPaginationElText(3)).toEqual('12');
+      })));
+
+      it('moves to the previous set when first ellipsis is clicked', async(inject((){
+        expect(getPaginationElText(1)).toEqual('...');
+
+        clickPaginationEl(1);
+
+        expect(getCurrentPage()).toEqual(5);
+        expect(getPaginationEl(5)).toHaveClass('active');
+      })));
+
+      it('moves to the next set when last ellipsis is clicked', async(inject((){
+        expect(getPaginationElText(7)).toEqual('...');
+
+        clickPaginationEl(7);
+
+        expect(getCurrentPage()).toEqual(11);
+        expect(getPaginationEl(2)).toHaveClass('active');
+      })));
+
+      it('should not display page numbers, if max-size is zero', async(inject((){
+        rootScope.apply(() => rootScope.context['maxSize'] = 0);
+        expect(getPaginationBarSize()).toBe(2);
+        expect(getPaginationElText(0)).toEqual('Previous');
+        expect(getPaginationElText(1)).toEqual('Next');
+      })));
+    });
+
+    describe('pagination directive with `boundary-links`', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          compileElement('<pagination boundary-links="true" total-items="total" page="currentPage"></pagination>');
+        };
+      }));
+
+      it('contains num-pages + 4 li elements', async(inject((){
+        expect(getPaginationBarSize()).toBe(9);
+        expect(getPaginationElText(0)).toEqual('First');
+        expect(getPaginationElText(1)).toEqual('Previous');
+        expect(getPaginationElText(7)).toEqual('Next');
+        expect(getPaginationElText(8)).toEqual('Last');
+      })));
+
+      it('has first and last li elements visible', async(inject((){
+        expect(getPaginationEl(0).style.display).not.toEqual('none');
+        expect(getPaginationEl(8).style.display).not.toEqual('none');
+      })));
+
+      it('disables the "first" & "previous" link if current page is 1', async(inject((){
+        updateCurrentPage(1);
+
+        expect(getPaginationEl(0)).toHaveClass('disabled');
+        expect(getPaginationEl(1)).toHaveClass('disabled');
+      })));
+
+      it('disables the "last" & "next" link if current page is num-pages', async(inject((){
+        updateCurrentPage(5);
+
+        expect(getPaginationEl(7)).toHaveClass('disabled');
+        expect(getPaginationEl(8)).toHaveClass('disabled');
+      })));
+
+      it('changes currentPage if the "first" link is clicked', async(inject((){
+        clickPaginationEl(0);
+        expect(getCurrentPage()).toBe(1);
+      })));
+
+      it('changes currentPage if the "last" link is clicked', async(inject((){
+        clickPaginationEl(8);
+        expect(getCurrentPage()).toBe(5);
+      })));
+
+      it('does not change the current page on "first" click if already at first page', async(inject((){
+        updateCurrentPage(1);
+        clickPaginationEl(0);
+        expect(getCurrentPage()).toBe(1);
+      })));
+
+      it('does not change the current page on "last" click if already at last page', async(inject((){
+        updateCurrentPage(5);
+        clickPaginationEl(8);
+        expect(getCurrentPage()).toBe(5);
+      })));
+
+      it('changes "first" & "last" text from attributes', async(inject((){
+        compileElement('<pagination boundary-links="true" first-text="<<<" last-text=">>>" total-items="total" page="currentPage"></pagination>');
+
+        expect(getPaginationElText(0)).toEqual('<<<');
+        expect(getPaginationElText(8)).toEqual('>>>');
+      })));
+
+      it('changes "previous" & "next" text from attributes', async(inject((){
+        compileElement('<pagination boundary-links="true" previous-text="<<" next-text=">>" total-items="total" page="currentPage"></pagination>');
+
+        expect(getPaginationElText(1)).toEqual('<<');
+        expect(getPaginationElText(7)).toEqual('>>');
+      })));
+
+      it('changes "first" & "last" text from interpolated attributes', async(inject((){
+        rootScope.context['myFirstText']= '<<<';
+        rootScope.context['myNextText']= '>>>';
+        compileElement('<pagination boundary-links="true" first-text="{{myFirstText}}" last-text="{{myNextText}}" total-items="total" page="currentPage"></pagination>');
+
+        expect(getPaginationElText(0)).toEqual('<<<');
+        expect(getPaginationElText(8)).toEqual('>>>');
+      })));
+
+      it('changes "previous" & "next" text from interpolated attributes', async(inject((){
+        rootScope.context['previousText']= '<<';
+        rootScope.context['nextText']= '>>';
+        compileElement('<pagination boundary-links="true" previous-text="{{previousText}}" next-text="{{nextText}}" total-items="total" page="currentPage"></pagination>');
+
+        expect(getPaginationElText(1)).toEqual('<<');
+        expect(getPaginationElText(7)).toEqual('>>');
+      })));
+    });
+
+    describe('pagination directive with just number links', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          compileElement('<pagination direction-links="false" total-items="total" page="currentPage"></pagination>');
+        };
+      }));
+
+      it('contains num-pages li elements', async(inject((){
+        expect(getPaginationBarSize()).toBe(5);
+        expect(getPaginationElText(0)).toEqual('1');
+        expect(getPaginationElText(4)).toEqual('5');
+      })));
+
+      it('has the number of the page as text in each page item', async(inject((){
+        for(var i = 0; i < 5; i++) {
+          expect(getPaginationElText(i)).toEqual((i+1).toString());
+        }
+      })));
+
+      it('sets the current page to be active', async(inject((){
+        expect(getPaginationEl(2)).toHaveClass('active');
+      })));
+
+      it('does not disable the "1" link if current page is 1', async(inject((){
+        updateCurrentPage(1);
+
+        expect(getPaginationEl(0)).not.toHaveClass('disabled');
+        expect(getPaginationEl(0)).toHaveClass('active');
+      })));
+
+      it('does not disable the "last" link if current page is last page', async(inject((){
+        updateCurrentPage(5);
+
+        expect(getPaginationEl(4)).not.toHaveClass('disabled');
+        expect(getPaginationEl(4)).toHaveClass('active');
+      })));
+
+      it('changes currentPage if a page link is clicked', async(inject((){
+        clickPaginationEl(1);
+
+        expect(getCurrentPage()).toBe(2);
+      })));
+
+      it('changes the number of items when total items changes', async(inject((){
+        rootScope.apply(()=>setTotalItems(73)); // 8 pages
+
+        expect(getPaginationBarSize()).toBe(8);
+        expect(getPaginationElText(0)).toEqual('1');
+        expect(getPaginationElText(7)).toEqual('8');
+      })));
+    });
+
+    describe('with just boundary & number links', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          rootScope.context['directions'] = false;
+          compileElement('<pagination boundary-links="true" direction-links="directions" total-items="total" page="currentPage"></pagination>');
+        };
+      }));
+
+      it('contains number of pages + 2 li elements', async(inject((){
+        expect(getPaginationBarSize()).toBe(7);
+        expect(getPaginationElText(0)).toEqual('First');
+        expect(getPaginationElText(1)).toEqual('1');
+        expect(getPaginationElText(5)).toEqual('5');
+        expect(getPaginationElText(6)).toEqual('Last');
+      })));
+
+      it('disables the "first" & activates "1" link if current page is 1', async(inject((){
+        updateCurrentPage(1);
+
+        expect(getPaginationEl(0)).toHaveClass('disabled');
+        expect(getPaginationEl(1)).not.toHaveClass('disabled');
+        expect(getPaginationEl(1)).toHaveClass('active');
+      })));
+
+      it('disables the "last" & "next" link if current page is num-pages', async(inject((){
+        updateCurrentPage(5);
+
+        expect(getPaginationEl(5)).toHaveClass('active');
+        expect(getPaginationEl(5)).not.toHaveClass('disabled');
+        expect(getPaginationEl(6)).toHaveClass('disabled');
+      })));
+    });
+
+    describe('`num-pages`', (){
+      beforeEach(module((Module module){
+        return (Injector injector){
+          rootScope.context['numpg'] = null;
+          compileElement('<pagination total-items="total" page="currentPage" num-pages="numpg"></pagination>');
+        };
+      }));
+
+      it('disables the "last" & "next" link if current page is num-pages', async(inject((){
+        expect(rootScope.context['numpg']).toBe(5);
+      })));
+
+      it('changes when total number of pages change', async(inject((){
+        rootScope.apply(()=>setTotalItems(73)); // 8 pages
+        expect(rootScope.context['numpg']).toBe(8);
+      })));
+
+      it('shows minimun one page if total items are not defined and does not break binding', async(inject((){
+        rootScope.apply(()=>setTotalItems(null));
+        expect(rootScope.context['numpg']).toBe(1);
+
+        rootScope.apply(()=>setTotalItems(73)); // 8 pages
+        expect(rootScope.context['numpg']).toBe(8);
+      })));
+    });
+
+    describe('setting `paginationConfig`', (){
+
+      it('shows minimun one page if total items are not defined and does not break binding', async(inject((PaginationConfig paginationConfig){
+        paginationConfig.boundaryLinks = true;
+        paginationConfig.directionLinks = true;
+        paginationConfig.firstText = 'FI';
+        paginationConfig.previousText = 'PR';
+        paginationConfig.nextText = 'NE';
+        paginationConfig.lastText = 'LA';
+        compileElement('<pagination total-items="total" page="currentPage"></pagination>');
+        expect(getPaginationElText(0)).toEqual('FI');
+        expect(getPaginationElText(1)).toEqual('PR');
+        expect(getPaginationElText(7)).toEqual('NE');
+        expect(getPaginationElText(8)).toEqual('LA');
+      })));
+
+      it('contains number of pages + 2 li elements', async(inject((PaginationConfig paginationConfig){
+        paginationConfig.itemsPerPage = 5;
+        compileElement('<pagination total-items="total" page="currentPage"></pagination>');
+        expect(getPaginationBarSize()).toBe(12);
+      })));
+
+      it('should take maxSize defaults into account', async(inject((PaginationConfig paginationConfig){
+        paginationConfig.maxSize = 2;
+        compileElement('<pagination total-items="total" page="currentPage"></pagination>');
+        expect(getPaginationBarSize()).toBe(4);
+      })));
+    });
   });
 }
