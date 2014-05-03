@@ -11,14 +11,21 @@ class PaginationController {
 
   int totalItems;
   int currentPage;
-  int itemsPerPage;
+  int maxSize;
 
-  int totalPages;
+  int bigTotalItems;
+  int bigCurrentPage;
 
   PaginationController() {
-    totalItems = 54;
-    currentPage = 2;
-    itemsPerPage = 5;
+    totalItems = 64;
+    currentPage = 4;
+    maxSize = 5;
+    bigTotalItems = 175;
+    bigCurrentPage = 1;
   }
+
+  setPage(int newPage) => currentPage = newPage;
+
+  pageChanged() => null;
 
 }
