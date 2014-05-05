@@ -34,6 +34,10 @@ dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isD
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
 
+dom.Element getFirstUList(dom.DocumentFragment doc) => doc.children.firstWhere(isUList);
+
+bool isUList(dom.Element element) => element is dom.UListElement;
+
 /**
  * Convert an [html] String to a [List] of [Element]s.
  */

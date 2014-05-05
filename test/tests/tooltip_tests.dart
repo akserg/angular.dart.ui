@@ -29,13 +29,20 @@ void tooltipTests() {
     
     afterEach(tearDownInjector);
     
-    compileElement([html = null]) {
+    Scope getElementScope(dom.Element el) {
+      Tooltip tooltip = (ngProbe(elm).directives as List).firstWhere((e) => e is Tooltip);
+      return tooltip.scope;
+    }
+    
+    Scope compileElement([html = null]) {
       elmBody = _.compile(html != null ? html : '<div><span tooltip="tooltip text" tooltip-animation="false">Selector Text</span></div>');
       
       microLeap();
       scope.apply();
       
       elm = elmBody.tagName == 'SPAN' ? elmBody : ngQuery(elmBody, 'span')[0];
+      
+      return getElementScope(elm);
     };
     
     void cleanup() {
@@ -44,7 +51,7 @@ void tooltipTests() {
     }
     
     it('should not be open initially', async(inject(() {
-      compileElement();
+      Scope scope = compileElement();
       
       expect(scope.context['tt_isOpen']).toBe(false);
       
@@ -54,7 +61,7 @@ void tooltipTests() {
     })));
     
     it('should open on mouseenter', async(inject(() {
-      compileElement();
+      Scope scope = compileElement();
       
       _.triggerEvent(elm, 'mouseenter');
       expect(scope.context['tt_isOpen']).toBe(true);
@@ -65,7 +72,7 @@ void tooltipTests() {
     })));
     
     it('should close on mouseleave', async(inject(() {
-      compileElement();
+      Scope scope = compileElement();
       
       _.triggerEvent(elm, 'mouseenter');
       _.triggerEvent(elm, 'mouseleave');
@@ -75,20 +82,20 @@ void tooltipTests() {
     })));
     
     it('should not animate on animation set to false', async(inject(() {
-      compileElement();
+      Scope scope = compileElement();
       
       expect(scope.context['tt_animation']).toBe(false);
     })));
     
     it('should have default placement of "top"', async(inject(() {
-      compileElement();
+      Scope scope = compileElement();
       
       _.triggerEvent(elm, 'mouseenter');
       expect(scope.context['tt_placement']).toEqual('top');
     })));
     
     it('should allow specification of placement', async(inject(() {
-      compileElement('<span tooltip="tooltip text" tooltip-placement="bottom">Selector Text</span>');
+      Scope scope = compileElement('<span tooltip="tooltip text" tooltip-placement="bottom">Selector Text</span>');
 
       _.triggerEvent(elm, 'mouseenter');
       expect(scope.context['tt_placement']).toEqual('bottom');
@@ -161,7 +168,7 @@ void tooltipTests() {
     })));
     
 //    it( 'should close the tooltip when its trigger element is destroyed', async(inject(() {
-//      compileElement();
+//      Scope scope = compileElement();
 //      
 //      _.triggerEvent(elm, 'mouseenter');
 //      expect(scope.context['tt_isOpen']).toBe(true);
@@ -173,7 +180,7 @@ void tooltipTests() {
 //    })));
     
 //    it('isolate scope on the popup should always be child of correct element scope', async(inject(() {
-//      compileElement();
+//      Scope scope = compileElement();
 //      
 //      var ttScope;
 //      _.triggerEvent(elm, 'mouseenter');
@@ -193,7 +200,7 @@ void tooltipTests() {
 //    })));
     
     describe('with specified enable expression', () {
-      compileElement(value) {
+      Scope compileElement(value) {
         scope.context['enable'] = value;
         elmBody = _.compile('<div><span tooltip="tooltip text" tooltip-enable="enable">Selector Text</span></div>');
         
@@ -201,6 +208,8 @@ void tooltipTests() {
         scope.apply();
         
         elm = elmBody.tagName == 'SPAN' ? elmBody : ngQuery(elmBody, 'span')[0];
+        
+        return getElementScope(elm);
       };
           
       it('should not open ', async(inject(() {
@@ -221,7 +230,7 @@ void tooltipTests() {
     });
     
     describe('with specified popup delay', () {
-      compileElement([delay = 1000]) {
+      Scope compileElement([delay = 1000]) {
         scope.context['delay'] = delay;
         elmBody = _.compile('<span tooltip="tooltip text" tooltip-popup-delay="delay">Selector Text</span>');
         
@@ -229,10 +238,12 @@ void tooltipTests() {
         scope.apply();
         
         elm = elmBody.tagName == 'SPAN' ? elmBody : ngQuery(elmBody, 'span')[0];
+        
+        return getElementScope(elm);
       };
       
       it('should open after timeout', async(inject(() {
-        compileElement();
+        Scope scope = compileElement();
 
         _.triggerEvent(elm, 'mouseenter');
         expect(scope.context['tt_isOpen']).toBe(false);
@@ -243,7 +254,7 @@ void tooltipTests() {
       })));
       
       it('should not open if mouseleave before timeout', async(inject(() {
-        compileElement();
+        Scope scope = compileElement();
         
         _.triggerEvent(elm, 'mouseenter');
         expect(scope.context['tt_isOpen']).toBe(false);
@@ -254,7 +265,7 @@ void tooltipTests() {
       })));
       
       it('should use default popup delay if specified delay is not a number', async(inject(() {
-        compileElement('text1000');
+        Scope scope = compileElement('text1000');
         
         _.triggerEvent(elm, 'mouseenter');
         expect(scope.context['tt_isOpen']).toBe(true);
@@ -262,18 +273,20 @@ void tooltipTests() {
     });
     
     describe( 'with a trigger attribute', () {
-      compileElement(String html) {
+      Scope compileElement(String html) {
         elmBody = _.compile(html.trim());
         
         microLeap();
         scope.apply();
         
         elm = elmBody.tagName == 'INPUT' ? elmBody : ngQuery(elmBody, 'input')[0];
+        
+        return getElementScope(elm);
       };
             
       it( 'should use it to show but set the hide trigger based on the map for mapped triggers', async(inject(() {
 
-        compileElement('<div><input tooltip="Hello!" tooltip-trigger="focus" /></div>');
+        Scope scope = compileElement('<div><input tooltip="Hello!" tooltip-trigger="focus" /></div>');
         
         expect(scope.context['tt_isOpen']).toBeFalsy();
         
@@ -285,7 +298,7 @@ void tooltipTests() {
       })));
       
       it( 'should use it as both the show and hide triggers for unmapped triggers', async(inject(() {
-        compileElement('<div><input tooltip="Hello!" tooltip-trigger="fakeTriggerAttr" /></div>');
+        Scope scope = compileElement('<div><input tooltip="Hello!" tooltip-trigger="fakeTriggerAttr" /></div>');
 
         expect(scope.context['tt_isOpen']).toBeFalsy();
         _.triggerEvent(elm, 'fakeTriggerAttr', 'Event');
@@ -321,11 +334,13 @@ void tooltipTests() {
         scope.apply();
         
         elm = elmBody.firstChild;
+        
+        Scope s = getElementScope(elm);
                 
         var bodyLength = dom.document.body.children.length;
         _.triggerEvent(elm, 'mouseenter');
         
-        expect(scope.context['tt_isOpen']).toBe(true);
+        expect(s.context['tt_isOpen']).toBe(true);
         expect(elmBody.children.length ).toBe(1);
         expect(dom.document.body.children.length).toEqual(bodyLength + 1);
       })));

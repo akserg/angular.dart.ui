@@ -105,7 +105,6 @@ class Tooltip extends TooltipBase {
     }
     //
     dom.Element innerTooltip = tooltip.children[1];
-    print('Content is ${_scope.context['tt_content']}');
     innerTooltip.setInnerHtml(_scope.context['tt_content']);
   }
 }
@@ -130,6 +129,7 @@ abstract class TooltipBase {
   bool hasEnableExp = false;      
       
   Scope _scope;
+  Scope get scope => _scope;
   dom.Element _element;
   NodeAttrs _attrs;
   
@@ -144,8 +144,11 @@ abstract class TooltipBase {
   Compiler _compiler;
   
   TooltipBase(this._type, this.prefix, this.defaultTriggerShow, 
-      this._scope, this._element, this._attrs, this._timeout, this._config, 
+      Scope scope, this._element, this._attrs, this._timeout, this._config, 
       this._interpolate, this._position, this._injector, this._compiler) {
+    
+    _scope = scope.createChild(new PrototypeMap(scope.context)); 
+    
     options = new Map.from(_config.defaultOptions)..addAll(_config.globalOptions);
     
     directiveName = _config.snakeCase(_type);
