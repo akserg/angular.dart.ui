@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+https://github.com/akserg/angular.dart.ui
+All rights reserved.  Please see the LICENSE.md file.
+-->
+<div popover-demo-controller>
+    <h4>Dynamic</h4>
+    <div class="form-group">
+      <label>Popup Text:</label>
+      <input type="text" ng-model="p.dynamicPopover" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Popup Title:</label>
+      <input type="text" ng-model="p.dynamicPopoverTitle" class="form-control">
+    </div>
+    <button popover="{{p.dynamicPopover}}" popover-title="{{p.dynamicPopoverTitle}}" class="btn btn-default">Dynamic Popover</button>
+    
+    <hr />
+    <h4>Positional</h4>
+    <button popover-placement="top" popover="On the Top!" class="btn btn-default">Top</button>
+    <button popover-placement="left" popover="On the Left!" class="btn btn-default">Left</button>
+    <button popover-placement="right" popover="On the Right!" class="btn btn-default">Right</button>
+    <button popover-placement="bottom" popover="On the Bottom!" class="btn btn-default">Bottom</button>
+    
+    <hr />
+    <h4>Triggers</h4>
+    <p>
+      <button popover="I appeared on mouse enter!" popover-trigger="mouseenter" class="btn btn-default">Mouseenter</button>
+    </p>
+    <input type="text" value="Click me!" popover="I appeared on focus! Click away and I'll vanish..."  popover-trigger="focus" class="form-control">
+
+    <hr />
+    <h4>Other</h4>
+    <button Popover-animation="true" popover="I fade in and out!" class="btn btn-default">fading</button>
+    <button popover="I have a title!" popover-title="The title." class="btn btn-default">title</button>
+</div>

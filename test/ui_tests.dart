@@ -35,6 +35,7 @@ import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/carousel/carousel.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
+import 'package:angular_ui/popover/popover.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -54,6 +55,7 @@ part 'tests/timepicker_tests.dart';
 part 'tests/rating_tests.dart';
 part 'tests/carousel_tests.dart';
 part 'tests/tooltip_tests.dart';
+part 'tests/popover_tests.dart';
 
 void main() {
   useHtmlEnhancedConfiguration();
@@ -77,6 +79,7 @@ void main() {
     group('Timepicker', () => timepickerTests());
     group('Carousel', () => carouselTests());
     group('Tooltip', () => tooltipTests());
+    group('Popover', () => popoverTests());
   });
 }
 
