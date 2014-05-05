@@ -5,6 +5,7 @@ authors:
 - Tonis Pool <tonis.pool@gmail.com>
 - Gunter Zochbauer <gzoechi@gmail.com>
 - Francesco Cina <ufoscout@gmail.com>
+- Neeraj Mittal <mittal.neeraj@gmail.com>
 description: Port of Angular-UI to Dart.
 homepage: http://akserg.github.io/angular.dart.ui
 environment:

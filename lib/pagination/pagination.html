@@ -1,0 +1,16 @@
+<ul class="pagination">
+    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noPrevious}"><a href
+                                                                             ng-click="ctrl.selectPage(1)">{{ctrl.firstText}}</a>
+    </li>
+    <li ng-if="ctrl.directionLinks" ng-class="{disabled: ctrl.noPrevious}"><a href
+                                                                              ng-click="ctrl.selectPage(ctrl.currentPage - 1)">{{ctrl.previousText}}</a>
+    </li>
+    <li ng-repeat="page in ctrl.pages" ng-class="{active: page.isActive}"><a href
+                                                                                      ng-click="ctrl.selectPage(page.number)">{{page.text}}</a>
+    </li>
+    <li ng-if="ctrl.directionLinks" ng-class="{disabled: ctrl.noNext}"><a href
+                                                                          ng-click="ctrl.selectPage(ctrl.currentPage + 1)">{{ctrl.nextText}}</a>
+    </li>
+    <li ng-if="ctrl.boundaryLinks" ng-class="{disabled: ctrl.noNext}"><a href ng-click="ctrl.selectPage(ctrl.totalPages)">{{ctrl.lastText}}</a>
+    </li>
+</ul>
