@@ -3,11 +3,11 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.pagination;
 
-import 'dart:html' as dom;
+//import 'dart:html' as dom;
 import 'dart:math' as Math;
 
 import 'package:angular/angular.dart';
-import "package:angular/core_dom/module_internal.dart";
+//import "package:angular/core_dom/module_internal.dart";
 import "package:angular/core/parser/syntax.dart";
 
 import "package:angular_ui/utils/utils.dart";
@@ -86,7 +86,7 @@ class PagerComponent {
 
   int get currentPage => _currentPage;
 
-  set currentPage(int value) {
+  set currentPage(value) {
     var newIntValue;
     try {
       newIntValue = toInt(value);
@@ -130,7 +130,7 @@ class PagerComponent {
   set nextText(String value) => _nextText = (value == null? pagerConfig.nextText : value);
 
   bool get align => _align;
-  set align(bool value) => _align = (value == null? pagerConfig.align : value);
+  set align(value) => _align = (value == null? pagerConfig.align : toBool(value));
 
   int get totalPages => _totalPages;
 

@@ -16,6 +16,9 @@ Port of Angular-UI to Dart.
 - Datepicker (partially implemented)
 - Tabs
 - Drag and Drop support
+- Carousel
+- Timepicker
+- Pagination
 
 *Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.*
 

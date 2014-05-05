@@ -38,13 +38,19 @@ void pagerTests() {
 
     void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
 
-    void setTotalItems(value) => rootScope.context['total'] = value;
+    void setTotalItems(value) {
+      rootScope.context['total'] = value;
+    }
 
     int getCurrentPage() => rootScope.context['currentPage'];
 
-    void setCurrentPage(value) => rootScope.context['currentPage'] = value;
+    void setCurrentPage(value) {
+      rootScope.context['currentPage'] = value;
+    }
 
-    void setItemsPerPage(int value) => rootScope.context['perPage'] = value;
+    void setItemsPerPage(int value) {
+      rootScope.context['perPage'] = value;
+    }
 
     beforeEach(module((Module module) {
       module.install(new PaginationModule());
@@ -282,13 +288,19 @@ void paginationTests() {
 
     void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pagination.html');
 
-    void setTotalItems(value) => rootScope.context['total'] = value;
+    void setTotalItems(value) { 
+      rootScope.context['total'] = value;
+    }
 
     int getCurrentPage() => rootScope.context['currentPage'];
 
-    void setCurrentPage(value) => rootScope.context['currentPage'] = value;
+    void setCurrentPage(value) { 
+      rootScope.context['currentPage'] = value;
+    }
 
-    void setItemsPerPage(int value) => rootScope.context['perPage'] = value;
+    void setItemsPerPage(int value) {
+      rootScope.context['perPage'] = value;
+    }
 
     beforeEach(module((Module module) {
       module.install(new PaginationModule());
