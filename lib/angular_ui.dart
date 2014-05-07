@@ -23,6 +23,7 @@ import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/popover/popover.dart';
+import 'package:angular_ui/grid/grid.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -49,6 +50,7 @@ class AngularUIModule extends Module {
     install(new TimepickerModule());
     install(new TooltipModule());
     install(new PopoverModule());
+    install(new GridModule());
   }
 }
 
