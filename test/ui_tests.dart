@@ -34,6 +34,7 @@ import 'package:angular_ui/tabs/tabset.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/carousel/carousel.dart';
+import 'tests/typeahead/module.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -74,6 +75,7 @@ void main() {
     group('Datepicker', () => datepickerTests());
     group('Timepicker', () => timepickerTests());
     group('Carousel', () => carouselTests());
+    group('Typeahead', () => typeaheadTests());
   });
 }
 
