@@ -15,7 +15,6 @@ import "package:angular_ui/utils/utils.dart";
 class GridModule extends Module {
   GridModule() {
     install(new TimeoutModule());
-    type(GridController);
     type(Grid);
     type(GridHeader);
     type(GridColumn);
@@ -29,10 +28,9 @@ class GridModule extends Module {
   }
 }
 
-const tableDirective="trNgGrid";
+const tableDirective="tr-ng-grid";
 
-const headerDirective="trNgGridHeader";
-const headerDirectiveAttribute="tr-ng-grid-header";
+const headerDirective="tr-ng-grid-header";
 
 const bodyDirective="trNgGridBody";
 const bodyDirectiveAttribute="tr-ng-grid-body";
@@ -125,9 +123,10 @@ abstract class IGridFooterScope implements Scope {
   var navigatePrevPage = (dom.Event event) {};
 }
 
-abstract class IGridScope implements IGridOptions, Scope { }
+//abstract class IGridScope implements IGridOptions, Scope { }
 
 class GridController {
+  
   Scope externalScope;
   Scope internalScope;
   IGridOptions gridOptions;
@@ -138,19 +137,12 @@ class GridController {
   Injector _injector;
   Compiler _compiler;
   
-  IGridScope scope;
-  NodeAttrs attrs;
+  Scope scope;
+  NodeAttrs _attrs;
   Parser _parse;
   Timeout _timeout;
   
-  GridController(this._compiler,
-                 this.scope,
-                 this._gridElement,
-                 this.attrs,
-                 this._parse,
-                 this._timeout,
-                 this._injector,
-                 _controller) {
+  GridController(this._compiler, this.scope, this._gridElement, this._attrs, this._parse, this._timeout, this._injector) {
     internalScope = scope;
     var scopeOptionsIdentifier = "gridOptions";
     
@@ -171,17 +163,23 @@ class GridController {
       ..enableMultiRowSelections = true
       ..onDataRequiredDelay = 1000;
     
-    gridOptions.onDataRequired = attrs.containsKey("on-data-required") ? scope.context['onDataRequired'] : null;
+    gridOptions.onDataRequired = _attrs.containsKey("on-data-required") ? scope.context['onDataRequired'] : null;
     gridOptions.gridColumnDefs = [];
-    scope.context['scopeOptionsIdentifier'] = gridOptions;
+    scope.context[scopeOptionsIdentifier] = gridOptions;
     
     externalScope = internalScope.parentScope;
     
     // link the outer scope with the internal one
-    linkScope(internalScope, scopeOptionsIdentifier, attrs);
+//    linkScope(internalScope, scopeOptionsIdentifier, _attrs);
+
+    if (_attrs.containsKey('items')) {
+      if (internalScope.context['items'] != null) {
+        gridOptions.items = internalScope.context['items'];
+      }
+    }
     
     // set up watchers for some of the special attributes we support
-    if (gridOptions.onDataRequired != null){
+    if (gridOptions.onDataRequired != null) {
         scope.watch("[gridOptions.filterBy, gridOptions.filterByFields, gridOptions.orderBy, gridOptions.orderByReverse, gridOptions.currentPage]", (value, old) {
 
         if (dataRequestPromise != null) {
@@ -198,7 +196,7 @@ class GridController {
     }
     
     internalScope.watch("enableMultiRowSelections", (bool newValue, bool oldValue) {
-      if (newValue != oldValue && !newValue){
+      if (newValue != oldValue && !newValue ){
         if(gridOptions.selectedItems.length > 1){
           gridOptions.selectedItems.removeRange(1, gridOptions.selectedItems.length);
         }
@@ -206,7 +204,7 @@ class GridController {
     });
     
     internalScope.watch("enableSelections", (bool newValue, bool oldValue) {
-      if(newValue !=oldValue && !newValue){
+      if (newValue != oldValue && !newValue) {
         gridOptions.selectedItems.clear();
         gridOptions.enableMultiRowSelections = false;
       }
@@ -281,50 +279,109 @@ class GridController {
   }
   
   linkScope(Scope scope, String scopeTargetIdentifier, NodeAttrs attrs) {
-    // this method shouldn't even be here
-    // but it is because we want to allow people to either set attributes with either a constant or a watchable variable
+    IGridOptions target = scope.context[scopeTargetIdentifier];
+    bindProperty(target.items, 'items', scope, scopeTargetIdentifier, attrs);
+  }
+  
+  void bindProperty(target, String propName, Scope scope, String scopeTargetIdentifier, NodeAttrs attrs) {
+    var attributeExists = attrs.containsKey(propName) && attrs[propName] != null; // typeof(attrs[propName])!="undefined" && attrs[propName]!=null;
 
-    // watch for a resolution to issue #5951 on angular
-    // https://github.com/angular/angular.js/issues/5951
+    if (attributeExists) {
+      var isArray = false;
 
-    var target = scope.context[scopeTargetIdentifier];
+      // initialise from the scope first
+      if (scope.context[propName] != null) {
+        target = scope.context[propName];
+        isArray = target is List;
+      }
 
-    for (var propName in target) {
-      var attributeExists = attrs.containsKey(propName) && attrs[propName] != null; // typeof(attrs[propName])!="undefined" && attrs[propName]!=null;
+      if (!isArray) {
+        var compiledAttr = _parse(attrs[propName]);
+        var dualDataBindingPossible = compiledAttr != null && compiledAttr.isAssignable && compiledAttr is! List; // && compiledAttr.assign; // typeof(compiledAttr)!="array" && compiledAttr && compiledAttr.assign; // very fragile, replace it as soon as possible
+        if (dualDataBindingPossible) {
+          ((String propName) {
+            // set up one of the bindings
+            scope.watch(scopeTargetIdentifier + "." + propName, (newValue, oldValue) {
+              if (newValue != oldValue) {
+                scope.context[propName] = target;
+              }
+            });
 
-      if (attributeExists) {
-        var isArray = false;
-
-        // initialise from the scope first
-//        if(typeof(scope[propName])!="undefined" && scope[propName]!=null){
-        if (scope.context[propName] != null) {
-          target[propName] = scope.context[propName];
-          isArray = target[propName] is List;
-        }
-
-        if (!isArray) {
-          var compiledAttr = _parse(attrs[propName]);
-          var dualDataBindingPossible = compiledAttr != null && compiledAttr is List && compiledAttr.assign; // typeof(compiledAttr)!="array" && compiledAttr && compiledAttr.assign; // very fragile, replace it as soon as possible
-          if (dualDataBindingPossible) {
-            ((String propName) {
-              // set up one of the bindings
-              scope.watch(scopeTargetIdentifier+"."+propName, (newValue, oldValue) {
-                if (newValue != oldValue) {
-                  scope.context[propName] = target[propName];
-                }
-              });
-
-              // set up the other one
-              scope.watch(propName, (newValue, oldValue) {
-                if(newValue != oldValue){
-                  target[propName] = scope.context[propName];
-                }
-              });
-            })(propName);
-          }
+            // set up the other one
+            scope.watch(propName, (newValue, oldValue) {
+              if (newValue != oldValue) {
+                target = scope.context[propName];
+              }
+            });
+          })(propName);
         }
       }
-    }
+  }    
+//    
+//    
+//                                
+//                                
+//                                
+//    ..items = []
+//    ..selectedItems = []
+//    ..filterBy = null
+//    ..filterByFields = {}
+//    ..orderBy = null
+//    ..orderByReverse = false
+//    ..pageItems = null
+//    ..currentPage = 0
+//    ..totalItems = null
+//    ..enableFiltering = true
+//    ..enableSorting = true
+//    ..enableSelections = true
+//    ..enableMultiRowSelections = true
+//    ..onDataRequiredDelay = 1000;
+//    
+    
+//    // this method shouldn't even be here
+//    // but it is because we want to allow people to either set attributes with either a constant or a watchable variable
+//
+//    // watch for a resolution to issue #5951 on angular
+//    // https://github.com/angular/angular.js/issues/5951
+//
+//    var target = scope.context[scopeTargetIdentifier];
+//
+//    for (var propName in target) {
+//      var attributeExists = attrs.containsKey(propName) && attrs[propName] != null; // typeof(attrs[propName])!="undefined" && attrs[propName]!=null;
+//
+//      if (attributeExists) {
+//        var isArray = false;
+//
+//        // initialise from the scope first
+////        if(typeof(scope[propName])!="undefined" && scope[propName]!=null){
+//        if (scope.context[propName] != null) {
+//          target[propName] = scope.context[propName];
+//          isArray = target[propName] is List;
+//        }
+//
+//        if (!isArray) {
+//          var compiledAttr = _parse(attrs[propName]);
+//          var dualDataBindingPossible = compiledAttr != null && compiledAttr is List && compiledAttr.assign; // typeof(compiledAttr)!="array" && compiledAttr && compiledAttr.assign; // very fragile, replace it as soon as possible
+//          if (dualDataBindingPossible) {
+//            ((String propName) {
+//              // set up one of the bindings
+//              scope.watch(scopeTargetIdentifier+"."+propName, (newValue, oldValue) {
+//                if (newValue != oldValue) {
+//                  scope.context[propName] = target[propName];
+//                }
+//              });
+//
+//              // set up the other one
+//              scope.watch(propName, (newValue, oldValue) {
+//                if(newValue != oldValue){
+//                  target[propName] = scope.context[propName];
+//                }
+//              });
+//            })(propName);
+//          }
+//        }
+//      }
+//    }
   }
   
   splitByCamelCasing(String input) {
@@ -338,10 +395,10 @@ class GridController {
   }
 }
 
-@Directive(selector:"[$tableDirective]")
-class Grid {
+@Decorator(selector:"table[$tableDirective]")
+class Grid extends GridController {
 
-  GridController _controller;
+//  GridController _controller;
   
   // create an isolated scope, and remember the original scope can be found in the parent
 //  scope: {
@@ -361,86 +418,69 @@ class Grid {
 //       onDataRequired:'&',
 //       onDataRequiredDelay:'=?'
 //   }
-                 
-  Grid(dom.Element templateElement, NodeAttrs _attrs, this._controller) {
+  
+  Grid(dom.Element gridElement, NodeAttrs attrs, Compiler compiler, Scope scope, Parser parse, Timeout timeout, Injector injector) : 
+    super (compiler, scope, gridElement, attrs, parse, timeout, injector) {
+    
+    dom.TableElement templateElement = gridElement as dom.TableElement;
     templateElement.classes.add(tableCssClass);
-    bool insertFooterElement = false;
-    bool insertHeadElement = false;
     
     // make sure the header is present
-    dom.Element tableHeadElement = templateElement.querySelector("thead");
+    dom.TableSectionElement tableHeadElement = templateElement.querySelector("thead");
     if (tableHeadElement == null) {
-      tableHeadElement = new dom.Element.html("<thead>");
-      insertHeadElement = true;
+      tableHeadElement = templateElement.createTHead();
     }
     
-    var tableHeadRowTemplate = tableHeadElement.querySelector("tr");
-    if(tableHeadRowTemplate == null){
-      tableHeadRowTemplate = new dom.Element.tr(); // $("<tr>").appendTo(tableHeadElement);
-      tableHeadElement.append(tableHeadRowTemplate);
+    dom.TableRowElement tableHeadRowTemplate = tableHeadElement.querySelector("tr");
+    if (tableHeadRowTemplate == null){
+      tableHeadRowTemplate = tableHeadElement.addRow();
     }
-    tableHeadRowTemplate.attributes[headerDirectiveAttribute] = "";
+    tableHeadRowTemplate.attributes[headerDirective] = "";
     // help a bit with the attributes
     tableHeadRowTemplate.querySelectorAll("th[field-name]").forEach((dom.Element el) {
       el.attributes[columnDirectiveAttribute] = "";
     });
-    
-    //discoverColumnDefinitionsFromUi(tableHeadRowTemplate);
-    
-    // make sure the body is present
-    dom.Element tableBodyElement = templateElement.querySelector("tbody");
-    if (tableBodyElement == null) {
-      tableBodyElement = new dom.Element.html("<tbody>");
-      templateElement.append(tableBodyElement);
-    }
-    
-    dom.Element tableBodyRowTemplate = tableBodyElement.querySelector("tr");
-    if (tableBodyRowTemplate == null) {
-      tableBodyRowTemplate = new dom.Element.tr(); //$("<tr>").appendTo(tableBodyElement);
-      tableBodyElement.append(tableBodyRowTemplate);
-    }
-    tableBodyElement.attributes[bodyDirectiveAttribute] = "";
-    
-    // make sure the footer is present
-    dom.Element tableFooterElement = templateElement.querySelector("tfoot");
-    if (tableFooterElement == null) {
-      tableFooterElement = new dom.Element.html("<tfoot>"); // $("<tfoot>");
-      insertFooterElement = true;
-    }
-    
-    var tableFooterRowTemplate = tableFooterElement.querySelector("tr");
-    if (tableFooterRowTemplate == null){
-      tableFooterRowTemplate = new dom.Element.tr(); // $("<tr>").appendTo(tableFooterElement);
-      tableFooterElement.append(tableFooterRowTemplate);
-    }
-    if (tableFooterRowTemplate.querySelectorAll("td").length == 0){
-      dom.Element fullTableLengthFooterCell = new dom.Element.td() // $("<td>")
-      ..attributes["colspan"] = "999"; //TODO: fix this hack
-      tableFooterRowTemplate.append(fullTableLengthFooterCell);
 
-      dom.Element footerOpsContainer = new dom.Element.div() //$("<div>")
+    // make sure the footer is present
+    dom.TableSectionElement tableFooterElement = templateElement.querySelector("tfoot");
+    if (tableFooterElement == null) {
+      tableFooterElement = templateElement.createTFoot();
+    }
+    
+    dom.TableRowElement tableFooterRowTemplate = tableFooterElement.querySelector("tr");
+    if (tableFooterRowTemplate == null) {
+      tableFooterRowTemplate = tableFooterElement.addRow();
+    }
+    if (tableFooterRowTemplate.querySelectorAll("td").length == 0) {
+      dom.TableCellElement fullTableLengthFooterCell = tableFooterRowTemplate.addCell() 
+      ..attributes["colspan"] = "999"; //TODO: fix this hack
+
+      dom.DivElement footerOpsContainer = new dom.DivElement() //$("<div>")
       ..attributes[footerDirectiveAttribute] = "";
       fullTableLengthFooterCell.append(footerOpsContainer);
     }
 
-    if (insertHeadElement) {
-      tableHeadElement.insertAdjacentElement("beforeBegin", templateElement);
-      //templateElement.prepend(tableHeadElement);
+    // make sure the body is present
+    dom.TableSectionElement tableBodyElement = templateElement.querySelector("tbody");
+    if (tableBodyElement == null) {
+      tableBodyElement = templateElement.createTBody();
     }
-
-    if (insertFooterElement) {
-      tableFooterElement.insertBefore(tableBodyElement, tableFooterElement);
+    
+    dom.TableRowElement tableBodyRowTemplate = tableBodyElement.querySelector("tr");
+    if (tableBodyRowTemplate == null) {
+      tableBodyRowTemplate = tableBodyElement.addRow();
     }
+    tableBodyElement.attributes[bodyDirectiveAttribute] = "";
   }
 }
 
-@Directive(selector:"[$headerDirective]")
+@Decorator(selector:"[$headerDirective]")
 class GridHeader {
   
   Scope _scope;
   dom.Element _element;
   NodeAttrs _attrs;
-  GridController _controller;
+  Grid _controller;
   
   Injector _injector;
   Compiler _compiler;
@@ -475,14 +515,14 @@ class GridHeader {
   }
 }
 
-@Directive(selector:"[$columnDirective]")
+@Decorator(selector:"[$columnDirective]")
 class GridColumn implements AttachAware {
   int columnIndex;
 
   Scope _scope;
   dom.Element _element;
   NodeAttrs _attrs;
-  GridController _controller;
+  Grid _controller;
   
   Injector _injector;
   Compiler _compiler;
@@ -637,7 +677,7 @@ class PagingFilter implements Function {
   }
 }
 
-@Directive(selector:"[$bodyDirective]")
+@Decorator(selector:"[$bodyDirective]")
 class GridBody implements AttachAware {
  
   dom.Element bodyTemplateRow;
@@ -645,7 +685,7 @@ class GridBody implements AttachAware {
   Scope _scope;
   dom.Element _element;
   NodeAttrs _attrs;
-  GridController _controller;
+  Grid _controller;
   
   Injector _injector;
   Compiler _compiler;
@@ -773,7 +813,7 @@ class GridFooter {
 class GridGlobalFilter {
   
   Scope _scope;
-  GridController _controller;
+  Grid _controller;
     
   GridGlobalFilter(this._scope, this._controller) {
     _scope.context['gridOptions'] = _controller.gridOptions;
@@ -802,7 +842,7 @@ class GridGlobalFilter {
 class GridPager implements AttachAware {
 
   Scope _scope;
-  GridController _controller;
+  Grid _controller;
     
   GridPager(this._scope, this._controller) {
     setupScope(_scope, _controller);
@@ -814,7 +854,7 @@ class GridPager implements AttachAware {
     });
   }
 
-  setupScope(IGridFooterScope scope, GridController controller) {
+  setupScope(IGridFooterScope scope, Grid controller) {
       _scope.context['gridOptions'] = controller.gridOptions;
       _scope.context['isPaged'] = !!_scope.context['gridOptions'].pageItems;
 
