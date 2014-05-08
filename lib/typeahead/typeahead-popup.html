@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<ul class="dropdown-menu" ng-if="ctrl.isOpen">
+    <li ng-repeat="match in ctrl.matches" ng-class="{active: ctrl.isActive($index)}" ng-mouseenter="ctrl.selectActive($index)" ng-click="ctrl.selectMatch($index)">
+        <div><a tabindex="-1" ng-bind-html="match | highlight:query"></a></div>
+    </li>
+</ul>
