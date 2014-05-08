@@ -7,6 +7,7 @@ import 'dart:async' as async;
 import "package:angular/angular.dart";
 import "package:angular/core_dom/module_internal.dart";
 import "package:angular_ui/utils/timeout.dart";
+import "package:angular_ui/utils/utils.dart";
 
 /**
  * Grid Module.
@@ -14,7 +15,17 @@ import "package:angular_ui/utils/timeout.dart";
 class GridModule extends Module {
   GridModule() {
     install(new TimeoutModule());
+    type(GridController);
     type(Grid);
+    type(GridHeader);
+    type(GridColumn);
+    type(GridSort);
+    type(GridColumnFilter);
+    type(PagingFilter);
+    type(GridBody);
+    type(GridFooter);
+    type(GridGlobalFilter);
+    type(GridPager);
   }
 }
 
@@ -75,7 +86,7 @@ class IGridOptions {
   List items;
   List selectedItems;
   String filterBy;
-  var filterByFields;
+  Map filterByFields;
   String orderBy;
   bool orderByReverse;
   int pageItems;
@@ -123,19 +134,23 @@ class GridController {
   dom.Element _gridElement;
   Function _scheduledRecompilationDereg;
   async.Completer dataRequestPromise;
+
+  Injector _injector;
+  Compiler _compiler;
   
-  Compiler _compile;
   IGridScope scope;
   NodeAttrs attrs;
   Parser _parse;
   Timeout _timeout;
   
-  GridController(this._compile,
+  GridController(this._compiler,
                  this.scope,
                  this._gridElement,
                  this.attrs,
                  this._parse,
-                 this._timeout) {
+                 this._timeout,
+                 this._injector,
+                 _controller) {
     internalScope = scope;
     var scopeOptionsIdentifier = "gridOptions";
     
@@ -221,7 +236,10 @@ class GridController {
   
   setFilter(String propertyName, String filter){
     if (filter == null){
-      delete(gridOptions.filterByFields[propertyName]);
+      //delete(gridOptions.filterByFields[propertyName]);
+      if (gridOptions.filterByFields.containsKey(propertyName)) {
+        gridOptions.filterByFields.remove(propertyName);
+      }
     }
     else{
       gridOptions.filterByFields[propertyName] = filter;
@@ -256,7 +274,8 @@ class GridController {
     internalScope.watch("items.length", (int newLength, int oldLength) {
      if(newLength > 0){
        _scheduledRecompilationDereg();
-       _compile(_gridElement)(externalScope);
+       //_compile(_gridElement)(externalScope);
+       compile(_gridElement, _injector, _compiler, scope:externalScope);
      }
     });
   }
@@ -319,9 +338,11 @@ class GridController {
   }
 }
 
-@Directive(selector:"grid")
+@Directive(selector:"[$tableDirective]")
 class Grid {
- 
+
+  GridController _controller;
+  
   // create an isolated scope, and remember the original scope can be found in the parent
 //  scope: {
 //       items:'=',
@@ -341,10 +362,10 @@ class Grid {
 //       onDataRequiredDelay:'=?'
 //   }
                  
-  Grid(dom.Element templateElement, NodeAttrs tAttrs) {
+  Grid(dom.Element templateElement, NodeAttrs _attrs, this._controller) {
     templateElement.classes.add(tableCssClass);
-    var insertFooterElement = false;
-    var insertHeadElement = false;
+    bool insertFooterElement = false;
+    bool insertHeadElement = false;
     
     // make sure the header is present
     dom.Element tableHeadElement = templateElement.querySelector("thead");
@@ -388,11 +409,11 @@ class Grid {
     }
     
     var tableFooterRowTemplate = tableFooterElement.querySelector("tr");
-    if(tableFooterRowTemplate == null){
+    if (tableFooterRowTemplate == null){
       tableFooterRowTemplate = new dom.Element.tr(); // $("<tr>").appendTo(tableFooterElement);
       tableFooterElement.append(tableFooterRowTemplate);
     }
-    if(tableFooterRowTemplate.querySelectorAll("td").length == 0){
+    if (tableFooterRowTemplate.querySelectorAll("td").length == 0){
       dom.Element fullTableLengthFooterCell = new dom.Element.td() // $("<td>")
       ..attributes["colspan"] = "999"; //TODO: fix this hack
       tableFooterRowTemplate.append(fullTableLengthFooterCell);
@@ -402,13 +423,428 @@ class Grid {
       fullTableLengthFooterCell.append(footerOpsContainer);
     }
 
-    if(insertHeadElement){
+    if (insertHeadElement) {
       tableHeadElement.insertAdjacentElement("beforeBegin", templateElement);
       //templateElement.prepend(tableHeadElement);
     }
 
-    if(insertFooterElement){
-      tableFooterElement.insertBefore(tableBodyElement);
+    if (insertFooterElement) {
+      tableFooterElement.insertBefore(tableBodyElement, tableFooterElement);
     }
   }
+}
+
+@Directive(selector:"[$headerDirective]")
+class GridHeader {
+  
+  Scope _scope;
+  dom.Element _element;
+  NodeAttrs _attrs;
+  GridController _controller;
+  
+  Injector _injector;
+  Compiler _compiler;
+  
+  GridHeader(this._scope, this._element, this._attrs, this._controller, this._injector, this._compiler) {
+    // deal with the situation where no column definition exists on the th elements in the table
+    if (_element.querySelectorAll("th").length == 0) {
+      if (_controller.gridOptions.items != null && _controller.gridOptions.items.length > 0) {
+        // no columns defined for the header, attempt to identify the properties and populate the columns definition
+        for (var propName in _controller.gridOptions.items){
+          // exclude the library properties
+          RegExp libProps = new RegExp(r"^[_\$]");
+          //if (!propName.match(/^[_\$]/g)) {
+          if (libProps.hasMatch(propName)) {
+            // create the th definition and add the column directive, serialised
+            //var headerCellElement = $("<th>").attr(columnDirectiveAttribute, "").attr("field-name", propName).appendTo(_element);
+            dom.TableCellElement headerCellElement = new dom.TableCellElement()
+            ..attributes[columnDirectiveAttribute] = ""
+            ..attributes["field-name"] = propName;
+            _element.append(headerCellElement);
+            //$compile(headerCellElement)(scope);
+            compile(headerCellElement, _injector, _compiler, scope:_scope);
+          }
+        }
+      }
+      else
+      {
+        // watch for items to arrive and re-run the compilation then
+        _controller.scheduleRecompilationOnAvailableItems();
+      }
+    }
+  }
+}
+
+@Directive(selector:"[$columnDirective]")
+class GridColumn implements AttachAware {
+  int columnIndex;
+
+  Scope _scope;
+  dom.Element _element;
+  NodeAttrs _attrs;
+  GridController _controller;
+  
+  Injector _injector;
+  Compiler _compiler;
+  
+  GridColumn(this._scope, this._element, this._attrs, this._controller, this._injector, this._compiler) {
+    var isValid = _element.tagName == "TH";
+    if(!isValid){
+        throw "The template has an invalid header column template element. Column templates must be defined on TH elements inside THEAD/TR";
+    }
+
+    // set up the scope for the column inside the header
+    // the directive can be present on the header's td elements but also on the body's elements but we extract column information from the header only
+    columnIndex = _element.parent.querySelectorAll("th").indexOf(_element);
+    if (columnIndex < 0) {
+        return;
+    }
+    
+    _scope.context['.gridOptions'] = _controller.gridOptions;
+    _scope.context['.toggleSorting'] = (propertyName) { 
+      _controller.toggleSorting(propertyName);
+    };
+    _scope.context['.filter'] = "";
+    _scope.watch("filter", (String newValue, String oldValue) {
+      if (newValue != oldValue) {
+        _controller.setFilter(_scope.context['currentGridColumnDef'].fieldName, newValue);
+      }
+    });
+
+    // prepare the child scope
+    var columnDefSetup = () {
+        _scope.context['.currentGridColumnDef'].fieldName = _attrs["fieldName"];
+        // typeof (_attrs["displayName"]) == "undefined" ? _controller.splitByCamelCasing(_attrs["fieldName"]) : _attrs["displayName"];
+        _scope.context['.currentGridColumnDef'].displayName = _attrs.containsKey("displayName") ? _attrs["displayName"] : _controller.splitByCamelCasing(_attrs["fieldName"]);
+        // _attrs["enableFiltering"] == "true" || (typeof(_attrs["enableFiltering"])=="undefined" && _scope.context['.gridOptions.enableFiltering);
+        _scope.context['.currentGridColumnDef'].enableFiltering = _attrs["enableFiltering"] == "true" || (!_attrs.containsKey("enableFiltering") && _scope.context['gridOptions'].enableFiltering);
+        // _attrs["enableSorting"]=="true" || (typeof(_attrs["enableSorting"])=="undefined" && _scope.context['gridOptions'].enableSorting);
+        _scope.context['.currentGridColumnDef'].enableSorting = _attrs["enableSorting"] == "true" || (!_attrs.containsKey("enableSorting") && _scope.context['gridOptions'].enableSorting);
+        _scope.context['.currentGridColumnDef'].displayAlign = _attrs["displayAlign"];
+        _scope.context['.currentGridColumnDef'].displayFormat = _attrs["displayFormat"];
+        _scope.context['.currentGridColumnDef'].cellWidth = _attrs["cellWidth"];
+        _scope.context['.currentGridColumnDef'].cellHeight = _attrs["cellHeight"];
+    };
+
+    _scope.context['currentGridColumnDef'] = new IGridColumnOptions();
+    columnDefSetup();
+
+    _scope.watch("[gridOptions.enableFiltering,gridOptions.enableSorting]", (bool newValue, bool oldValue) {
+      columnDefSetup();
+    });
+    _controller.setColumnOptions(columnIndex, _scope.context['currentGridColumnDef']);
+    _element.attributes.remove(columnDirectiveAttribute);
+  }
+  
+  void attach() {
+    // we're sure we're inside the header
+    if(_scope.context['currentGridColumnDef']){
+      if(!_scope.context['currentGridColumnDef'].fieldName){
+          throw "The column definition for trNgGrid must contain the field name";
+      }
+
+      if (_scope.context['currentGridColumnDef'].cellWidth) {
+          _element.style.width = _scope.context['currentGridColumnDef'].cellWidth;
+      }
+      if (_scope.context['currentGridColumnDef'].cellHeight) {
+          _element.style.height = _scope.context['currentGridColumnDef'].cellHeight;
+      }
+
+      if (_element.text == "") {
+        //prepopulate
+        var cellContentsElement = new dom.DivElement()
+        ..classes.add(cellCssClass);
+
+        var cellContentsTitleSortElement = new dom.DivElement()
+        ..classes.add(cellTitleSortCssClass);
+        cellContentsElement.append(cellContentsTitleSortElement);
+
+        // the column title was not specified, attempt to include it and recompile
+        var cellTitleElement = new dom.DivElement()
+        ..classes.add(titleCssClass)
+        ..text = _scope.context['currentGridColumnDef'].displayName;
+        cellContentsTitleSortElement.append(cellTitleElement);
+
+        var cellSortTitleElement = new dom.DivElement()
+        ..attributes[sortDirectiveAttribute] = "";
+        cellContentsTitleSortElement.append(cellSortTitleElement);
+
+        var cellFilterTitleElement = new dom.DivElement()
+        ..attributes[filterColumnDirectiveAttribute] = "";
+        cellContentsElement.append(cellFilterTitleElement);
+
+        //_element.append(cellContentsElement);
+
+        // pass the outside scope
+        var newCellContentsElement = compile(cellContentsElement, _injector, _compiler, scope:_scope);
+        _element.append(newCellContentsElement);
+      }
+    }
+  }
+}
+
+@Component(selector:"[$sortDirective]", 
+    useShadowDom:false,
+    template: """<div ng-show='currentGridColumnDef.enableSorting' ng-click='toggleSorting(currentGridColumnDef.fieldName)' title='Sort' class='$sortCssClass'>
+<div ng-class=\"{'$sortActiveCssClass':gridOptions.orderBy==currentGridColumnDef.fieldName,'$sortInactiveCssClass':gridOptions.orderBy!=currentGridColumnDef.fieldName,'$sortReverseCssClass':gridOptions.orderByReverse}\">
+</div>
+</div>""")
+class GridSort {
+}
+
+@Component(selector:"[$filterColumnDirective]", 
+    useShadowDom:false,
+    template: """<div ng-show='currentGridColumnDef.enableFiltering' class='$filterColumnCssClass'>
+<div class='$filterInputWrapperCssClass'>
+<input class='form-control input-sm' type='text' ng-model='filter'/>
+</div>
+</div>
+""")
+class GridColumnFilter {
+}
+
+@Formatter(name: 'paging')
+class PagingFilter implements Function {
+  call(List input, IGridOptions gridOptions) {
+    //currentPage?:number, pageItems?:number
+    if (input != null) {
+      gridOptions.totalItems = input.length;
+    }
+    
+    if (gridOptions.pageItems == null || input == null || input.length == 0) {
+      return input;
+    }
+    
+    if (gridOptions.currentPage == null) {
+        gridOptions.currentPage = 0;
+    }
+
+    var startIndex = gridOptions.currentPage * gridOptions.pageItems;
+    if (startIndex >= input.length) {
+        gridOptions.currentPage = 0;
+        startIndex = 0;
+    }
+    var endIndex = gridOptions.currentPage * gridOptions.pageItems + gridOptions.pageItems;
+
+/*              
+  // Update: Not called for server-side paging
+  if(startIndex>=input.length){
+    // server side paging, ignore the operation
+    return input;
+  }
+*/
+    return input.getRange(startIndex, endIndex);
+  }
+}
+
+@Directive(selector:"[$bodyDirective]")
+class GridBody implements AttachAware {
+ 
+  dom.Element bodyTemplateRow;
+  
+  Scope _scope;
+  dom.Element _element;
+  NodeAttrs _attrs;
+  GridController _controller;
+  
+  Injector _injector;
+  Compiler _compiler;
+  
+  
+  GridBody(this._scope, this._element, this._attrs, this._controller, this._injector, this._compiler) {
+    
+    // we cannot allow angular to use the body row template just yet
+    bodyTemplateRow = _element.querySelector("tr");
+    _element.children.clear(); //contents().remove();
+  }
+  
+  void attach() {
+    // set up the scope
+    _scope.context['gridOptions'] = _controller.gridOptions;
+    _scope.context['toggleItemSelection'] = (item) { 
+      _controller.toggleItemSelection(item);
+    };
+
+    // find the body row template, which was initially excluded from the compilation
+    // apply the ng-repeat
+    var ngRepeatAttrValue = "gridItem in gridOptions.items";
+    if(_scope.context['gridOptions'].onDataRequired){
+        // data is retrieved externally, watchers set up in the controller take care of calling this method
+    }
+    else{
+        // the grid's internal mechanisms are active
+        ngRepeatAttrValue += " | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions";
+    }
+
+    bodyTemplateRow.attributes["ng-repeat"] = ngRepeatAttrValue;
+    if (!bodyTemplateRow.attributes.containsKey("ng-click")){
+      bodyTemplateRow.attributes["ng-click"] = "toggleItemSelection(gridItem)";
+    }
+    bodyTemplateRow.attributes["ng-class"] = "{'$selectedRowCssClass':gridOptions.selectedItems.indexOf(gridItem)>=0}";
+
+    bodyTemplateRow.attributes[rowPageItemIndexAttribute] = r"{{$index}}";
+    for (int index = 0; index < _scope.context['gridOptions'].gridColumnDefs.length; index++ ) {
+      IGridColumnOptions columnOptions = _scope.context['gridOptions'].gridColumnDefs[index];
+        dom.Element cellTemplateElement = bodyTemplateRow.querySelector("td:nth-child(${index+1})");
+        String cellTemplateFieldName = cellTemplateElement.attributes["field-name"]; // cellTemplateElement.is("[" + columnDirectiveAttribute + "]");
+        bool createInnerCellContents = false;
+
+        if (cellTemplateFieldName != columnOptions.fieldName) {
+            // inconsistencies between column definition and body cell template
+            createInnerCellContents = true;
+
+            var newCellTemplateElement = new dom.DivElement();
+//            if (cellTemplateElement.length == 0)
+//                bodyTemplateRow.append(newCellTemplateElement);
+//            else
+//                cellTemplateElement.insert(0, newCellTemplateElement);
+            
+            bodyTemplateRow.append(newCellTemplateElement);
+
+            cellTemplateElement = newCellTemplateElement;
+        }
+        else {
+            // create the content if the td had no children
+            createInnerCellContents = (cellTemplateElement.text == "");
+        }
+
+        if (createInnerCellContents) {
+            var cellContentsElement = new dom.DivElement()
+            ..classes.add(cellCssClass);
+            if (columnOptions.fieldName != null) {
+                // according to the column options, a model bound cell is needed here
+                cellContentsElement.attributes["field-name"] = columnOptions.fieldName;
+                var cellContentsElementText = "{{gridItem.${columnOptions.fieldName}";
+                if (columnOptions.displayFormat != null) {
+                    // add the display filter
+                    if (columnOptions.displayFormat.codeUnitAt(0) != '|' && columnOptions.displayFormat.codeUnitAt(0) != '.') {
+                        cellContentsElementText += " | "; // assume an angular filter by default
+                    }
+                    cellContentsElementText += columnOptions.displayFormat;
+                }
+                cellContentsElementText += "}}";
+                cellContentsElement.text = cellContentsElementText;
+            }
+            else {
+                cellContentsElement.text = "Invalid column match inside the table body";
+            }
+
+            cellTemplateElement.append(cellContentsElement);
+        }
+
+        if (columnOptions.displayAlign != null) {
+            cellTemplateElement.classes.add("text-${columnOptions.displayAlign}");
+        }
+        if (columnOptions.cellWidth != null) {
+            cellTemplateElement.style.width = columnOptions.cellWidth;
+        }
+        if (columnOptions.cellHeight != null) {
+            cellTemplateElement.style.height = columnOptions.cellHeight;
+        }
+    }
+
+    // now we need to compile, but in order for this to work, we need to have the dom in place
+    // also we remove the column directive, it was just used to mark data bound body columns
+    bodyTemplateRow.querySelectorAll("td[$columnDirectiveAttribute]").forEach((dom.Element el) {
+      el.attributes.remove(columnDirectiveAttribute);
+    });
+    bodyTemplateRow.attributes.remove(bodyDirectiveAttribute);
+    //
+    var compiledElement = compile(bodyTemplateRow, _injector, _compiler, scope:_scope);
+    // compiledInstanceElement ???
+    _element.append(compiledElement);
+  }
+}
+
+@Component(selector:"[$footerDirective]", 
+    useShadowDom:false,
+    template: """<div class="$footerOpsContainerCssClass">
+<span $globalFilterDirectiveAttribute=""/>
+<span $pagerDirectiveAttribute=""/>
+</div>""")
+class GridFooter {
+}
+
+@Component(selector:"[$globalFilterDirective]", 
+    useShadowDom:false,
+    template: """<span ng-show="gridOptions.enableFiltering" class="pull-left form-group">
+<input class="form-control" type="text" ng-model="gridOptions.filterBy" placeholder="Search"/>
+</span>""")
+class GridGlobalFilter {
+  
+  Scope _scope;
+  GridController _controller;
+    
+  GridGlobalFilter(this._scope, this._controller) {
+    _scope.context['gridOptions'] = _controller.gridOptions;
+  }
+}
+
+@Component(selector:"[$pagerDirective]", 
+    useShadowDom:false,
+    template: """<span class="pull-right form-group">
+<ul class="pagination">
+<li>
+<a href="#" ng-show="pageCanGoBack" ng-click="navigatePrevPage(event)" title="Previous Page">&lArr;</a>
+</li>
+<li class="disabled" style="white-space: nowrap;">
+<span ng-hide="totalItemsCount">No items to display</span>
+<span ng-show="totalItemsCount">{{startItemIndex+1}} - {{endItemIndex+1}} displayed
+<span>, {{totalItemsCount}} in total</span>
+</span>
+// (page {{gridOptions.currentPage}})
+</li>
+<li>
+<a href="#" ng-show="pageCanGoForward" ng-click="navigateNextPage(event)" title="Next Page">&rArr;</a>
+<li>
+</ul>
+</span>""")
+class GridPager implements AttachAware {
+
+  Scope _scope;
+  GridController _controller;
+    
+  GridPager(this._scope, this._controller) {
+    setupScope(_scope, _controller);
+  }
+  
+  void attach() {
+    _scope.watch("[gridOptions.currentPage, gridOptions.items.length, gridOptions.totalItems, gridOptions.pageItems]", (List newValues, List oldValues) {
+        setupScope(_scope, _controller);
+    });
+  }
+
+  setupScope(IGridFooterScope scope, GridController controller) {
+      _scope.context['gridOptions'] = controller.gridOptions;
+      _scope.context['isPaged'] = !!_scope.context['gridOptions'].pageItems;
+
+      // do not set scope.gridOptions.totalItems, it might be set from the outside
+      _scope.context['totalItemsCount'] = _scope.context['gridOptions'].totalItems != null
+          ? _scope.context['gridOptions'].totalItems
+          :_scope.context['gridOptions'].items != null ? _scope.context['gridOptions'].items.length : 0;
+
+      _scope.context['startItemIndex'] = _scope.context['isPaged'] ? _scope.context['gridOptions'].pageItems * _scope.context['gridOptions'].currentPage : 0;
+      _scope.context['endItemIndex'] = _scope.context['isPaged'] ? _scope.context['startItemIndex'] + _scope.context['gridOptions'].pageItems-1 : _scope.context['totalItemsCount'] - 1;
+      if (_scope.context['endItemIndex'] >= _scope.context['totalItemsCount']) {
+          _scope.context['endItemIndex'] = _scope.context['totalItemsCount'] - 1;
+      }
+      if (_scope.context['endItemIndex'] < _scope.context['startItemIndex']) {
+          _scope.context['endItemIndex'] = _scope.context['startItemIndex'];
+      }
+
+      _scope.context['pageCanGoBack'] = _scope.context['isPaged'] && _scope.context['gridOptions'].currentPage > 0;
+      _scope.context['pageCanGoForward'] = _scope.context['isPaged'] && _scope.context['endItemIndex'] <_scope.context['totalItemsCount'] - 1;
+      _scope.context['navigateNextPage'] = (dom.Event event) {
+          _scope.context['gridOptions'].currentPage = _scope.context['gridOptions'].currentPage + 1;
+          event.preventDefault();
+          event.stopPropagation();
+      };
+      _scope.context['navigatePrevPage'] = (dom.Event event) {
+          _scope.context['gridOptions'].currentPage = _scope.context['gridOptions'].currentPage - 1;
+          event.preventDefault();
+          event.stopPropagation();
+      };
+  }
+  
+
 }
