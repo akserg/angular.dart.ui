@@ -70,11 +70,11 @@ void gridTests() {
       expect(ngQuery(table, 'tbody').length).toBe(1);
     })));
     
-    it('should have head containes tr-ng-grid-header', async(inject(() {
-      dom.Element table = compileElement();
-      
-      expect(ngQuery(table, '.tr-ng-grid-header').length).toBe(1);
-    })));
+//    it('should have head containes tr-ng-grid-header', async(inject(() {
+//      dom.Element table = compileElement();
+//      
+//      expect(ngQuery(table, '.tr-ng-grid-header').length).toBe(1);
+//    })));
     
   });
 }
