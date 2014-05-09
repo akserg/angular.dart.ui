@@ -2,6 +2,7 @@ library angular.ui.typeahead;
 
 import 'dart:html' as dom;
 import 'dart:async';
+import 'dart:math';
 
 import 'package:angular/angular.dart';
 import 'package:angular/core/module_internal.dart';

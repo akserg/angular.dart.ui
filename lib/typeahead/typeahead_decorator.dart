@@ -32,6 +32,8 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   bool isLoading = false;
   Function onSelectCallback;
 
+  String popupId;
+
   TypeaheadParseResult _typeaheadParserResult;
 
   var keyMappings;
@@ -42,7 +44,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   // Popup specific params;
   List<TypeaheadMatchItem> matches = [];
-  int active = -1;
+  int _active = -1;
   Rect position;
   String query;
 
@@ -50,6 +52,12 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
 
     _isInputFormatterEnabled = _element.getAttribute('typeahead-input-formatter') != null;
+
+    popupId = 'typeahead-${_scope.id}-${new Random().nextInt(10000)}';
+
+    _element.attributes.addAll({'aria-autocomplete': 'list', 'aria-expanded': 'false', 'aria-owns': popupId});
+
+    active = -1;
   }
 
   set expression(value) {
@@ -78,6 +86,16 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   set waitInMs(value) => _waitInMs =  (value == null) ? 0 : toInt(value);
   set isEditable(value) => _isEditable =  (value == null) ? true : toBool(value);
   set appendToBody(value) => _appendToBody =  (value == null) ? false : toBool(value);
+
+  int get active => _active;
+  set active(int value) {
+    _active = value;
+    if (value < 0) {
+      _element.attributes.remove('aria-activedescendant');
+    } else {
+      _element.attributes['aria-activedescendant'] =  _getMatchItemId(value);
+    }
+  }
 
   void select(int index) {
 
@@ -189,7 +207,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     _scope.apply(() => _resetMatches());
   }
 
-  String _getMatchItemId(int index) => '-option-$index';
+  String _getMatchItemId(int index) => '${popupId}-option-$index';
 
   void _getMatchesAsync(String inputValue) {
     isLoading = true;
@@ -228,11 +246,14 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
     position = _appendToBody? _positionService.position(_element) : _positionService.offset(_element);
     position.top += _element.offsetHeight;
+
+    _element.attributes['aria-expanded'] = 'true';
   }
 
   void _resetMatches() {
     matches.clear();
     active = -1;
+    _element.attributes['aria-expanded'] = 'false';
   }
 
 }
