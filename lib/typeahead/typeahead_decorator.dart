@@ -2,7 +2,14 @@ part of angular.ui.typeahead;
 
 @Decorator(selector : '[typeahead]', map: const {
     'typeahead': '@expression',
-    'typeahead-template-url': '@templateUrl'
+    'typeahead-template-url': '@templateUrl',
+    'typeahead-min-length': '@minLength',
+    'typeahead-append-to-body': '@appendToBody',
+    'typeahead-input-formatter': '&inputFormatter',
+    'typeahead-wait-ms': '@waitInMs',
+    'typeahead-loading': '<=>isLoading',
+    'typeahead-on-select': '&onSelectCallback',
+    'typeahead-editable': '@isEditable'
 })
 class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
@@ -16,6 +23,14 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   final Position _positionService;
 
   String templateUrl;
+  int _minLength;
+  int _waitInMs;
+  bool _isEditable;
+  bool _appendToBody;
+  Function inputFormatter;
+  bool _isInputFormatterEnabled;
+  bool isLoading = false;
+  Function onSelectCallback;
 
   TypeaheadParseResult _typeaheadParserResult;
 
@@ -23,6 +38,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   bool _hasFocus;
 
   StreamSubscription _clickSubscription;
+  Timer _matchesLookupTimer;
 
   // Popup specific params;
   List<TypeaheadMatchItem> matches = [];
@@ -32,6 +48,8 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   TypeaheadDecorator(this._ngModel, this._injector, this._scope, this._element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache) {
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
+
+    _isInputFormatterEnabled = _element.getAttribute('typeahead-input-formatter') != null;
   }
 
   set expression(value) {
@@ -39,31 +57,45 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
     _typeaheadParserResult = _typeaheadParser.parse(value);
     var formatterFunc = (modelValue) {
-      try {
-        var locals = {
-            _typeaheadParserResult.itemName : modelValue
-        };
-        return eval(_typeaheadParserResult.viewMapper, locals);
-      } catch(e, s) {
-        return modelValue;
+
+      if(_isInputFormatterEnabled) {
+        return inputFormatter({r'$model' : modelValue});
+      } else {
+        try {
+          var locals = {
+              _typeaheadParserResult.itemName : modelValue
+          };
+          return eval(_typeaheadParserResult.viewMapper, locals);
+        } catch(e, s) {
+          return modelValue;
+        }
       }
     };
     _ngModel.converter = new TypeaheadConverter(formatterFunc);
   }
 
+  set minLength(value) => _minLength =  (value == null) ? 1 : toInt(value);
+  set waitInMs(value) => _waitInMs =  (value == null) ? 0 : toInt(value);
+  set isEditable(value) => _isEditable =  (value == null) ? true : toBool(value);
+  set appendToBody(value) => _appendToBody =  (value == null) ? false : toBool(value);
+
   void select(int index) {
 
+    var item = matches[index].model;
+    var locals = {_typeaheadParserResult.itemName : item};
+    var model = eval(_typeaheadParserResult.modelMapper, locals);
     _scope.apply((){
-      _ngModel.setter(eval(_typeaheadParserResult.modelMapper, {_typeaheadParserResult.itemName : matches[index].model}));
-      _ngModel.validateLater();
+      _ngModel.setter(model);
+      _ngModel.removeError('ng-editable');
       _resetMatches();
     });
+
+    onSelectCallback({r'$item' : item, r'$model' : model, r'$label': eval(_typeaheadParserResult.viewMapper,locals)});
 
     new Future.microtask(()=> _element.focus());
   }
 
   void attach() {
-    loadView(_element.parent, _injector, _scope, 'packages/angular_ui/typeahead/typeahead.html', {'ctrl' : this});
     _element
       ..onChange.listen(_onValueChanged)
       ..onCut.listen(_onValueChanged)
@@ -79,7 +111,6 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
         _scope.apply(()=> _resetMatches());
       }
     });
-
   }
 
   void detach() {
@@ -89,15 +120,44 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   eval(expression, locals) => expression.eval(new ScopeLocals(_scope.context, locals), _formatters);
 
+  _scheduleSearchWithTimeout(inputValue) {
+    _matchesLookupTimer = new Timer(new Duration(milliseconds : _waitInMs), ()=>_getMatchesAsync(inputValue));
+  }
+
+  _cancelPreviousTimeout() {
+    if(_matchesLookupTimer) {
+      _matchesLookupTimer.cancel();
+    }
+    _matchesLookupTimer = null;
+  }
 
   void _onValueChanged(dom.Event event) {
 
     _hasFocus = true;
 
-    if(_element.value == null || _element.value.length == 0) {
-      _scope.apply(() => _resetMatches());
+    String inputValue = _element.value;
+
+    if(inputValue != null || inputValue.length >= _minLength) {
+      if(_waitInMs != 0) {
+        _cancelPreviousTimeout();
+        _scheduleSearchWithTimeout(inputValue);
+      } else {
+        _getMatchesAsync(inputValue);
+      }
     } else {
-      _getMatchesAsync(_element.value);
+      _scope.apply(() {
+        isLoading = false;
+        _cancelPreviousTimeout();
+        _resetMatches();
+      });
+    }
+
+    if(!_isEditable) {
+      if(inputValue == null || inputValue.isEmpty) {
+        _ngModel.removeError('ng-editable');
+      } else {
+        _ngModel.addError('ng-editable');
+      }
     }
   }
 
@@ -132,18 +192,31 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   String _getMatchItemId(int index) => '-option-$index';
 
   void _getMatchesAsync(String inputValue) {
+    isLoading = true;
+
     new Future(() => eval(_typeaheadParserResult.source, {r'$viewValue': inputValue})).then((matches){
-      if(_hasFocus) {
-        if (matches.length == 0) {
-          _resetMatches();
-        } else {
+      var onCurrentRequest = (inputValue == _ngModel.viewValue);
+      if(onCurrentRequest && _hasFocus) {
+        if (matches.length > 0) {
           _scope.apply(() => _updatePopup(inputValue, matches));
+        } else {
+          _scope.apply(() => _resetMatches());
         }
       }
+      if(onCurrentRequest)
+        isLoading = false;
+    }).catchError((){
+      _resetMatches();
+      isLoading = false;
     });
   }
 
   void _updatePopup(String inputValue, Iterable values) {
+
+    if(_view == null) {
+      loadView(_appendToBody? dom.document.body :_element.parent, _injector, _scope, 'packages/angular_ui/typeahead/typeahead.html', {'ctrl' : this});
+    }
+
     active = 0;
     query = inputValue;
 
@@ -153,7 +226,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       matches.add(new TypeaheadMatchItem(_getMatchItemId(index), eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), item));
     }
 
-    position = _positionService.offset(_element);
+    position = _appendToBody? _positionService.position(_element) : _positionService.offset(_element);
     position.top += _element.offsetHeight;
   }
 
