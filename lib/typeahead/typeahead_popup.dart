@@ -62,7 +62,7 @@ class TemplateBasedComponent implements DetachAware {
     _cleanUp();
   }
 
-  void loadView(dom.Element element, Injector injector, Scope scope, String templateUrl, Map locals) {
+  void loadView(dom.Element element, Injector injector, Scope scope, String templateUrl, Map locals, [bool replace = false]) {
     var newDirectives = injector.get(DirectiveMap);
     _viewCache.fromUrl(templateUrl, newDirectives).then((ViewFactory viewFactory){
       _cleanUp();
@@ -73,7 +73,12 @@ class TemplateBasedComponent implements DetachAware {
       _view = viewFactory(
           injector.createChild([new Module()..bind(Scope, toValue: _viewScope)]));
 
-      _view.nodes.forEach((e) => element.append(e));
+      if(replace) {
+
+        element.replaceWith(_view.nodes.firstWhere((e) => !(e is dom.Text)));
+      } else {
+        _view.nodes.forEach((e) => element.append(e));
+      }
     });
 
   }
@@ -116,7 +121,7 @@ class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
   set templateUrl(String value) => _templateUrl = (value == null || value.isEmpty)? DEFAULT_MATCHED_ITEM_TEMPLATE: value;
 
   void attach() {
-    loadView(_element, _injector, _scope, _templateUrl, {'match': match, 'index': index, 'query': query});
+    loadView(_element, _injector, _scope, _templateUrl, {'match': match, 'index': index, 'query': query}, true);
   }
 
 

@@ -1,7 +1,8 @@
 part of angular.ui.typeahead;
 
 @Decorator(selector : '[typeahead]', map: const {
-    'typeahead': '@expression'
+    'typeahead': '@expression',
+    'typeahead-template-url': '@templateUrl'
 })
 class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
@@ -12,17 +13,20 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   final FormatterMap _formatters;
   final Injector _injector;
+  final Position _positionService;
+
+  String templateUrl;
 
   TypeaheadParseResult _typeaheadParserResult;
 
   // Popup specific params;
   List<TypeaheadMatchItem> matches = [];
   int active = -1;
-  Rect position = new Rect(top : 200, left: 30);
+  Rect position;
   String query;
 
 
-  TypeaheadDecorator(this._ngModel, this._injector, this._scope, this._element, this._typeaheadParser, this._formatters, ViewCache viewCache) : super(viewCache);
+  TypeaheadDecorator(this._ngModel, this._injector, this._scope, this._element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache);
 
   set expression(value) {
     assert(value != null);
@@ -48,6 +52,8 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       _ngModel.validateLater();
       _resetMatches();
     });
+
+    _element.focus();
   }
 
   void attach() {
@@ -57,6 +63,8 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       ..onCut.listen(_onValueChanged)
       ..onPaste.listen(_onValueChanged)
       ..onInput.listen(_onValueChanged);
+
+    _element.onKeyPress.listen(_onKeyPress);
   }
 
   eval(expression, locals) => expression.eval(new ScopeLocals(_scope.context, locals), _formatters);
@@ -70,16 +78,32 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     }
   }
 
+  void _onKeyPress(dom.KeyEvent event) {
+
+    if(matches.length == 0 || event.keyCode != dom.KeyCode.ENTER) {
+      return;
+    }
+
+    event.preventDefault();
+
+    select(active);
+  }
+
+
   String _getMatchItemId(int index) => '-option-$index';
 
   void _getMatchesAsync(String inputValue) {
     new Future(() => eval(_typeaheadParserResult.source, {r'$viewValue': inputValue})).then((matches){
-      _scope.apply(() => _updatePopup(inputValue, matches));
+      if(matches.length == 0) {
+        _resetMatches();
+      } else {
+        _scope.apply(() => _updatePopup(inputValue, matches));
+      }
     });
   }
 
   void _updatePopup(String inputValue, Iterable values) {
-    active = -1;
+    active = 0;
     query = inputValue;
 
     matches.clear();
@@ -87,6 +111,9 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       var item = values.elementAt(index);
       matches.add(new TypeaheadMatchItem(_getMatchItemId(index), eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), item));
     }
+
+    position = _positionService.offset(_element);
+    position.top += _element.offsetHeight;
   }
 
   void _resetMatches() {
