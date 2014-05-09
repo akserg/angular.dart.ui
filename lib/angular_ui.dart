@@ -21,9 +21,9 @@ import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
-import 'package:angular_ui/typeahead/module.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/popover/popover.dart';
+import 'package:angular_ui/typeahead/module.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
