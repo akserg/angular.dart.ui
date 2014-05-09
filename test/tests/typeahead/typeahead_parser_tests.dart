@@ -71,4 +71,17 @@ void typeaheadParserTests(){
       expect(evaluateExpression(result.viewMapper, locals)).toEqual('Alabama (AL)');
       expect(evaluateExpression(result.modelMapper, locals)).toEqual('AL');
     })));
+
+    it('should parse the multiline array-based syntax', async(inject((){
+      rootScope.context['states'] = ['Alabama', 'California', 'Delaware'];
+      var result = typeaheadParser.parse(r'''state for state in states
+       | filter:$viewValue''');
+      var itemName = result.itemName;
+      var locals = {r'$viewValue':'al'};
+      expect(evaluateExpression(result.source, locals)).toEqual(['Alabama', 'California']);
+
+      locals[itemName] = 'Alabama';
+      expect(evaluateExpression(result.viewMapper, locals)).toEqual('Alabama');
+      expect(evaluateExpression(result.modelMapper, locals)).toEqual('Alabama');
+    })));
 }

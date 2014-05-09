@@ -17,6 +17,7 @@ class TypeaheadParser {
   TypeaheadParser(this._parser);
 
   TypeaheadParseResult parse(String input) {
+    input = input.replaceAll('\n', '');
     var match = _SYNTAX.firstMatch(input);
     var itemName = match.group(3);
     var sourceExpression = match.group(4);
