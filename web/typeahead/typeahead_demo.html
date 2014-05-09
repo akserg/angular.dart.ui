@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<div typeahead_demo_controller>
+    <div row>
+        Selected Item {{demoCtrl.selectedItem}}
+    </div>
+
+    <div row>
+        <input type="email" typeahead="state for state in demoCtrl.states | filter:$viewValue" ng-model="demoCtrl.selectedItem" />
+    </div>
+</div>

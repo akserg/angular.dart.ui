@@ -3,7 +3,7 @@ part of angular.ui.typeahead;
 @Decorator(selector : '[typeahead]', map: const {
     'typeahead': '@expression'
 })
-class TypeaheadDecorator implements AttachAware {
+class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   final TypeaheadParser _typeaheadParser;
   final NgModel _ngModel;
@@ -11,71 +11,89 @@ class TypeaheadDecorator implements AttachAware {
   final dom.Element _element;
 
   final FormatterMap _formatters;
-  final Compiler _compiler;
-  final DirectiveMap _directiveMap;
   final Injector _injector;
 
-   TypeaheadDecorator(this._ngModel, this._scope, this._element, this._typeaheadParser, this._compiler, this._directiveMap, this._injector);
+  TypeaheadParseResult _typeaheadParserResult;
+
+  // Popup specific params;
+  List<TypeaheadMatchItem> matches = [];
+  int active = -1;
+  Rect position = new Rect(top : 200, left: 30);
+  String query;
+
+
+  TypeaheadDecorator(this._ngModel, this._injector, this._scope, this._element, this._typeaheadParser, this._formatters, ViewCache viewCache) : super(viewCache);
 
   set expression(value) {
     assert(value != null);
 
-    final TypeaheadParseResult typeaheadResult = _typeaheadParser.parse(value);
-
-    _setupModelFormatter(typeaheadResult);
-  }
-
-  void attach() {
-    _createPopup();
-    _setupEventListeners();
-  }
-
-  void _setupEventListeners() {
-
-    var handler = (dom.Event event) {
-      _scope.apply(() => _openPopup());
-    };
-
-    _element..onChange.listen(handler)
-      ..onCut.listen(handler)
-      ..onPaste.listen(handler)..onInput.listen(handler);
-  }
-
-  void _createPopup() {
-    String html = '<typeahead-popup matches="matches"></typeahead-popup>';
-    // Convert to html
-    List<dom.Element> rootElements = toNodeList(html);
-
-    _compiler(rootElements, _directiveMap)(_injector, rootElements);
-
-    _element.parent.append(rootElements.first);
-  }
-
-  void _openPopup() {
-    _setMatches();
-  }
-
-  void _setMatches() {
-    _scope.context['matches'] = ['abc', 'xyz'];
-  }
-
-  void _cleanupMatches() {
-    _scope.context['macthes'] = null;
-  }
-
-
-  void _setupModelFormatter(TypeaheadParseResult typeaheadResult) {
+    _typeaheadParserResult = _typeaheadParser.parse(value);
     var formatterFunc = (modelValue) {
       try {
-        var locals = {typeaheadResult.itemName : modelValue};
-        return typeaheadResult.viewMapper.eval(new ScopeLocals(_scope.context, locals), _formatters);
+        var locals = {
+            _typeaheadParserResult.itemName : modelValue
+        };
+        return eval(_typeaheadParserResult.viewMapper, locals);
       } catch(e, s) {
         return modelValue;
       }
     };
-
     _ngModel.converter = new TypeaheadConverter(formatterFunc);
   }
+
+  void select(int index) {
+
+    _scope.apply((){
+      _ngModel.setter(eval(_typeaheadParserResult.modelMapper, {_typeaheadParserResult.itemName : matches[index].model}));
+      _ngModel.validateLater();
+      _resetMatches();
+    });
+  }
+
+  void attach() {
+    loadView(_element.parent, _injector, _scope, 'packages/angular_ui/typeahead/typeahead.html', {'ctrl' : this});
+    _element
+      ..onChange.listen(_onValueChanged)
+      ..onCut.listen(_onValueChanged)
+      ..onPaste.listen(_onValueChanged)
+      ..onInput.listen(_onValueChanged);
+  }
+
+  eval(expression, locals) => expression.eval(new ScopeLocals(_scope.context, locals), _formatters);
+
+
+  void _onValueChanged(dom.Event event) {
+    if(_element.value == null || _element.value.length == 0) {
+      _scope.apply(() => _resetMatches());
+    } else {
+      _getMatchesAsync(_element.value);
+    }
+  }
+
+  String _getMatchItemId(int index) => '-option-$index';
+
+  void _getMatchesAsync(String inputValue) {
+    new Future(() => eval(_typeaheadParserResult.source, {r'$viewValue': inputValue})).then((matches){
+      _scope.apply(() => _updatePopup(inputValue, matches));
+    });
+  }
+
+  void _updatePopup(String inputValue, Iterable values) {
+    active = -1;
+    query = inputValue;
+
+    matches.clear();
+    for(var index = 0; index < values.length; ++index) {
+      var item = values.elementAt(index);
+      matches.add(new TypeaheadMatchItem(_getMatchItemId(index), eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), item));
+    }
+  }
+
+  void _resetMatches() {
+    matches.clear();
+    active = -1;
+  }
+
 }
 
 typedef FormatterFunc(value);
