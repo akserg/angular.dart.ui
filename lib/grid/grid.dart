@@ -55,7 +55,8 @@ const filterColumnDirectiveAttribute="tr-ng-grid-column-filter";
 
 const rowPageItemIndexAttribute="tr-ng-grid-row-page-item-index";
 
-const tableCssClass="tr-ng-grid table table-bordered table-hover"; // at the time of coding, table-striped is not working properly with selection
+// at the time of coding, table-striped is not working properly with selection
+const tableCssClass="tr-ng-grid table table-bordered table-hover"; 
 const cellCssClass="tr-ng-cell";
 const cellTitleSortCssClass="";
 const titleCssClass="tr-ng-title";
@@ -99,17 +100,17 @@ class IGridOptions {
   List<IGridColumnOptions> gridColumnDefs;
 }
 
-abstract class IGridColumnScope implements Scope {
-  IGridColumnOptions currentGridColumnDef;
-  IGridOptions gridOptions;
-  var toggleSorting = (String propertyName) {};
-  String filter;
-}
+//abstract class IGridColumnScope implements Scope {
+//  IGridColumnOptions currentGridColumnDef;
+//  IGridOptions gridOptions;
+//  var toggleSorting = (String propertyName) {};
+//  String filter;
+//}
 
-abstract class IGridBodyScope implements Scope {
-  IGridOptions gridOptions;
-  var toggleItemSelection = (item) {};
-}
+//abstract class IGridBodyScope implements Scope {
+//  IGridOptions gridOptions;
+//  var toggleItemSelection = (item) {};
+//}
 
 abstract class IGridFooterScope implements Scope {
   IGridOptions gridOptions;
