@@ -7,7 +7,6 @@ import 'dart:async' as async;
 import "package:angular/angular.dart";
 import "package:angular/core_dom/module_internal.dart";
 import "package:angular_ui/utils/timeout.dart";
-import "package:angular_ui/utils/utils.dart";
 
 /**
  * Grid Module.
@@ -23,16 +22,16 @@ typedef OnDataRequired(GridOptions options);
 class GridColumnOptions {
   String fieldName;
   String displayName;
-  String displayAlign = 'left';
+  String displayAlign;
   String displayFormat;
-  bool enableSorting = true;
-  bool enableFiltering = true;
+  bool enableSorting;
+  bool enableFiltering;
   String cellWidth;
   String cellHeight;
 }
 
 class GridOptions {
-//  List items = [];
+  List items = [];
   List selectedItems = [];
   String filterBy;
   Map filterByFields = {};
@@ -59,48 +58,28 @@ class PagerOptions {
   bool pageCanGoForward;
 }
 
-@Decorator(selector:"table[tr-ng-grid]")
+@Decorator(selector:"table[ng-grid]")
 class Grid {
   
-  List _items = [];
-  @NgTwoWay('items')
-  set items(value) {
-    _items = value == null ? [] : value;
-    if (gridOptions.gridColumnDefs.length == 0 && _items.length > 0 && _items.first is Map) {
-      Map item = items.first;
-      for (var key in item.keys) {
-        GridColumnOptions colDef = new GridColumnOptions()
-        ..fieldName = key
-        ..displayName = key;
-        gridOptions.gridColumnDefs.add(colDef);
-      }
-      _update();
-    }
-    _render();
-  }
-  List get items => _items;
-  
   dom.TableElement _grid;
-  dom.TableSectionElement _head;
   dom.TableSectionElement _body;
   
   Scope _scope;
   NodeAttrs _attrs;
   Timeout _timeout;
   async.Completer _dataRequestPromise;
-  FieldGetterFactory _fieldGetterFactory;
   
   GridOptions gridOptions;
   PagerOptions pagerOptions;
   
-  Grid(dom.Element gridEl, this._scope, this._attrs, this._timeout, this._fieldGetterFactory) {
+  Grid(dom.Element gridEl, this._scope, this._attrs, this._timeout) {
     _grid = gridEl as dom.TableElement;
     _grid.classes.add('tr-ng-grid table table-bordered table-hover');
     //
     _scope.context['gridOptions'] = gridOptions = new GridOptions();
     _scope.context['pagerOptions'] = pagerOptions = new PagerOptions();
     //
-    _scope.watch('[gridOptions.currentPage, items.length, gridOptions.totalItems, gridOptions.pageItems]', (value, old){
+    _scope.watch('[gridOptions.currentPage, gridOptions.items.length, gridOptions.totalItems, gridOptions.pageItems]', (value, old){
       _updatePager();
     }, collection:true);
     //
@@ -132,7 +111,6 @@ class Grid {
     // Create Footer
     _createFooter();
     // Create Body
-    _createBody();
   }
   
   /**
@@ -140,8 +118,8 @@ class Grid {
    * of [GridColumnOptions].
    */
   _createHead() {
-    _head = _grid.createTHead();
-    dom.TableRowElement row = _head.addRow()
+    dom.TableSectionElement head = _grid.createTHead();
+    dom.TableRowElement row = head.addRow()
     ..attributes['tr-ng-grid-header'] = '';
 //    <th field-name="id" class="ng-scope">
     gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
@@ -271,7 +249,7 @@ class Grid {
     ..onClick.listen((dom.MouseEvent evt) {
       navigatePrevPage(evt);
     });
-    _scope.watch('pagerOptions.pageCanGoBack', (value, old) {
+    _scope.watch('pageCanGoBack', (value, old) {
       if (value) {
         prevIcon.classes.remove("ng-hide");
       } else {
@@ -288,11 +266,11 @@ class Grid {
     dom.SpanElement iemsToDisplay = new dom.SpanElement()
     ..classes.add('ng-hide')
     ..text = 'No items to display';
-    _scope.watch('pagerOptions.totalItemsCount', (value, old) {
+    _scope.watch('totalItemsCount', (value, old) {
       if (value == 0) {
         iemsToDisplay.text = 'No items to display';
       } else {
-        iemsToDisplay.text = '${_scope.context["pagerOptions.startItemIndex"] + 1} - ${_scope.context["pagerOptions.endItemIndex"] + 1} displayed, ${_scope.context["pagerOptions.totalItemsCount"]} in count // ${gridOptions.currentPage}';
+        iemsToDisplay.text = '${_scope.context["startItemIndex"] + 1} - ${_scope.context["endItemIndex"] + 1} displayed, ${_scope.context["totalItemsCount"]} in count // ${gridOptions.currentPage}';
       }
     });
     display.append(iemsToDisplay);
@@ -308,8 +286,8 @@ class Grid {
     ..onClick.listen((dom.MouseEvent evt) {
       navigateNextPage(evt);
     });
-    _scope.watch('pagerOptions.pageCanGoForward', (value, old) {
-      if (toBool(value)) {
+    _scope.watch('pageCanGoForward', (value, old) {
+      if (value) {
         nextIcon.classes.remove("ng-hide");
       } else {
         nextIcon.classes.add("ng-hide");
@@ -339,32 +317,19 @@ class Grid {
     // Clear gird body before render
     _body.children.clear();
     //
-    items.forEach((item) {
+    gridOptions.items.forEach((item) {
 //      <tr 
       //ng-repeat="gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions" ng-click="toggleItemSelection(gridItem)" 
       //ng-class="{'active':gridOptions.selectedItems.indexOf(gridItem)>=0}" tr-ng-grid-row-page-item-index="0" class="ng-scope">
       dom.TableRowElement row = _body.addRow();
 //      ..attributes['tr-ng-grid-row-page-item-index'] = '0';
       gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
-        
-        var val;
-        if (item is Map) {
-          val = item[colDef.fieldName];
-        } else if (item is List) {
-          val = item.toString();
-        } else {
-          Function itemGetter = _fieldGetterFactory.getter(item, colDef.fieldName);
-          val = itemGetter(item);
-        }
-        
-        val = val == null ? '' : val.toString();
-        
 //        <td><div class="tr-ng-cell ng-binding" field-name="id">01</div></td>
         dom.TableCellElement cell = row.addCell();
         dom.DivElement data = new dom.DivElement()
         ..classes.add('tr-ng-cell')
         ..attributes['field-name'] = colDef.fieldName
-        ..text = val;
+        ..text = _scope.eval('item.${colDef.fieldName}');
         cell.append(data);
       });
     });
@@ -418,7 +383,7 @@ class Grid {
     pagerOptions.isPaged = gridOptions.pageItems > 0;
 
     // do not set scope.gridOptions.totalItems, it might be set from the outside
-    pagerOptions.totalItemsCount = gridOptions.totalItems != null ? gridOptions.totalItems : items != null ? items.length : 0;
+    pagerOptions.totalItemsCount = gridOptions.totalItems != null ? gridOptions.totalItems : gridOptions.items != null ? gridOptions.items.length : 0;
 
     pagerOptions.startItemIndex = pagerOptions.isPaged ? gridOptions.pageItems * gridOptions.currentPage : 0;
     pagerOptions.endItemIndex = pagerOptions.isPaged ? pagerOptions.startItemIndex + gridOptions.pageItems-1 : pagerOptions.totalItemsCount - 1;

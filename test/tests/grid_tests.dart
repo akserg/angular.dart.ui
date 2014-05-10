@@ -10,8 +10,6 @@ void gridTests() {
   describe('', () {
     TestBed _;
     Scope scope;
-//    Timeout timeout;
-//    dom.Element elmBody, elm;
     
     beforeEach(() {
       setUpInjector();
@@ -19,19 +17,13 @@ void gridTests() {
         module.install(new TimeoutModule());
         module.install(new GridModule());
       });
-      inject((TestBed tb, Scope s) { //, Timeout t) {
+      inject((TestBed tb, Scope s) {
         _ = tb;
         scope = s;
-//        timeout = t;
       });
     });
     
     afterEach(tearDownInjector);
-    
-//    Scope getElementScope(dom.Element el) {
-//      Popover popover = (ngProbe(elm).directives as List).firstWhere((e) => e is Popover);
-//      return popover.scope;
-//    }
     
     dom.Element compileElement([html = null]) {
       scope.context['myItems'] = [
@@ -45,11 +37,6 @@ void gridTests() {
       
       return elm;
     };
-    
-//    void cleanup() {
-//      microLeap();
-//      timeout.flush();
-//    }
     
     it('should be initialised with default classes', async(inject(() {
       dom.Element table = compileElement();

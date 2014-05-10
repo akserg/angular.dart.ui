@@ -11,7 +11,7 @@ library angular.ui.test;
 import 'dart:html' as dom;
 import 'dart:async';
 
-import 'package:unittest/html_enhanced_config.dart';
+//import 'package:unittest/html_enhanced_config.dart';
 import '_specs.dart';
 import 'package:angular/core_dom/module_internal.dart';
 
@@ -60,28 +60,28 @@ part 'tests/popover_tests.dart';
 part 'tests/grid_tests.dart';
 
 void main() {
-  useHtmlEnhancedConfiguration();
+//  useHtmlEnhancedConfiguration();
   group('All Tests:', () {
-    group('Acoordion', () => accordionTests());
-    group('Alert', () => alertTests());
-    group('Buttons', () => buttonsTests());
-    group('Collapse', () => collapseTests());
-    group('Drag&Drop', () => dragdropTests());
-    group('DropdownToggle', () => dropdownToggleTests());
-    group('Pager', () => pagerTests());
-    group('Pagination', () => paginationTests());
-    group('Position', () => positionTests());
-    group('Progressbar', () => porgressbarTests());
-    group('Tabs', () => tabsTests());
-    group('Timeout', () => timeoutTests());
-    group('Transition', () => transitionTests());
-    group('Modal', () => modalTests());
-    group('Rating', () => ratingTests());
-    group('Datepicker', () => datepickerTests());
-    group('Timepicker', () => timepickerTests());
-    group('Carousel', () => carouselTests());
-    group('Tooltip', () => tooltipTests());
-    group('Popover', () => popoverTests());
+//    group('Acoordion', () => accordionTests());
+//    group('Alert', () => alertTests());
+//    group('Buttons', () => buttonsTests());
+//    group('Collapse', () => collapseTests());
+//    group('Drag&Drop', () => dragdropTests());
+//    group('DropdownToggle', () => dropdownToggleTests());
+//    group('Pager', () => pagerTests());
+//    group('Pagination', () => paginationTests());
+//    group('Position', () => positionTests());
+//    group('Progressbar', () => porgressbarTests());
+//    group('Tabs', () => tabsTests());
+//    group('Timeout', () => timeoutTests());
+//    group('Transition', () => transitionTests());
+//    group('Modal', () => modalTests());
+//    group('Rating', () => ratingTests());
+//    group('Datepicker', () => datepickerTests());
+//    group('Timepicker', () => timepickerTests());
+//    group('Carousel', () => carouselTests());
+//    group('Tooltip', () => tooltipTests());
+//    group('Popover', () => popoverTests());
     group('Grid', () => gridTests());
   });
 }

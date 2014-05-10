@@ -42,6 +42,7 @@ part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
 part 'tooltip/tooltip_demo.dart';
 part 'popover/popover_demo.dart';
+part 'grid/grid_demo.dart';
 
 /**
  * Entry point into app.
@@ -59,6 +60,7 @@ class DemoModule extends Module {
   DemoModule() {
     install(new AngularUIModule());
     //
+    type(GridDemoController);
     type(PopoverDemoCtrl);
     type(TooltipDemoCtrl);
     type(TimepickerDemoCtrl);
