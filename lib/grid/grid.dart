@@ -34,15 +34,15 @@ class GridColumnOptions {
 class GridOptions {
 //  List items = [];
   List selectedItems = [];
-  String filterBy;
+  String searchBy;
   Map filterByFields = {};
   String orderBy;
   bool orderByReverse = false;
   int pageItems = 0;
   int currentPage = 0;
   int totalItems = 0;
-  bool enableFiltering = false;
-  bool enableSorting = false;
+  bool enableFiltering = true;
+  bool enableSorting = true;
   bool enableSelections = false;
   bool enableMultiRowSelections = false;
   OnDataRequired onDataRequired;
@@ -66,14 +66,7 @@ class Grid {
   @NgTwoWay('items')
   set items(value) {
     _items = value == null ? [] : value;
-    if (gridOptions.gridColumnDefs.length == 0 && _items.length > 0 && _items.first is Map) {
-      Map item = items.first;
-      for (var key in item.keys) {
-        GridColumnOptions colDef = new GridColumnOptions()
-        ..fieldName = key
-        ..displayName = key;
-        gridOptions.gridColumnDefs.add(colDef);
-      }
+    if (_checkAndDefineColumns()) {
       _update();
     }
     _render();
@@ -112,7 +105,7 @@ class Grid {
   }
 
   _parseAttributes() {
-    
+    // TODO: Add wath enableSorting and filtering and manage columns
   }
   
   _parse() {
@@ -145,6 +138,9 @@ class Grid {
     ..attributes['tr-ng-grid-header'] = '';
 //    <th field-name="id" class="ng-scope">
     gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
+      // Push current column definition into scope
+      _scope.context['currentGridColumnDef'] = colDef;
+      //
       dom.TableCellElement th = row.addCell()
       ..attributes['field-name'] = colDef.fieldName;
       //
@@ -159,61 +155,75 @@ class Grid {
       //
 //          <div class="tr-ng-title">Id</div>
       dom.DivElement title = new dom.DivElement()
+      ..classes.add('tr-ng-title')
       ..text = colDef.displayName;
       sortWrapper.append(title);
       //
 //          <div ng-show="currentGridColumnDef.enableSorting" ng-click="toggleSorting(currentGridColumnDef.fieldName)" title="Sort" class="tr-ng-sort" tr-ng-grid-column-sort="">
-      if (colDef.enableSorting) {
-        dom.DivElement sort = new dom.DivElement()
-        ..title = "Sort"
-        ..classes.add("tr-ng-sort")
-        ..attributes['tr-ng-grid-column-sort'] = ''
-        ..onClick.listen((dom.MouseEvent evt){
-          toggleSorting(colDef.fieldName);
-        });
-        sortWrapper.append(sort);
-        //
+      dom.DivElement sort = new dom.DivElement()
+      ..title = "Sort"
+      ..classes.add("tr-ng-sort ng-hide")
+      ..attributes['tr-ng-grid-column-sort'] = ''
+      ..onClick.listen((dom.MouseEvent evt){
+        toggleSorting(colDef.fieldName);
+      });
+      _scope.watch('currentGridColumnDef.enableSorting', (value, old) {
+        if (toBool(value)) {
+          sort.classes.remove('ng-hide');
+        } else {
+          sort.classes.add('ng-hide');
+        }
+      });
+      sortWrapper.append(sort);
+      //
 //            <div ng-class="{'tr-ng-sort-active':gridOptions.orderBy==currentGridColumnDef.fieldName,'tr-ng-sort-inactive':gridOptions.orderBy!=currentGridColumnDef.fieldName,'tr-ng-sort-reverse':gridOptions.orderByReverse}" class="tr-ng-sort-inactive"></div>
-        dom.DivElement icon = new dom.DivElement()
-        ..classes.add('tr-ng-sort-inactive');
-        _scope.watch('gridOptions.orderBy', (value, old) {
-          if (value == colDef.fieldName) {
-            icon.classes.add('tr-ng-sort-active');
-            icon.classes.remove('tr-ng-sort-inactive');
-          } else {
-            icon.classes.add('tr-ng-sort-inactive');
-            icon.classes.remove('tr-ng-sort-active');
-          }
-        });
-        _scope.watch('gridOptions.orderByReverse', (value, old) {
-          if (value) {
-            icon.classes.add('tr-ng-sort-reverse');
-          } else {
-            icon.classes.remove('tr-ng-sort-reverse');
-          }
-        });
-        sort.append(icon);
-      }
+      dom.DivElement icon = new dom.DivElement()
+      ..classes.add('tr-ng-sort-inactive');
+      _scope.watch('gridOptions.orderBy', (value, old) {
+        if (value == colDef.fieldName) {
+          icon.classes.add('tr-ng-sort-active');
+          icon.classes.remove('tr-ng-sort-inactive');
+        } else {
+          icon.classes.add('tr-ng-sort-inactive');
+          icon.classes.remove('tr-ng-sort-active');
+        }
+      });
+      _scope.watch('gridOptions.orderByReverse', (value, old) {
+        if (value) {
+          icon.classes.add('tr-ng-sort-reverse');
+        } else {
+          icon.classes.remove('tr-ng-sort-reverse');
+        }
+      });
+      sort.append(icon);
       //
 //        <div ng-show="currentGridColumnDef.enableFiltering" class="tr-ng-column-filter" tr-ng-grid-column-filter="">
-      if (colDef.enableFiltering) {
-        dom.DivElement filter = new dom.DivElement()
-        ..classes.add('tr-ng-column-filter')
-        ..attributes['tr-ng-grid-column-filter'] = '';
-        cell.append(filter);
-        //
+      dom.DivElement filter = new dom.DivElement()
+      ..classes.add('tr-ng-column-filter')
+      ..attributes['tr-ng-grid-column-filter'] = '';
+      _scope.watch('currentGridColumnDef.enableFiltering', (value, old) {
+        if (toBool(value)) {
+          filter.classes.remove('ng-hide');
+        } else {
+          filter.classes.add('ng-hide');
+        }
+      });
+      cell.append(filter);
+      //
 //          <div class=""><input class="form-control input-sm ng-pristine ng-valid" type="text" ng-model="filter"></div>
-        dom.DivElement inputWrapper = new dom.DivElement();
-        filter.append(inputWrapper);
-        //
-        dom.InputElement input = new dom.InputElement()
-        ..classes.add('form-control input-sm ng-pristine ng-valid')
-        ..type = 'text'
-        ..onChange.listen((dom.Event evt) {
-            setFilter(colDef.fieldName, (evt.target as dom.InputElement).text);
-        });
-        inputWrapper.append(input);
-      }
+      dom.DivElement inputWrapper = new dom.DivElement();
+      filter.append(inputWrapper);
+      //
+      dom.InputElement input = new dom.InputElement()
+      ..classes.add('form-control input-sm ng-valid')
+      ..type = 'text'
+      ..onChange.listen((dom.Event evt) {
+          setFilter(colDef.fieldName, (evt.target as dom.InputElement).value);
+      })
+      ..onInput.listen((dom.Event evt) {
+        setFilter(colDef.fieldName, (evt.target as dom.InputElement).value);
+      });
+      inputWrapper.append(input);
     });
   }
   
@@ -235,26 +245,34 @@ class Grid {
     ..attributes['tr-ng-grid-footer'];
     cell.append(wrapper);
 //            <span ng-show="gridOptions.enableFiltering" class="pull-left form-group ng-scope" tr-ng-grid-global-filter="">
-    if (gridOptions.enableFiltering) {
-      dom.SpanElement filter = new dom.SpanElement()
-      ..classes.add('pull-left form-group ng-scope')
-      ..attributes['tr-ng-grid-global-filter'];
-      wrapper.append(filter);
+    dom.SpanElement filter = new dom.SpanElement()
+    ..classes.add('pull-left form-group ng-scope ng-hide')
+    ..attributes['tr-ng-grid-global-filter'] = '';
+    _scope.watch('gridOptions.enableFiltering', (value, old) {
+      if (toBool(value)) {
+        filter.classes.remove('ng-hide');
+      } else {
+        filter.classes.add('ng-hide');
+      }
+    });
+    wrapper.append(filter);
 //              <input class="form-control ng-pristine ng-valid" type="text" ng-model="gridOptions.filterBy" placeholder="Search">
-      dom.InputElement input = new dom.InputElement()
-      ..classes.add('form-control ng-pristine ng-valid')
-      ..type = 'test'
-      ..placeholder = 'Search'
-      ..onChange.listen((dom.Event evt) {
-        print('Search ${(evt.target as dom.InputElement).text}');
-      });
-      filter.append(input);
+    dom.InputElement input = new dom.InputElement()
+    ..classes.add('form-control ng-pristine ng-valid')
+    ..type = 'text'
+    ..placeholder = 'Search'
+    ..onChange.listen((dom.Event evt) {
+      setSearch((evt.target as dom.InputElement).value);
+    })
+    ..onInput.listen((dom.Event evt) {
+      setSearch((evt.target as dom.InputElement).value);
+    });
+    filter.append(input);
 //            </span>
-    }
 //            <span class="pull-right form-group ng-scope" tr-ng-grid-pager="">
     dom.SpanElement pager = new dom.SpanElement()
     ..classes.add('pull-right form-group ng-scope')
-    ..attributes['tr-ng-grid-pager'];
+    ..attributes['tr-ng-grid-pager'] = '';
     wrapper.append(pager);
 //              <ul class="pagination">
     dom.UListElement pagination = new dom.UListElement()
@@ -330,16 +348,127 @@ class Grid {
     _body = _grid.createTBody();
   }
   
+  //**************************
+  // Attributes and Properties
+  // **************************
+  
+  /**
+   * Check were columns defined? If not we trying define them based on [items].
+   * If columns were defined in here then that method returns true else false. 
+   */
+  bool _checkAndDefineColumns() {
+    if (gridOptions.gridColumnDefs.length == 0 && _items.length > 0 && _items.first is Map) {
+      Map item = items.first;
+      for (var key in item.keys) {
+        GridColumnOptions colDef = new GridColumnOptions()
+        ..fieldName = key
+        ..displayName = splitByCamelCasing(key)
+        ..enableSorting = gridOptions.enableSorting
+        ..enableFiltering = gridOptions.enableFiltering;
+        gridOptions.gridColumnDefs.add(colDef);
+      }
+      return true;
+    }
+    return false;
+  }
+  
   //**********
   // Rendering
   //**********
+  
+  List _prepareItemsToRender(List input) {
+    List result = [];
+    // Filter items by gridOptions.searchBy
+    result = _globalFilterBy(input, gridOptions.searchBy);
+    // Filter result by gridOptions.filterByFields
+    result = _filterByFields(result, gridOptions.filterByFields);
+    // Order by gridOptions.orderBy
+    result = _orderBy(result, gridOptions.orderBy, gridOptions.orderByReverse);
+    // Apply paging
+    result = _paging(result, gridOptions.currentPage, gridOptions.pageItems);
+    return result;
+  }
+  
+  List _globalFilterBy(List input, String filterValue) {
+    List result = [];
+    if (filterValue != null && filterValue.trim().length > 0) {
+      filterValue = filterValue.toLowerCase();
+      result = input.where((item) {
+        // Pass through all columns to find contains filter value
+        return gridOptions.gridColumnDefs.any((GridColumnOptions colDef) {
+          return getField(item, colDef.fieldName).toLowerCase().contains(filterValue);
+        });
+      }).toList();
+    } else {
+      result = new List.from(input);
+    }
+    return result;
+  }
+  
+  List _filterByFields(List input, Map filters) {
+    List result = new List.from(input);
+    if (filters != null && filters.length > 0) {
+      // Prepare cols to filter
+      gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
+        // Check is columns must be filtered
+        if (filters.containsKey(colDef.fieldName)) {
+          result = _filterBy(result, filters[colDef.fieldName], colDef);
+        }
+      });
+    }
+    return result;
+  }
+  
+  List _filterBy(List input, String filterValue, GridColumnOptions colDef) {
+    List result = [];
+    if (filterValue != null && filterValue.trim().length > 0) {
+      filterValue = filterValue.toLowerCase();
+      result = input.where((item) {
+        // Check is column value starts with filterValue
+        return getField(item, colDef.fieldName).toLowerCase().startsWith(filterValue);
+      }).toList();
+    } else {
+      result = new List.from(input);
+    }
+    return result;
+  }
+
+  List _orderBy(List input, String orderBy, bool orderByReverse) {
+    List result = new List.from(input);
+    if (orderBy != null && orderBy.trim().length > 0) {
+      // Find column definition
+      result.sort((item1, item2) {
+        String val1 = getField(item1, orderBy);
+        String val2 = getField(item2, orderBy);
+        // Compare to not null string
+        if (orderByReverse) {
+          return val2.compareTo(val1);
+        } else {
+          return val1.compareTo(val2);
+        }
+      });
+    }
+    return result;
+  }
+  
+  List _paging(List input, int currentPage, int pageItems) {
+    List result = [];
+    if (pageItems > 0) {
+      result = input.sublist(pagerOptions.startItemIndex, pagerOptions.endItemIndex);
+    } else {
+      result = new List.from(input);
+    }
+    return result;
+  }
   
   // Render data based in column information
   _render() {
     // Clear gird body before render
     _body.children.clear();
+    // Prepare items to show
+    List preparedItems = _prepareItemsToRender(items);
     //
-    items.forEach((item) {
+    preparedItems.forEach((gridItem) {
 //      <tr 
       //ng-repeat="gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions" ng-click="toggleItemSelection(gridItem)" 
       //ng-class="{'active':gridOptions.selectedItems.indexOf(gridItem)>=0}" tr-ng-grid-row-page-item-index="0" class="ng-scope">
@@ -347,27 +476,29 @@ class Grid {
 //      ..attributes['tr-ng-grid-row-page-item-index'] = '0';
       gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
         
-        var val;
-        if (item is Map) {
-          val = item[colDef.fieldName];
-        } else if (item is List) {
-          val = item.toString();
-        } else {
-          Function itemGetter = _fieldGetterFactory.getter(item, colDef.fieldName);
-          val = itemGetter(item);
-        }
-        
-        val = val == null ? '' : val.toString();
-        
 //        <td><div class="tr-ng-cell ng-binding" field-name="id">01</div></td>
         dom.TableCellElement cell = row.addCell();
         dom.DivElement data = new dom.DivElement()
         ..classes.add('tr-ng-cell')
         ..attributes['field-name'] = colDef.fieldName
-        ..text = val;
+        ..text = getField(gridItem, colDef.fieldName);
         cell.append(data);
       });
     });
+  }
+  
+  String getField(item, String name) {
+    var val;
+    if (item is Map) {
+      val = item[name];
+    } else if (item is List) {
+      val = item.toString();
+    } else {
+      Function itemGetter = _fieldGetterFactory.getter(item, name);
+      val = itemGetter(item);
+    }
+    
+    return val == null ? '' : val.toString();
   }
 
   //******
@@ -394,6 +525,12 @@ class Grid {
     } else {
       gridOptions.filterByFields[propertyName] = filter;
     }
+
+    _render();
+  }
+  
+  setSearch(String search) {
+    gridOptions.searchBy = search == null ? '' : search;
 
     _render();
   }

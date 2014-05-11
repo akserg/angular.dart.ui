@@ -25,7 +25,7 @@
 .tr-ng-grid .tr-ng-grid-footer.form-inline .form-control {
   width: auto;
 }
-.tr-ng-grid thead tr th {
+.tr-ng-grid thead tr td {
   text-align: center;
   vertical-align: top;
   -moz-user-select: none;

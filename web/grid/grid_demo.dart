@@ -9,7 +9,7 @@ part of angular.ui.demo;
 class GridDemoController {
   
   List myItems = [
-    {'id':1, 'name':'John'},
-    {'id':2, 'name':'Marry'}
+    {'id':1, 'userName':'John Evans'},
+    {'id':2, 'userName':'Marry Poppins'}
   ];
 }

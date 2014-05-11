@@ -128,3 +128,26 @@ dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, Di
   return rootElement;
 }
   
+/**
+ * Split camel case [input] words and join with spases in between.
+ */
+String splitByCamelCasing(String input) {
+  RegExp r = new RegExp(r"(?=[A-Z])");
+  List<Match> matches = r.allMatches(input).toList();
+  List<String> splitInput;
+//  if (matches.length > 0) {
+//    splitInput = new List<String>.generate(matches.length, (int index) {
+//      return matches[index].group(0);
+//    });
+//  } else {
+    splitInput = [input];
+//  }
+  // Check is first letter of first word capital and fix it
+  if (splitInput.length > 0 && splitInput.first.length > 0) {
+    String word = splitInput[0];
+    splitInput[0] = word[0].toUpperCase() + word.substring(1);
+  }
+
+  return splitInput.join(" ");
+}
+
