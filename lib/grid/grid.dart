@@ -32,13 +32,12 @@ class GridColumnOptions {
 }
 
 class GridOptions {
-//  List items = [];
   List selectedItems = [];
   String searchBy;
   Map filterByFields = {};
   String orderBy;
   bool orderByReverse = false;
-  int pageItems = 0;
+  int pageItems = 5;
   int currentPage = 0;
   int totalItems = 0;
   bool enableFiltering = true;
@@ -66,6 +65,7 @@ class Grid {
   @NgTwoWay('items')
   set items(value) {
     _items = value == null ? [] : value;
+    _initialisePager(_items);
     if (_checkAndDefineColumns()) {
       _update();
     }
@@ -94,13 +94,13 @@ class Grid {
     _scope.context['pagerOptions'] = pagerOptions = new PagerOptions();
     //
     _scope.watch('[gridOptions.currentPage, items.length, gridOptions.totalItems, gridOptions.pageItems]', (value, old){
-      _updatePager();
+      _updatePager(gridOptions.totalItems);
     }, collection:true);
     //
     _parseAttributes();
     _parse();
     _update();
-    _updatePager();
+    _updatePager(gridOptions.totalItems);
     _render();
   }
 
@@ -277,6 +277,13 @@ class Grid {
 //              <ul class="pagination">
     dom.UListElement pagination = new dom.UListElement()
     ..classes.add('pagination');
+    _scope.watch('gridOptions.pageItems', (value, old) {
+      if (toInt(value) > 0) {
+        pagination.classes.remove('ng-model');
+      } else {
+        pagination.classes.add('ng-model');
+      }
+    });
     pager.append(pagination);
 //                <li><a href="#" ng-show="pageCanGoBack" ng-click="navigatePrevPage($event)" title="Previous Page" class="ng-hide">â‡</a></li>
     dom.LIElement prev = new dom.LIElement();
@@ -285,12 +292,12 @@ class Grid {
     ..href = '#'
     ..title = 'Previous Page'
     ..classes.add('ng-hide')
-    ..text = '&lArr'
+    ..setInnerHtml('&lArr;')
     ..onClick.listen((dom.MouseEvent evt) {
       navigatePrevPage(evt);
     });
     _scope.watch('pagerOptions.pageCanGoBack', (value, old) {
-      if (value) {
+      if (toBool(value)) {
         prevIcon.classes.remove("ng-hide");
       } else {
         prevIcon.classes.add("ng-hide");
@@ -303,17 +310,17 @@ class Grid {
     ..style.whiteSpace = 'nowrap';
     pagination.append(display);
 //                  <span ng-hide="totalItemsCount" class="ng-hide">No items to display</span>
-    dom.SpanElement iemsToDisplay = new dom.SpanElement()
-    ..classes.add('ng-hide')
+    dom.SpanElement itemsToDisplay = new dom.SpanElement()
     ..text = 'No items to display';
-    _scope.watch('pagerOptions.totalItemsCount', (value, old) {
-      if (value == 0) {
-        iemsToDisplay.text = 'No items to display';
+    _scope.watch('[pagerOptions.startItemIndex, pagerOptions.endItemIndex, pagerOptions.totalItemsCount]', (value, old) {
+      if (pagerOptions.totalItemsCount == null || pagerOptions.totalItemsCount == 0) {
+        itemsToDisplay.text = 'No items to display';
       } else {
-        iemsToDisplay.text = '${_scope.context["pagerOptions.startItemIndex"] + 1} - ${_scope.context["pagerOptions.endItemIndex"] + 1} displayed, ${_scope.context["pagerOptions.totalItemsCount"]} in count // ${gridOptions.currentPage}';
+        //itemsToDisplay.text = '${_scope.context["pagerOptions.startItemIndex"] + 1} - ${_scope.context["pagerOptions.endItemIndex"] + 1} displayed, ${_scope.context["pagerOptions.totalItemsCount"]} in count // ${gridOptions.currentPage}';
+        itemsToDisplay.text = '${pagerOptions.startItemIndex + 1} - ${pagerOptions.endItemIndex + 1} displayed, ${pagerOptions.totalItemsCount} in total';
       }
-    });
-    display.append(iemsToDisplay);
+    }, collection:true);
+    display.append(itemsToDisplay);
 //                </li>
 //                <li><a href="#" ng-show="pageCanGoForward" ng-click="navigateNextPage($event)" title="Next Page" class="ng-hide">â‡’</a></li>
     dom.LIElement next = new dom.LIElement();
@@ -322,7 +329,7 @@ class Grid {
     ..href = '#'
     ..title = 'Next Page'
     ..classes.add('ng-hide')
-    ..text = '&rArr;'
+    ..setInnerHtml('&rArr;')
     ..onClick.listen((dom.MouseEvent evt) {
       navigateNextPage(evt);
     });
@@ -347,6 +354,7 @@ class Grid {
 //    <tbody tr-ng-grid-body="" class="ng-scope"><!-- ngRepeat: gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions -->
     _body = _grid.createTBody();
   }
+  
   
   //**************************
   // Attributes and Properties
@@ -384,6 +392,8 @@ class Grid {
     result = _filterByFields(result, gridOptions.filterByFields);
     // Order by gridOptions.orderBy
     result = _orderBy(result, gridOptions.orderBy, gridOptions.orderByReverse);
+    // Update pager
+    _updatePager(result.length);
     // Apply paging
     result = _paging(result, gridOptions.currentPage, gridOptions.pageItems);
     return result;
@@ -453,8 +463,8 @@ class Grid {
   
   List _paging(List input, int currentPage, int pageItems) {
     List result = [];
-    if (pageItems > 0) {
-      result = input.sublist(pagerOptions.startItemIndex, pagerOptions.endItemIndex);
+    if (pageItems > 0 && input.length > 0) {
+      result = input.sublist(pagerOptions.startItemIndex, pagerOptions.endItemIndex + 1);
     } else {
       result = new List.from(input);
     }
@@ -540,6 +550,7 @@ class Grid {
     event.preventDefault();
     event.stopPropagation();
     
+    _updatePager(gridOptions.totalItems);
     _render();
   }
   
@@ -548,25 +559,47 @@ class Grid {
     event.preventDefault();
     event.stopPropagation();
     
+    _updatePager(gridOptions.totalItems);
     _render();
   }
   
-  _updatePager() {
+  _updatePager(int totalItems) {
     pagerOptions.isPaged = gridOptions.pageItems > 0;
 
     // do not set scope.gridOptions.totalItems, it might be set from the outside
-    pagerOptions.totalItemsCount = gridOptions.totalItems != null ? gridOptions.totalItems : items != null ? items.length : 0;
+    pagerOptions.totalItemsCount = totalItems != null ? totalItems : items != null ? items.length : 0;
 
-    pagerOptions.startItemIndex = pagerOptions.isPaged ? gridOptions.pageItems * gridOptions.currentPage : 0;
-    pagerOptions.endItemIndex = pagerOptions.isPaged ? pagerOptions.startItemIndex + gridOptions.pageItems-1 : pagerOptions.totalItemsCount - 1;
-    if (pagerOptions.endItemIndex >= pagerOptions.totalItemsCount) {
-      pagerOptions.endItemIndex = pagerOptions.totalItemsCount - 1;
+    if (pagerOptions.totalItemsCount > 0) {
+      pagerOptions.startItemIndex = pagerOptions.isPaged ? gridOptions.pageItems * gridOptions.currentPage : 0;
+      pagerOptions.endItemIndex = pagerOptions.isPaged ? pagerOptions.startItemIndex + gridOptions.pageItems-1 : pagerOptions.totalItemsCount - 1;
+      if (pagerOptions.endItemIndex >= pagerOptions.totalItemsCount) {
+        pagerOptions.endItemIndex = pagerOptions.totalItemsCount - 1;
+      }
+      if (pagerOptions.endItemIndex < pagerOptions.startItemIndex) {
+        pagerOptions.endItemIndex = pagerOptions.startItemIndex;
+      }
+  
+      pagerOptions.pageCanGoBack = pagerOptions.isPaged && gridOptions.currentPage > 0;
+      pagerOptions.pageCanGoForward = pagerOptions.isPaged && pagerOptions.endItemIndex < pagerOptions.totalItemsCount - 1;
+    } else {
+      pagerOptions.startItemIndex = pagerOptions.endItemIndex = 0;
+      pagerOptions.pageCanGoBack = pagerOptions.pageCanGoForward = false;
     }
-    if (pagerOptions.endItemIndex < pagerOptions.startItemIndex) {
-      pagerOptions.endItemIndex = pagerOptions.startItemIndex;
+  }
+  
+  _initialisePager(List input) {
+    if (input != null) {
+      gridOptions.totalItems = input.length;
+    } else {
+      gridOptions.totalItems = 0;
     }
 
-    pagerOptions.pageCanGoBack = pagerOptions.isPaged && gridOptions.currentPage > 0;
-    pagerOptions.pageCanGoForward = pagerOptions.isPaged && pagerOptions.endItemIndex < pagerOptions.totalItemsCount - 1;
+    _updatePager(gridOptions.totalItems);
+//    
+//    if (gridOptions.pageItems > 0 &&
+//        input != null &&
+//        input.length > 0) {
+//      _updatePager();
+//    }
   }
 }
