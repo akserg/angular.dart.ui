@@ -5,9 +5,11 @@ library angular.ui.dragdrop;
 
 import 'package:angular/angular.dart';
 import 'dart:html' as html;
+import 'dart:async';
 
 part 'draggable.dart';
 part 'droppable.dart';
+part 'sortable.dart';
 
 @Injectable()
 class DragDropDataService {
@@ -18,26 +20,39 @@ class DragDropDataService {
 
 @Injectable()
 class DragDropConfigService {
-  DragDropConfig config = new DragDropConfig();
+  DragDropConfig dragDropConfig = new DragDropConfig();
+  SortableConfig sortableConfig = new SortableConfig();
 }
 
-class DragDropConfig {
+abstract class AbstractDDConfig {
   DragImage dragImage;
   DataTransferEffect dragEffect = DataTransferEffect.MOVE;
   DataTransferEffect dropEffect = DataTransferEffect.MOVE;
   String dragCursor = "move";
-  String onDragStartClass = "ui-drag-start";
-  String onDragEnterClass = "ui-drag-enter";
-  String onDragOverClass = "ui-drag-over";
+  String onDragStartClass = "";
+  String onDragEnterClass = "";
+  String onDragOverClass = "";
+}
+
+class DragDropConfig extends AbstractDDConfig {
+  DragDropConfig() {
+    onDragStartClass = "ui-drag-start";
+    onDragEnterClass = "ui-drag-enter";
+    onDragOverClass = "ui-drag-over";
+  }
+}
+
+abstract class DisposableComponent {
+  void dispose();
 }
 
 class DragImage {
   html.Element imageElement;
   int x_offset;
   int y_offset;
-  
-  DragImage(this.imageElement, {this.x_offset : 0, this.y_offset : 0}) {}
-  
+
+  DragImage(this.imageElement, {this.x_offset: 0, this.y_offset: 0}) {}
+
 }
 
 class DataTransferEffect {
@@ -47,7 +62,7 @@ class DataTransferEffect {
   static const MOVE = const DataTransferEffect('move');
   static const NONE = const DataTransferEffect('none');
   static const values = const <DataTransferEffect>[COPY, LINK, MOVE, NONE];
-    
+
   final String name;
   const DataTransferEffect(this.name);
 }
@@ -58,5 +73,6 @@ class DragDropModule extends Module {
     bind(DragDropConfigService);
     bind(DraggableComponent);
     bind(DroppableComponent);
+    bind(SortableComponent);
   }
 }

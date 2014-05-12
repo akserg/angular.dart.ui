@@ -3,13 +3,111 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
-@Decorator(selector: '[ui-droppable]')
-class DroppableComponent {
 
-  html.Element _elem;
-  DragDropDataService _dragDropService;
-  DragDropConfig _dragDropConfig;
+abstract class AbstractDroppableComponent extends DisposableComponent {
+  
+  final List<StreamSubscription> subscriptions = [];
+  final html.Element elem;
+  final DragDropDataService dragDropService;
   List<String> dropZoneNames = [];
+  AbstractDDConfig config;
+  bool enabled = true;
+  
+  AbstractDroppableComponent(this.elem, this.dragDropService, this.config) {
+    subscriptions.add( elem.onDragEnter.listen(_onDragEnter) );
+    subscriptions.add( elem.onDragOver.listen((html.MouseEvent event) {
+      _onDragOver(event);
+      //workaround to avoid NullPointerException during unit testing
+      if (event.dataTransfer!=null) {
+        event.dataTransfer.dropEffect = config.dropEffect.name;
+      }
+    }) );
+    subscriptions.add( elem.onDragLeave.listen(_onDragLeave) );
+    subscriptions.add( elem.onTouchEnter.listen(_onDragEnter) );
+    subscriptions.add( elem.onTouchLeave.listen(_onDragLeave) );
+    subscriptions.add( elem.onDrop.listen(_onDrop) );
+  }
+  
+  void _onDragEnter(html.Event event) {
+    if(!enabled || !isAllowedDropZone()) {
+      return;
+    }
+    // This is necessary to allow us to drop.
+    event.preventDefault();
+    elem.classes.add(config.onDragEnterClass);
+    onDragEnterCallback(event);
+  }
+
+  void _onDragOver(html.Event event) {
+    if(!enabled || !isAllowedDropZone()) {
+      return;
+    }
+    // This is necessary to allow us to drop.
+    event.preventDefault();
+    elem.classes.add(config.onDragOverClass);
+    onDragOverCallback(event);
+  }
+
+  void _onDragLeave(html.Event event) {
+    if(!enabled || !isAllowedDropZone()) {
+      return;
+    }
+    elem.classes.remove(config.onDragOverClass);
+    elem.classes.remove(config.onDragEnterClass);
+    onDragLeaveCallback(event);
+  }
+
+  void _onDrop(html.Event event) {
+    if(!enabled || !isAllowedDropZone()) {
+      return;
+    }
+    elem.classes.remove(config.onDragOverClass);
+    elem.classes.remove(config.onDragEnterClass);
+    onDropCallback(event);
+  }
+  
+  bool isAllowedDropZone() {
+    if (dropZoneNames.isEmpty && dragDropService.allowedDropZones.isEmpty) {
+      return true;
+    }
+    for (String dragZone in dragDropService.allowedDropZones) {
+      if (dropZoneNames.contains(dragZone)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  void dispose() {
+    for (StreamSubscription subscription in subscriptions) {
+      subscription.cancel();
+    }
+    subscriptions.clear();
+  }
+  
+  void onDragEnterCallback(html.Event event);
+  void onDragOverCallback(html.Event event);
+  void onDragLeaveCallback(html.Event event);
+  void onDropCallback(html.Event event);
+
+}
+
+
+@Decorator(selector: '[ui-droppable]')
+class DroppableComponent extends AbstractDroppableComponent {
+
+  @NgCallback("on-drop-success")
+  Function onDropSuccessCallback;
+  
+  @NgOneWay("ui-droppable")
+  set dragdropConfig(var config) {
+    if (!(config is DragDropConfig)) {
+      return;
+    }
+    DragDropConfig ddConfig = config as DragDropConfig; 
+    this.config = config;
+  }
   
   @NgOneWay("drop-zones")
   set dropZones (var dropZoneNames) {
@@ -20,79 +118,35 @@ class DroppableComponent {
     }
   }
   
-  @NgCallback("on-drop-success")
-  Function onDropSuccessCallback;
-  
-  @NgOneWay("dragdrop-config")
-  set dragdropConfig(DragDropConfig config) {
-    _dragDropConfig = config;
-  }
-  
-  DroppableComponent(this._elem, this._dragDropService, DragDropConfigService dragDropConfigService) {
-    _dragDropConfig = dragDropConfigService.config;
-    _elem.onDragEnter.listen(_onDragEnter);
-    _elem.onDragOver.listen((html.MouseEvent event) {
-      _onDragOver(event);
-      //workaround to avoid NullPointerException during unit testing
-      if (event.dataTransfer!=null) {
-        event.dataTransfer.dropEffect = _dragDropConfig.dropEffect.name;
-      }
-    });
-    _elem.onDragLeave.listen(_onDragLeave);
-    _elem.onTouchEnter.listen(_onDragEnter);
-    _elem.onTouchLeave.listen(_onDragLeave);
-    _elem.onDrop.listen(_onDrop);
+  DroppableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
+  : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+
   }
 
-  void _onDragEnter(html.Event event) {
-    if(!isAllowedDragZone()) {
-      return;
-    }
-    // This is necessary to allow us to drop.
-    event.preventDefault();
-    _elem.classes.add(_dragDropConfig.onDragEnterClass);
+  @override
+  void onDragEnterCallback(html.Event event) {
   }
 
-  void _onDragOver(html.Event event) {
-    if(!isAllowedDragZone()) {
-      return;
-    }
-    // This is necessary to allow us to drop.
-    event.preventDefault();
-    _elem.classes.add(_dragDropConfig.onDragOverClass);
+  @override
+  void onDragLeaveCallback(html.Event event) {
   }
 
-  void _onDragLeave(html.Event event) {
-    if(!isAllowedDragZone()) {
-      return;
-    }
-    _elem.classes.remove(_dragDropConfig.onDragOverClass);
-    _elem.classes.remove(_dragDropConfig.onDragEnterClass);
+  @override
+  void onDragOverCallback(html.Event event) {
   }
 
-  void _onDrop(html.Event event) {
-    if(!isAllowedDragZone()) {
-      return;
-    }
+  @override
+  void onDropCallback(html.Event event) {
     if (onDropSuccessCallback!=null) {
-      onDropSuccessCallback({'data':_dragDropService.draggableData});
+      onDropSuccessCallback({'data':dragDropService.draggableData});
     }
-    if(_dragDropService.onDragSuccessCallback!=null){
-      _dragDropService.onDragSuccessCallback(); 
+    if(dragDropService.onDragSuccessCallback!=null){
+      dragDropService.onDragSuccessCallback(); 
     }
-    _elem.classes.remove(_dragDropConfig.onDragOverClass);
-    _elem.classes.remove(_dragDropConfig.onDragEnterClass);
   }
-  
-  bool isAllowedDragZone() {
-    if (dropZoneNames.isEmpty && _dragDropService.allowedDropZones.isEmpty) {
-      return true;
-    }
-    for (String dragZone in _dragDropService.allowedDropZones) {
-      if (dropZoneNames.contains(dragZone)) {
-        return true;
-      }
-    }
-    return false;
+
+  @override
+  bool isActive() {
+    return true;
   }
 }

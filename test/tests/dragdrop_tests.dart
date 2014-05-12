@@ -86,11 +86,11 @@ void dragdropTests() {
       it('Drag events should add/remove the expected classes to the target element', async(inject(() {
         dom.Element dragElem = ngQuery(createElement(), '#dragId')[0];
         
-        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.dragDropConfig.onDragStartClass);
         _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
-        expect(dragElem).toHaveClass(ddConfig.config.onDragStartClass);
+        expect(dragElem).toHaveClass(ddConfig.dragDropConfig.onDragStartClass);
         _.triggerEvent(dragElem, 'dragend', 'MouseEvent');
-        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.dragDropConfig.onDragStartClass);
         
       })));
 
@@ -98,10 +98,10 @@ void dragdropTests() {
         dom.Element dragElem = ngQuery(createElement(dragEnabled: false), '#dragId')[0];
         
         expect(ddDataService.draggableData).toBeNull();
-        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.dragDropConfig.onDragStartClass);
         _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
         expect(ddDataService.draggableData).toBeNull();
-        expect(dragElem).not.toHaveClass(ddConfig.config.onDragStartClass);
+        expect(dragElem).not.toHaveClass(ddConfig.dragDropConfig.onDragStartClass);
         
       })));
  
@@ -109,26 +109,26 @@ void dragdropTests() {
         Function dropSuccessCallback = jasmine.createSpy('drop callback');
         dom.Element dropElem = ngQuery(createElement(dropSuccessCallback:dropSuccessCallback), '#dropId')[0];
         
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
         
         _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
-        expect(dropElem).toHaveClass(ddConfig.config.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
+        expect(dropElem).toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
  
         _.triggerEvent(dropElem, 'dragover', 'MouseEvent');
-        expect(dropElem).toHaveClass(ddConfig.config.onDragEnterClass);
-        expect(dropElem).toHaveClass(ddConfig.config.onDragOverClass);
+        expect(dropElem).toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        expect(dropElem).toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
         
         _.triggerEvent(dropElem, 'dragleave', 'MouseEvent');
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
 
         _.triggerEvent(dropElem, 'dragover', 'MouseEvent');
         _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
         _.triggerEvent(dropElem, 'drop', 'MouseEvent');
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragEnterClass);
-        expect(dropElem).not.toHaveClass(ddConfig.config.onDragOverClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
       })));
       
       it('Drop event should activate the onDropSuccess and onDragSuccess callbacks', async(inject(() {
@@ -177,27 +177,27 @@ void dragdropTests() {
         
         droppableComponent.dropZones = [];
         ddService.allowedDropZones = [];
-        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
         
         droppableComponent.dropZones = 'zone1';
         ddService.allowedDropZones = [];
-        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
   
         droppableComponent.dropZones = [];
         ddService.allowedDropZones = ['zone1'];
-        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
         
         droppableComponent.dropZones = 'zone1';
         ddService.allowedDropZones = ['zone1','zone3'];
-        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
         ddService.allowedDropZones = ['zone1','zone3'];
-        expect(droppableComponent.isAllowedDragZone()).toBeTruthy();
+        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
         ddService.allowedDropZones = ['zone2'];
-        expect(droppableComponent.isAllowedDragZone()).toBeFalsy();
+        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
         
       })));
       
@@ -264,10 +264,10 @@ void dragdropTests() {
             _.triggerEvent(dragElemOne, 'dragstart', 'MouseEvent');
             
             _.triggerEvent(dropElemTwo, 'dragenter', 'MouseEvent');
-            expect(dropElemTwo).not.toHaveClass(ddConfig.config.onDragEnterClass);
+            expect(dropElemTwo).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
             
             _.triggerEvent(dropElemTwo, 'dragover', 'MouseEvent');
-            expect(dropElemTwo).not.toHaveClass(ddConfig.config.onDragOverClass);
+            expect(dropElemTwo).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
             
             _.triggerEvent(dragElemOne, 'drop', 'MouseEvent');
             expect(scope.context['dragOneSuccessCallback']).not.toHaveBeenCalled();
@@ -282,10 +282,10 @@ void dragdropTests() {
             _.triggerEvent(dragElemOne, 'dragstart', 'MouseEvent');
             
             _.triggerEvent(dropElemOne, 'dragenter', 'MouseEvent');
-            expect(dropElemOne).toHaveClass(ddConfig.config.onDragEnterClass);
+            expect(dropElemOne).toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
             
             _.triggerEvent(dropElemOne, 'dragover', 'MouseEvent');
-            expect(dropElemOne).toHaveClass(ddConfig.config.onDragOverClass);
+            expect(dropElemOne).toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
             
             _.triggerEvent(dropElemOne, 'drop', 'MouseEvent');
             expect(scope.context['dragOneSuccessCallback']).toHaveBeenCalled();
@@ -300,10 +300,10 @@ void dragdropTests() {
             _.triggerEvent(dragElemOneTwo, 'dragstart', 'MouseEvent');
             
             _.triggerEvent(dropElemOneTwo, 'dragenter', 'MouseEvent');
-            expect(dropElemOneTwo).toHaveClass(ddConfig.config.onDragEnterClass);
+            expect(dropElemOneTwo).toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
             
             _.triggerEvent(dropElemOneTwo, 'dragover', 'MouseEvent');
-            expect(dropElemOneTwo).toHaveClass(ddConfig.config.onDragOverClass);
+            expect(dropElemOneTwo).toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
             
             _.triggerEvent(dropElemOneTwo, 'drop', 'MouseEvent');
             expect(scope.context['dragOneTwoSuccessCallback']).toHaveBeenCalled();

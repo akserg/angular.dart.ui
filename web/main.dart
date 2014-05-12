@@ -22,7 +22,8 @@ import 'dart:mirrors';
 part 'buttons/buttons_demo.dart';
 //part 'carousel/carousel_demo.dart';
 //part 'collapse/collapse_demo.dart';
-//part 'dragdrop/dragdrop_demo.dart';
+part 'dragdrop/dragdrop_demo.dart';
+part 'dragdrop/sortable_demo.dart';
 //part 'datepicker/datepicker_demo.dart';
 //part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'modal/modal_demo_embedded_template.dart';
@@ -74,10 +75,11 @@ class DemoModule extends Module {
 //    bind(TabsCtrl);
 //    bind(AccordionDemoController);
 //    bind(RatingCtrl);
-//    bind(DragDropShoppingBasketDemoController);
-//    bind(DragDropListDemoController);
-//    bind(DragDropCustomImageDemoController);
-//    bind(DragDropHandlerDemoController);
+    bind(DragDropShoppingBasketDemoController);
+    bind(DragDropListDemoController);
+    bind(DragDropCustomImageDemoController);
+    bind(DragDropHandlerDemoController);
+    bind(SortableController);
 //    bind(TypeaheadDemoController);
   }
 }

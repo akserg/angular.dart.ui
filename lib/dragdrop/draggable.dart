@@ -3,17 +3,109 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
-@Decorator(selector: '[ui-draggable]',
-  visibility: Directive.CHILDREN_VISIBILITY)
-class DraggableComponent {
+abstract class AbstractDraggableComponent extends DisposableComponent {
 
-  html.Element _draggableElement;
-  DraggableElementHandler draggableHandler;
-  DragDropDataService _dragDropService;
-  DragDropConfig _dragDropConfig;
-  bool _enabled = true;
+  final List<StreamSubscription> subscriptions = [];
+
+  DraggableElementHandler _draggableHandler;
   List<String> allowedDropZones = [];
   
+  final html.Element elem;
+  final DragDropDataService dragDropService;
+
+  AbstractDDConfig _config;
+  bool _enabled = true;
+  
+  get config => _config;
+  set config(AbstractDDConfig config) {
+    this._config = config;
+    _draggableHandler.refresh();
+  }
+  
+  get enabled => _enabled;
+  set enabled(bool enabled) {
+    _enabled = enabled;
+    _draggableHandler.refresh();
+  }
+  
+  AbstractDraggableComponent(this.elem, this.dragDropService, AbstractDDConfig config) {
+    _draggableHandler = new DraggableElementHandler(this);
+    this.config = config;
+    
+    subscriptions.add(elem.onDragStart.listen((html.MouseEvent event) {
+      _onDragStart(event);
+      //workaround to avoid NullPointerException during unit testing
+      if (event.dataTransfer!=null) {
+        event.dataTransfer.effectAllowed = this.config.dragEffect.name;
+        event.dataTransfer.setData('text/html', '');
+        
+        if (this.config.dragImage!=null) {
+          DragImage dragImage = this.config.dragImage;
+          event.dataTransfer.setDragImage(dragImage.imageElement, dragImage.x_offset, dragImage.y_offset);
+        }
+        
+      }
+    }) );
+    subscriptions.add(elem.onDragEnd.listen(_onDragEnd) );
+    
+    subscriptions.add(elem.onTouchStart.listen(_onDragStart) );
+    subscriptions.add(elem.onTouchEnd.listen(_onDragEnd) );
+  }
+  
+  void _onDragStart(html.Event event) {
+    if(!_enabled) {
+      return;
+    }
+    html.Element dragTarget = event.target;
+    dragTarget.classes.add(config.onDragStartClass);
+    dragDropService.allowedDropZones = allowedDropZones;
+    onDragStartCallback(event);
+  }
+
+  void _onDragEnd(html.Event event) {
+    html.Element dragTarget = event.target;
+    dragTarget.classes.remove(config.onDragStartClass);
+    dragDropService.allowedDropZones = [];
+    onDragEndCallback(event);
+  }
+  
+  @override
+  void dispose() {
+    for (StreamSubscription subscription in subscriptions) {
+      subscription.cancel();
+    }
+    subscriptions.clear();
+  }
+  
+  void onDragStartCallback(html.Event event);
+  void onDragEndCallback(html.Event event);
+}
+
+
+@Decorator(selector: '[ui-draggable]',
+  visibility: Directive.CHILDREN_VISIBILITY)
+class DraggableComponent extends AbstractDraggableComponent {
+
+  @NgOneWay("draggable-enabled")
+  set draggable(bool value) {
+    if(value!=null) {
+      enabled = value;
+    }
+  }
+  @NgOneWay("draggable-data")
+  var draggableData;
+  
+  @NgOneWay("ui-draggable")
+  set dragdropConfig(var config) {
+    if (!(config is DragDropConfig)) {
+      return;
+    }
+    DragDropConfig ddConfig = config as DragDropConfig; 
+    this.config = ddConfig;
+  }
+  @NgCallback("on-drag-success")
+  Function onDragSuccessCallback;
+
   @NgOneWay("allowed-drop-zones")
   set dropZones (var dropZones) {
     if (dropZones!=null && (dropZones is String)) {
@@ -23,64 +115,22 @@ class DraggableComponent {
     }
   }
   
-  @NgOneWay("draggable-enabled")
-  set draggable(bool value) {
-    if(value!=null) {
-      _enabled = value;
-      draggableHandler.refresh();
-    }
-  }
-  @NgOneWay("draggable-data")
-  var draggableData;
-  
-  @NgOneWay("dragdrop-config")
-  set dragdropConfig(DragDropConfig config) {
-    _dragDropConfig = config;
-    draggableHandler.refresh();
-  }
-  @NgCallback("on-drag-success")
-  Function onDragSuccessCallback;
-
-  DraggableComponent(this._draggableElement, this._dragDropService, DragDropConfigService dragDropConfigService) {
-    draggableHandler = new DraggableElementHandler(this);
-    dragdropConfig = dragDropConfigService.config;
-
-    _draggableElement.onDragStart.listen((html.MouseEvent event) {
-      _onDragStart(event);
-      //workaround to avoid NullPointerException during unit testing
-      if (event.dataTransfer!=null) {
-        event.dataTransfer.effectAllowed = _dragDropConfig.dragEffect.name;
-        event.dataTransfer.setData('text/html', '');
-        
-        if (_dragDropConfig.dragImage!=null) {
-          DragImage dragImage = _dragDropConfig.dragImage;
-          event.dataTransfer.setDragImage(dragImage.imageElement, dragImage.x_offset, dragImage.y_offset);
-        }
-        
-      }
-    });
-    _draggableElement.onDragEnd.listen(_onDragEnd);
-
-    _draggableElement.onTouchStart.listen(_onDragStart);
-    _draggableElement.onTouchEnd.listen(_onDragEnd);
+  DraggableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
+  : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+    dragdropConfig = dragDropConfigService.dragDropConfig;
   }
 
-  void _onDragStart(html.Event event) {
-    if(!_enabled) {
-      return;
-    }
-    html.Element dragTarget = event.target;
-    dragTarget.classes.add(_dragDropConfig.onDragStartClass);
-    _dragDropService.allowedDropZones = allowedDropZones;
-    _dragDropService.draggableData = draggableData;
-    _dragDropService.onDragSuccessCallback = onDragSuccessCallback;
+
+  @override
+  void onDragEndCallback(html.Event event) {
+    dragDropService.draggableData = null;
+    dragDropService.onDragSuccessCallback = null;
   }
 
-  void _onDragEnd(html.Event event) {
-    html.Element dragTarget = event.target;
-    dragTarget.classes.remove(_dragDropConfig.onDragStartClass);
-    _dragDropService.draggableData = null;
-    _dragDropService.onDragSuccessCallback = null;
+  @override
+  void onDragStartCallback(html.Event event) {
+    dragDropService.draggableData = draggableData;
+    dragDropService.onDragSuccessCallback = onDragSuccessCallback;
   }
 
 }
@@ -88,15 +138,15 @@ class DraggableComponent {
 class DraggableElementHandler {
   
   String defaultCursor;
-  DraggableComponent draggableComponent;
+  AbstractDraggableComponent draggableComponent;
   DraggableElementHandler(this.draggableComponent ) {
-    defaultCursor = draggableComponent._draggableElement.style.cursor;
+    defaultCursor = draggableComponent.elem.style.cursor;
   }
   
   void refresh() {
-    draggableComponent._draggableElement.draggable = draggableComponent._enabled;
-    if (draggableComponent._dragDropConfig.dragCursor!=null) {
-      draggableComponent._draggableElement.style.cursor = draggableComponent._enabled ? draggableComponent._dragDropConfig.dragCursor : defaultCursor;
+    draggableComponent.elem.draggable = draggableComponent._enabled;
+    if (draggableComponent.config.dragCursor!=null) {
+      draggableComponent.elem.style.cursor = draggableComponent._enabled ? draggableComponent.config.dragCursor : defaultCursor;
     }
   }
 }
