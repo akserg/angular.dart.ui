@@ -43,9 +43,7 @@ void gridTests() {
       
       expect(table.classes.contains('tr-ng-grid')).toBeTruthy();
       expect(table.classes.contains('table')).toBeTruthy();
-      expect(table.classes.contains('table-bordered')).toBeTruthy();
       expect(table.classes.contains('table-hover')).toBeTruthy();
-//      expect(table.classes.contains('ng-isolate-scope')).toBeTruthy();
     })));
     
     it('should have head, footer and body', async(inject(() {
