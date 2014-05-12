@@ -8,6 +8,8 @@ part of angular.ui.demo;
     publishAs: 'gridCtrl')
 class GridDemoController {
   
+  List selectedItems = [];
+  
   List myItems = [
     {'id':1, 'userName':'John'},
     {'id':2, 'userName':'Marry'},

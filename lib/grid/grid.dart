@@ -42,8 +42,8 @@ class GridOptions {
   int totalItems = 0;
   bool enableFiltering = true;
   bool enableSorting = true;
-  bool enableSelections = false;
-  bool enableMultiRowSelections = false;
+  bool enableSelections = true;
+  bool enableMultiRowSelections = true;
   OnDataRequired onDataRequired;
   int onDataRequiredDelay = 1000;
   List<GridColumnOptions> gridColumnDefs = [];
@@ -61,17 +61,50 @@ class PagerOptions {
 @Decorator(selector:"table[tr-ng-grid]")
 class Grid {
   
-  List _items = [];
-  @NgTwoWay('items')
-  set items(value) {
-    _items = value == null ? [] : value;
-    _initialisePager(_items);
-    if (_checkAndDefineColumns()) {
-      _update();
+//  List _items = [];
+//  @NgTwoWay('items')
+//  set items(value) {
+//    _items = value == null ? [] : value;
+//    _initialisePager(_items);
+//    if (_checkAndDefineColumns()) {
+//      _update();
+//    }
+//    _render();
+//  }
+//  List get items => _items;
+  List items = [];
+  
+  @NgOneWay('enable-selections')
+  set enableSelections(value) {
+    if (gridOptions.enableSelections != value) {
+      gridOptions.enableSelections = value;
+      if (!gridOptions.enableSelections) {
+        gridOptions.selectedItems.clear();
+        gridOptions.enableMultiRowSelections = false;
+      }
     }
+  }
+  get enableSelections => gridOptions.enableSelections;
+  
+  @NgOneWay('enable-multi-row-selections')
+  set enableMultiRowSelections(value) {
+    if (gridOptions.enableMultiRowSelections != value) {
+      gridOptions.enableMultiRowSelections = value;
+      if (!gridOptions.enableMultiRowSelections) {
+        if (gridOptions.selectedItems.length > 1) {
+          gridOptions.selectedItems.removeRange(1, gridOptions.selectedItems.length - 1);
+        }
+      }
+    }
+  }
+  get enableMultiRowSelections => gridOptions.enableMultiRowSelections;
+  
+  @NgTwoWay('selected-items')
+  set selectedItems(value) {
+    gridOptions.selectedItems = value;
     _render();
   }
-  List get items => _items;
+  get selectedItems => gridOptions.selectedItems;
   
   dom.TableElement _grid;
   dom.TableSectionElement _head;
@@ -88,7 +121,7 @@ class Grid {
   
   Grid(dom.Element gridEl, this._scope, this._attrs, this._timeout, this._fieldGetterFactory) {
     _grid = gridEl as dom.TableElement;
-    _grid.classes.add('tr-ng-grid table table-bordered table-hover');
+    _grid.classes.add('tr-ng-grid table table-hover');
     //
     _scope.context['gridOptions'] = gridOptions = new GridOptions();
     _scope.context['pagerOptions'] = pagerOptions = new PagerOptions();
@@ -97,14 +130,30 @@ class Grid {
       _updatePager(gridOptions.totalItems);
     }, collection:true);
     //
-    _parseAttributes();
     _parse();
     _update();
     _updatePager(gridOptions.totalItems);
     _render();
+    _parseAttributes();
   }
 
   _parseAttributes() {
+    _attrs.observe('items', (value) {
+      items = _scope.context['items'] = eval(_scope, value, []);
+      _initialisePager(items);
+      if (_checkAndDefineColumns()) {
+        _update();
+      }
+      _render();      
+    });
+    //
+    _scope.watch('items', (value, old) {
+      _initialisePager(items);
+      if (_checkAndDefineColumns()) {
+        _update();
+      }
+      _render();
+    });
     // TODO: Add wath enableSorting and filtering and manage columns
   }
   
@@ -214,14 +263,15 @@ class Grid {
       dom.DivElement inputWrapper = new dom.DivElement();
       filter.append(inputWrapper);
       //
-      dom.InputElement input = new dom.InputElement()
+      dom.InputElement input;
+      input = new dom.InputElement()
       ..classes.add('form-control input-sm ng-valid')
       ..type = 'text'
       ..onChange.listen((dom.Event evt) {
-          setFilter(colDef.fieldName, (evt.target as dom.InputElement).value);
+          setFilter(colDef.fieldName, input.value);
       })
       ..onInput.listen((dom.Event evt) {
-        setFilter(colDef.fieldName, (evt.target as dom.InputElement).value);
+        setFilter(colDef.fieldName, input.value);
       });
       inputWrapper.append(input);
     });
@@ -257,15 +307,16 @@ class Grid {
     });
     wrapper.append(filter);
 //              <input class="form-control ng-pristine ng-valid" type="text" ng-model="gridOptions.filterBy" placeholder="Search">
-    dom.InputElement input = new dom.InputElement()
+    dom.InputElement input;
+    input = new dom.InputElement()
     ..classes.add('form-control ng-pristine ng-valid')
     ..type = 'text'
     ..placeholder = 'Search'
     ..onChange.listen((dom.Event evt) {
-      setSearch((evt.target as dom.InputElement).value);
+      setSearch(input.value);
     })
     ..onInput.listen((dom.Event evt) {
-      setSearch((evt.target as dom.InputElement).value);
+      setSearch(input.value);
     });
     filter.append(input);
 //            </span>
@@ -352,7 +403,8 @@ class Grid {
   
   _createBody() {
 //    <tbody tr-ng-grid-body="" class="ng-scope"><!-- ngRepeat: gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions -->
-    _body = _grid.createTBody();
+    _body = _grid.createTBody()
+    ..attributes['tr-ng-grid-body'] = '';
   }
   
   
@@ -365,7 +417,7 @@ class Grid {
    * If columns were defined in here then that method returns true else false. 
    */
   bool _checkAndDefineColumns() {
-    if (gridOptions.gridColumnDefs.length == 0 && _items.length > 0 && _items.first is Map) {
+    if (gridOptions.gridColumnDefs.length == 0 && items.length > 0 && items.first is Map) {
       Map item = items.first;
       for (var key in item.keys) {
         GridColumnOptions colDef = new GridColumnOptions()
@@ -482,7 +534,16 @@ class Grid {
 //      <tr 
       //ng-repeat="gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions" ng-click="toggleItemSelection(gridItem)" 
       //ng-class="{'active':gridOptions.selectedItems.indexOf(gridItem)>=0}" tr-ng-grid-row-page-item-index="0" class="ng-scope">
-      dom.TableRowElement row = _body.addRow();
+      dom.TableRowElement row;
+      row = _body.addRow()
+      ..classes.add(gridOptions.selectedItems.indexOf(gridItem) != -1 ? 'active' : '')
+      ..onClick.listen((dom.MouseEvent evt) {
+        if (_toggleItemSelection(gridItem)) {
+          row.classes.add('active');
+        } else {
+          row.classes.remove('active');
+        }
+      });
 //      ..attributes['tr-ng-grid-row-page-item-index'] = '0';
       gridOptions.gridColumnDefs.forEach((GridColumnOptions colDef) {
         
@@ -595,11 +656,22 @@ class Grid {
     }
 
     _updatePager(gridOptions.totalItems);
-//    
-//    if (gridOptions.pageItems > 0 &&
-//        input != null &&
-//        input.length > 0) {
-//      _updatePager();
-//    }
+  }
+  
+  bool _toggleItemSelection(item) {
+    if (gridOptions.enableSelections) {
+      var itemIndex = gridOptions.selectedItems.indexOf(item);
+      if (itemIndex != -1) {
+        // We found him - just remove
+        gridOptions.selectedItems.removeAt(itemIndex);
+      } else {
+        if (!gridOptions.enableMultiRowSelections) {
+          gridOptions.selectedItems.clear();
+        }
+        gridOptions.selectedItems.add(item);
+        return true;
+      }
+    }
+    return false;
   }
 }

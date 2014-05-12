@@ -67,8 +67,8 @@
 		</tr>
 	</tfoot>
 
-	<tbody tr-ng-grid-body="" class="ng-scope"><!-- ngRepeat: gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions -->
-		<tr ng-repeat="gridItem in gridOptions.items | filter:gridOptions.filterBy | filter:gridOptions.filterByFields | orderBy:gridOptions.orderBy:gridOptions.orderByReverse | paging:gridOptions" ng-click="toggleItemSelection(gridItem)" ng-class="{'active':gridOptions.selectedItems.indexOf(gridItem)>=0}" tr-ng-grid-row-page-item-index="0" class="ng-scope">
+	<tbody tr-ng-grid-body="" class="ng-scope">
+		<tr ng-click="toggleItemSelection(gridItem)" ng-class="{'active':gridOptions.selectedItems.indexOf(gridItem)>=0}" tr-ng-grid-row-page-item-index="0" class="ng-scope">
 			<td><div class="tr-ng-cell ng-binding" field-name="id">01</div></td>
 			<td><div class="tr-ng-cell ng-binding" field-name="name">Chapp</div></td>
 			<td><div class="tr-ng-cell ng-binding" field-name="address">87 Wbxgkfhlra Ave</div></td>
