@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:angular/angular.dart';
 import 'package:angular/core/module_internal.dart';
+import 'package:angular/core/parser/syntax.dart' show Expression;
 
 import 'package:angular_ui/utils/utils.dart';
 import 'package:angular_ui/utils/position.dart';
@@ -18,6 +19,7 @@ part 'typeahead_decorator.dart';
 class TypeaheadModule extends Module {
 
   TypeaheadModule() {
+    install(new PositionModule());
     type(TypeaheadParser);
     type(TypeaheadHighlightFilter);
     type(TypeaheadMatch);

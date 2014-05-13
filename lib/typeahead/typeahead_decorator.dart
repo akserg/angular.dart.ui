@@ -1,6 +1,6 @@
 part of angular.ui.typeahead;
 
-@Decorator(selector : '[typeahead]', map: const {
+@Decorator(selector : 'input[typeahead]', map: const {
     'typeahead': '@expression',
     'typeahead-template-url': '@templateUrl',
     'typeahead-min-length': '@minLength',
@@ -16,7 +16,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   final TypeaheadParser _typeaheadParser;
   final NgModel _ngModel;
   final Scope _scope;
-  final dom.Element _element;
+  dom.InputElement _element;
 
   final FormatterMap _formatters;
   final Injector _injector;
@@ -48,7 +48,8 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   Rect position;
   String query;
 
-  TypeaheadDecorator(this._ngModel, this._injector, this._scope, this._element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache) {
+  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache) {
+    this._element = element as dom.InputElement;
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
 
     _isInputFormatterEnabled = _element.getAttribute('typeahead-input-formatter') != null;
@@ -143,7 +144,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   }
 
   _cancelPreviousTimeout() {
-    if(_matchesLookupTimer) {
+    if(_matchesLookupTimer != null) {
       _matchesLookupTimer.cancel();
     }
     _matchesLookupTimer = null;
@@ -179,7 +180,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     }
   }
 
-  void _onKeyPress(dom.KeyEvent event) {
+  void _onKeyPress(dom.KeyboardEvent event) {
 
     if(matches.length == 0 || !keyMappings.containsKey(event.keyCode)) {
       return;
@@ -190,19 +191,19 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     keyMappings[event.keyCode](event);
   }
 
-  void _onKeyPressEnter(dom.KeyEvent event) {
+  void _onKeyPressEnter(dom.KeyboardEvent event) {
     select(active);
   }
 
-  void _onKeyPressDown(dom.KeyEvent event) {
+  void _onKeyPressDown(dom.KeyboardEvent event) {
     _scope.apply(() => active = (active + 1) % matches.length);
   }
 
-  void _onKeyPressUp(dom.KeyEvent event) {
+  void _onKeyPressUp(dom.KeyboardEvent event) {
     _scope.apply(() => active = (active ==0? matches.length : active) - 1);
   }
 
-  void _onKeyPressEsc(dom.KeyEvent event) {
+  void _onKeyPressEsc(dom.KeyboardEvent event) {
     event.stopPropagation();
     _scope.apply(() => _resetMatches());
   }
@@ -212,7 +213,11 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   void _getMatchesAsync(String inputValue) {
     isLoading = true;
 
-    new Future(() => eval(_typeaheadParserResult.source, {r'$viewValue': inputValue})).then((matches){
+    var func = () { 
+      return eval(_typeaheadParserResult.source, {r'$viewValue': inputValue});
+    };
+    
+    new Future(func).then((matches){
       var onCurrentRequest = (inputValue == _ngModel.viewValue);
       if(onCurrentRequest && _hasFocus) {
         if (matches.length > 0) {
@@ -223,7 +228,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       }
       if(onCurrentRequest)
         isLoading = false;
-    }).catchError((){
+    }).catchError((error){
       _resetMatches();
       isLoading = false;
     });
@@ -260,6 +265,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
 typedef FormatterFunc(value);
 
+@Injectable()
 class TypeaheadConverter extends NgModelConverter {
   final name = 'typeahead';
   final FormatterFunc _formatter;

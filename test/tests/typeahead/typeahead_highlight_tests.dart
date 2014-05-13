@@ -41,6 +41,6 @@ void typeaheadHighlightFilterTests() {
   })));
 
   it('should work correctly with numeric values', async(inject((){
-    expect(highlightFilter(123, '2')).toEqual('1<strong>2</strong>3');
+    expect(highlightFilter('123', '2')).toEqual('1<strong>2</strong>3');
   })));
 }

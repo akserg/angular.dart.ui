@@ -1,5 +1,6 @@
 part of angular.ui.typeahead;
 
+@Injectable()
 class TypeaheadMatchItem {
   String id;
   String label;
@@ -20,6 +21,8 @@ class TypeaheadMatchItem {
     'template-url': '=>templateUrl',
     'query': '=>query'
 })
+
+@Injectable()
 class TypeaheadPopup {
 
   final Scope scope;
@@ -49,6 +52,7 @@ class TypeaheadPopup {
   }
 }
 
+@Injectable()
 class TemplateBasedComponent implements DetachAware {
 
   final ViewCache _viewCache;
@@ -111,7 +115,7 @@ class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
 
   Scope _scope;
 
-  String index;
+  int index;
   var match;
   String query;
   String _templateUrl = DEFAULT_MATCHED_ITEM_TEMPLATE;

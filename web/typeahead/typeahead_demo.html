@@ -7,6 +7,7 @@
     </a>
 </script>
 <div class='container-fluid' typeahead_demo_controller>
+    <i>Use names of states of USA for search</i>
     <h4>Static arrays</h4>
     <pre>Model: {{demoCtrl.selected | json}}</pre>
     <input type="text" ng-model="demoCtrl.selected" typeahead="state for state in demoCtrl.states | filter:$viewValue | limitTo:8"
