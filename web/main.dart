@@ -19,7 +19,7 @@ import 'package:angular_ui/angular_ui.dart';
 //  'angular.routing',
 //  'angular.core.parser',
 //  dom.NodeTreeSanitizer,
-  'angular_ui',
+  'angular.ui',
   'angular.ui.demo'
 ],
   override: '*')
