@@ -23,7 +23,7 @@ class PaginationModule extends Module {
   }
 }
 
-
+@Injectable()
 class PagerConfig {
   int itemsPerPage;
   String previousText;
@@ -170,7 +170,7 @@ class PagerComponent {
   }
 }
 
-
+@Injectable()
 class PaginationConfig extends PagerConfig {
   bool boundaryLinks;
   bool directionLinks;
@@ -257,6 +257,7 @@ class PaginationComponent extends PagerComponent {
 
 }
 
+@Injectable()
 class PageInfo {
   int number;
   String text;
@@ -265,10 +266,12 @@ class PageInfo {
   PageInfo(this.number, this.text, this.isActive);
 }
 
+@Injectable()
 abstract class PaginationGenerator {
   List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate);
 }
 
+@Injectable()
 class BasicPaginationGenerator implements PaginationGenerator {
 
   List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate) {

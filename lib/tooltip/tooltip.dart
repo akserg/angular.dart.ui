@@ -21,6 +21,7 @@ class TooltipModule extends Module {
   }
 }
 
+@Injectable()
 class TooltipConfig {
   // The default options tooltip and popover.
   Map defaultOptions = {
@@ -112,6 +113,7 @@ class Tooltip extends TooltipBase {
 /**
  * Base class for all tooltipable components.
  */
+@Injectable()
 abstract class TooltipBase {
   
   Map options;
@@ -275,8 +277,7 @@ abstract class TooltipBase {
     if (appendToBody) {
         dom.document.body.append(tooltip);
     } else {
-      _element.insertAdjacentElement('afterEnd', tooltip);
-      //_element.append(tooltip);
+      _element.parent.append(tooltip);
     }
 
     positionTooltip();
