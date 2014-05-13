@@ -36,6 +36,7 @@ import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/carousel/carousel.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/popover/popover.dart';
+import 'tests/typeahead/module.dart';
 
 part 'tests/accordion_tests.dart';
 part 'tests/alert_tests.dart';
@@ -80,6 +81,7 @@ void main() {
     group('Carousel', () => carouselTests());
     group('Tooltip', () => tooltipTests());
     group('Popover', () => popoverTests());
+    group('Typeahead', () => typeaheadTests());
   });
 }
 

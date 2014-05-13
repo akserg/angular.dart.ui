@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
+import 'package:angular_ui/typeahead/module.dart';
 
 @MirrorsUsed(targets: const[
 //  'angular',
@@ -42,6 +43,7 @@ part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
 part 'tooltip/tooltip_demo.dart';
 part 'popover/popover_demo.dart';
+part 'typeahead/typeahead_demo.dart';
 
 /**
  * Entry point into app.
@@ -81,5 +83,6 @@ class DemoModule extends Module {
     type(DragDropListDemoController);
     type(DragDropCustomImageDemoController);
     type(DragDropHandlerDemoController);
+    type(TypeaheadDemoController);
   }
 }
