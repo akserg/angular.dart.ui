@@ -25,6 +25,7 @@ class PositionModule extends Module {
  * relation to other, existing elements (this is the case for tooltips, popovers,
  * typeahead suggestions etc.).
  */
+@Injectable()
 class Position {
 
 //  dom.Document document;
@@ -136,6 +137,7 @@ class Position {
 /**
  * A class for representing two-dimensional rectangles.
  */
+@Injectable()
 class Rect {
   var left, top, width, height;
 

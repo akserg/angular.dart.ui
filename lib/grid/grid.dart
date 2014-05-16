@@ -43,7 +43,7 @@ class GridOptions {
   bool enableFiltering = true;
   bool enableSorting = true;
   bool enableSelections = true;
-  bool enableMultiRowSelections = true;
+  bool enableMultiRowSelections = false;
   OnDataRequired onDataRequired;
   int onDataRequiredDelay = 1000;
   List<GridColumnOptions> gridColumnDefs = [];

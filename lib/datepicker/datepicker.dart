@@ -31,6 +31,7 @@ typedef _VisibleDates _GetVisibleDates(DateTime date, DateTime selected);
 /**
  * Datepicker configuration.
  */
+@Injectable()
 class DatepickerConfig {
   String dayFormat = 'dd';
   String monthFormat = 'MMMM';
@@ -48,6 +49,7 @@ class DatepickerConfig {
 /**
  * List of visible dates.
  */
+@Injectable()
 class _VisibleDates {
   List objects = [];
   String title = '';
@@ -57,6 +59,7 @@ class _VisibleDates {
 /**
  * Date format to show.
  */
+@Injectable()
 class _Format {
   String day;
   String month;
@@ -69,6 +72,7 @@ class _Format {
 /**
  * Date Value Object
  */
+@Injectable()
 class _DateVO {
   DateTime date;
   String label = '';
@@ -80,6 +84,7 @@ class _DateVO {
 /**
  * Datepicker mode.
  */
+@Injectable()
 class _Mode {
   String name;
   _GetVisibleDates getVisibleDates;
@@ -241,15 +246,11 @@ class Datepicker implements ShadowRootAware {
       selected = date;
     }
     
-//    _ngModel.setValidity('date', valid);
-
     var currentMode = modes[mode];
     _VisibleDates data = currentMode.getVisibleDates(selected, date);
     data.objects.forEach((_DateVO obj) {
       obj.disabled = isDisabled(obj.date, mode);
     });
-
-//    _ngModel.setValidity('date-disabled', (date == null || !isDisabled(date)));
 
     rows = split(data.objects, currentMode.split);
     labels = data.labels;
@@ -257,7 +258,6 @@ class Datepicker implements ShadowRootAware {
     
     // DOM render
     
-    // <th colspan="{{rows[0].length - 2 + showWeekNumbers}}"><button type="button" class="btn btn-default btn-sm btn-block" ng-click="toggleMode()"><strong>{{title}}</strong></button></th>
     dom.TableCellElement titleEl = _element.shadowRoot.querySelector("#title");
     if (titleEl != null) {
       if (rows.length > 0) {
@@ -266,9 +266,6 @@ class Datepicker implements ShadowRootAware {
       (titleEl.firstChild as dom.ButtonElement).setInnerHtml('<strong>$title</strong>');
     }
     
-//    <th ng-show="d.showWeekNumbers" class="text-center">#</th>
-//    <th ng-repeat="label in d.labels | toList" class="text-center">{{label}}</th>
-
     dom.TableRowElement labelsEl = _element.shadowRoot.querySelector("#labels");
     if (labelsEl != null) {
       labelsEl.children.clear();
@@ -290,14 +287,6 @@ class Datepicker implements ShadowRootAware {
         labelsEl.append(labelEl);
       });
     }
-    
-//    <tr ng-repeat="row in d.visibleDates | toRows:d.currentMode.split">
-//      <td ng-show="d.showWeekNumbers" class="text-center"><em>{{ row | weekNumber:d }}</em></td>
-//      <td ng-repeat="dt in row" class="text-center">
-//        <button type="button" style="width:100%;" class="btn btn-default btn-sm" ng-class="{'btn-info': dt.selected}" 
-//    ng-click="d.select(dt.date)" ng-disabled="dt.disabled"><span ng-class="{'text-muted': dt.secondary}">{{dt.label}}</span></button>
-//      </td>
-//    </tr>    
     
     dom.TableSectionElement rowsEl = _element.shadowRoot.querySelector("#rows");
     if (rowsEl != null) {

@@ -18,6 +18,7 @@ class TimeoutModule extends Module {
   }
 }
 
+@Injectable()
 class _TimeItem {
   Function fn;
   async.Timer timer;
