@@ -1,0 +1,10 @@
+Grid improvements:
+- Support paging on server and client
+- Support filtering on server and client
+- Support search on server and client
+- Support order by on server and client
+- What and where cellHeight uses?
+- Move filterBy, sortBy and orderBy to column definition
+- Change pageItems to itemsOnPage
+- Templates
+- Renderers
