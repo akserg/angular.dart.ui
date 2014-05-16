@@ -15,8 +15,8 @@ import 'package:angular_ui/utils/utils.dart';
 class ModalModule extends Module {
   ModalModule() {
     install(new TimeoutModule());
-    type(ModalWindow);
-    type(Modal);
+    bind(ModalWindow);
+    bind(Modal);
   }
 }
 
@@ -183,7 +183,7 @@ class Modal {
 
     contentFuture
       ..then((String content){
-        var injector = _injector.createChild([new Module()..value(Scope, scope)]);
+        var injector = _injector.createChild([new Module()..bind(Scope, toValue:scope)]);
         // Check is content valid from modal-window perspective
         if (content.contains('modal-window')) {
           throw new Exception("It is not allowing to have modal-window inside othermodal-window" );

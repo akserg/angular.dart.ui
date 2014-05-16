@@ -48,7 +48,7 @@ void timeoutTests() {
     beforeEach(setUpInjector);
     beforeEach(module((Module module) {
       module.install(new TimeoutModule());
-      module.type(ExceptionHandler, implementedBy:TestExceptionHandler);
+      module.bind(ExceptionHandler, toImplementation:TestExceptionHandler);
     }));
     beforeEach(inject((TestBed tb) => _ = tb));
     beforeEach(inject((Scope s) => scope = s));

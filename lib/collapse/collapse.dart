@@ -18,7 +18,7 @@ final _log = new Logger('angular.ui.collapse');
 class CollapseModule extends Module {
   CollapseModule() {
     install(new TransitionModule());
-    type(Collapse);
+    bind(Collapse);
   }
 }
 

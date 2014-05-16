@@ -7,22 +7,23 @@
     </a>
 </script>
 <div class='container-fluid' typeahead_demo_controller>
-    <i>Use names of states of USA for search</i>
-    <h4>Static arrays</h4>
+    <h4>Static arrays of states (USA only)</h4>
     <pre>Model: {{demoCtrl.selected | json}}</pre>
     <input type="text" ng-model="demoCtrl.selected" typeahead="state for state in demoCtrl.states | filter:$viewValue | limitTo:8"
            class="form-control">
 
-    <h4>Asynchronous results</h4>
+    <h4>Custom templates for results of states (USA only)</h4>
+    <pre>Model: {{demoCtrl.customSelected | json}}</pre>
+    <input type="text" ng-model="demoCtrl.customSelected" placeholder="Custom template"
+           typeahead="state as state.name for state in demoCtrl.statesWithFlags | filter:{name:$viewValue}"
+           typeahead-template-url="customTemplate.html" class="form-control">
+           
+    <h4>Asynchronous results of states and countries from Google Maps</h4>
     <pre>Model: {{demoCtrl.asyncSelected | json}}</pre>
     <input type="text" ng-model="demoCtrl.asyncSelected" placeholder="Locations loaded via $http"
            typeahead="address for address in demoCtrl.getLocation($viewValue)" typeahead-loading="loadingLocations"
            class="form-control">
     <i ng-show="demoCtrl.loadingLocations" class="glyphicon glyphicon-refresh"></i>
 
-    <h4>Custom templates for results</h4>
-    <pre>Model: {{demoCtrl.customSelected | json}}</pre>
-    <input type="text" ng-model="demoCtrl.customSelected" placeholder="Custom template"
-           typeahead="state as state.name for state in demoCtrl.statesWithFlags | filter:{name:$viewValue}"
-           typeahead-template-url="customTemplate.html" class="form-control">
+    
 </div>

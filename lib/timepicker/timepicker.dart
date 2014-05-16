@@ -13,8 +13,8 @@ import 'package:angular_ui/utils/utils.dart';
  */
 class TimepickerModule extends Module {
   TimepickerModule() {
-    value(TimepickerConfig, new TimepickerConfig());
-    type(Timepicker);
+    bind(TimepickerConfig, toValue:new TimepickerConfig());
+    bind(Timepicker);
   }
 }
 

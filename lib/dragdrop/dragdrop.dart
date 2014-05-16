@@ -54,9 +54,9 @@ class DataTransferEffect {
 
 class DragDropModule extends Module {
   DragDropModule() {
-    type(DragDropDataService);
-    type(DragDropConfigService);
-    type(DraggableComponent);
-    type(DroppableComponent);
+    bind(DragDropDataService);
+    bind(DragDropConfigService);
+    bind(DraggableComponent);
+    bind(DroppableComponent);
   }
 }

@@ -8,18 +8,18 @@ part of angular.ui.demo;
     publishAs: 'ctrl')
 class CarouselDemoController {
 
-  // workaround until number conversion is supported by Angular
-  String _myInterval = '5000';
-  String get myIntervalAsString => _myInterval;
-  set myIntervalAsString(String newVal) {
-    _myInterval = newVal;
-    try {
-      myInterval = int.parse(newVal);
-    } catch(e){}
+  int _myInterval = 2;
+  int get myInterval {
+    return _myInterval;
   }
-  // workaround end
-
-  int myInterval = 5000;
+  set myInterval(value) {
+    try {
+      _myInterval = toInt(value);
+    } on Error catch(ex) {
+      _myInterval = 0;
+    }
+  }
+  
   List<Map<String,dynamic>> slides = [];
 
   CarouselDemoController() {

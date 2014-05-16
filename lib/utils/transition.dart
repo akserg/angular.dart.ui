@@ -19,7 +19,7 @@ final _log = new Logger('angular.ui.transition');
 class TransitionModule extends Module {
   TransitionModule() {
     install(new TimeoutModule());
-    type(Transition);
+    bind(Transition);
   }
 }
 

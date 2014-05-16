@@ -11,7 +11,7 @@ import "package:angular/core/parser/syntax.dart";
  */
 class AlertModule extends Module {
   AlertModule() {
-    type(Alert);
+    bind(Alert);
   }
 }
 

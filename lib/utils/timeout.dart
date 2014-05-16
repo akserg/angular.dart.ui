@@ -14,7 +14,7 @@ final _log = new Logger('angular.ui.timeout');
  */
 class TimeoutModule extends Module {
   TimeoutModule() {
-    type(Timeout);
+    bind(Timeout);
   }
 }
 
@@ -117,6 +117,7 @@ class Timeout {
         exceptionHandler(e, s);
       } finally {
         timeItem.timer.cancel();
+        timeItem.timer = null;
       }
     });
     deferreds.clear();

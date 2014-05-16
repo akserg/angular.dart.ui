@@ -16,8 +16,8 @@ import 'package:angular_ui/utils/utils.dart';
  */
 class TooltipModule extends Module {
   TooltipModule() {
-    value(TooltipConfig, new TooltipConfig());
-    type(Tooltip);
+    bind(TooltipConfig, toValue:new TooltipConfig());
+    bind(Tooltip);
   }
 }
 

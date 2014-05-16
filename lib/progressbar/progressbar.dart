@@ -15,11 +15,11 @@ import 'package:angular_ui/utils/transition.dart';
 class ProgressbarModule extends Module {
   ProgressbarModule() {
     install(new TransitionModule());
-    value(ProgressbarConfig, new ProgressbarConfig(animate:true, max: 100));
-    type(ProgressBar);
-    type(Progress);
-    type(Bar);
-    type(NgPseudo);
+    bind(ProgressbarConfig, toValue:new ProgressbarConfig(animate:true, max: 100));
+    bind(ProgressBar);
+    bind(Progress);
+    bind(Bar);
+    bind(NgPseudo);
   }
 }
 
