@@ -1,3 +1,20 @@
+#Version 0.4.0, (2014/05/16)
+
+##Features
+
+- Carousel
+- Timepicker
+- Pagination
+- Tooltip
+- Popover
+- Typehead
+
+##Bug Fixes
+
+- Classes Popover, Tooltip, Modal Window, DatePicker compiled to JavaScript don't work proper
+- Error compiling pagination component to JavaScript
+- Checkbox component doesn't work proper in example
+
 #Version 0.3.0, (2014/04/19)
 
 ##Features

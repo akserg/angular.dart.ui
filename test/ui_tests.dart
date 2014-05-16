@@ -78,7 +78,7 @@ void main() {
     group('Rating', () => ratingTests());
     group('Datepicker', () => datepickerTests());
     group('Timepicker', () => timepickerTests());
-//    group('Carousel', () => carouselTests());
+    group('Carousel', () => carouselTests());
     group('Tooltip', () => tooltipTests());
     group('Popover', () => popoverTests());
     group('Typeahead', () => typeaheadTests());

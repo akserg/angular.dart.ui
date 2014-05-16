@@ -46,7 +46,7 @@ class Carousel implements DetachAware {
   @NgOneWay('no-transition') 
   bool noTransition = false;
   
-  int _interval = 0;
+  int _interval;
   @NgOneWay('interval') 
   set interval(int interval) {
     _interval = interval;
@@ -67,9 +67,11 @@ class Carousel implements DetachAware {
   Transition _transition;
   async.Completer _currentTransition;
   Timeout _timeout;
+  Scope _scope;
 
-  Carousel(this._transition, this._timeout) {
+  Carousel(this._transition, this._timeout, this._scope) {
     _log.fine('CarouselComponent');
+    
   }
 
   void next() {
@@ -204,7 +206,9 @@ class Carousel implements DetachAware {
   void restartTimer() {
     resetTimer();
     if (_interval != null && _interval >= 0) {
-      _currentTimeout = _timeout(timerFn, delay: _interval);
+      _currentTimeout = _timeout(() {
+        timerFn();
+      }, delay: _interval);
     }
   }
 
@@ -216,23 +220,14 @@ class Carousel implements DetachAware {
   }
 
   void timerFn() {
-    // this is called from timeout. restart async so the previous can properly
-    // switch to completed before restarting
-//    bool attached = slides.any((Slide slide) {
-//      return slide.element.parent != null && slide.element.parent.parent != null;
-//    });
-    //_log.fine('timerFn');
-//    if (attached) {
-    print('timerFn');
-      new async.Future(() {
-        if (_isPlaying) {
-          next();
-          restartTimer();
-        } else {
-          pause();
-        }
-      });
-//    }
+    new async.Future(() {
+      if (_isPlaying) {
+        next();
+        restartTimer();
+      } else {
+        pause();
+      }
+    });
   }
 
   void addSlide(Slide slide, dom.Element element) {

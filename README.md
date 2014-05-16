@@ -19,7 +19,9 @@ Port of Angular-UI to Dart.
 - Carousel
 - Timepicker
 - Pagination
+- Tooltip
 - Popover
+- Typehead
 
 *Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.*
 

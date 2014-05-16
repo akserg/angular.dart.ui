@@ -108,10 +108,14 @@ class Timeout {
   /**
    * Call all functions in [deferreds].
    */
-  void flush() {
+  void flush({bool cancel:false}) {
     deferreds.forEach((async.Completer deferred, _TimeItem timeItem) {
       try {
-        deferred.complete(timeItem.fn());
+        if (cancel) {
+          deferred.completeError('canceled');
+        } else {
+          deferred.complete(timeItem.fn());
+        }
       } catch(e, s) {
         deferred.completeError(e);
         exceptionHandler(e, s);
