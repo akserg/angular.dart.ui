@@ -17,7 +17,7 @@ bool toBool(x) {
 }
 
 int toInt(x) {
-  if (x is int) return x;
+  if (x is num) return x.toInt();
   if (x is String) return int.parse(x);
   throw new Exception("Can't translate $x to int");
 }
@@ -109,7 +109,7 @@ DateTime parseDate(model, [intl.DateFormat format = null]) {
 dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, DirectiveMap directives}) {
   List<dom.Node> rootElements;
   if (scope != null) {
-    injector = injector.createChild([new Module()..value(Scope, scope)]);
+    injector = injector.createChild([new Module()..bind(Scope, toValue:scope)]);
   }
   if (html is String) {
     rootElements = toNodeList(html.trim());

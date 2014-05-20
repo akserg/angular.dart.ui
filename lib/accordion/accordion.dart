@@ -14,10 +14,10 @@ final _log = new Logger('angular.ui.accordion');
 
 class AccordionModule extends Module {
   AccordionModule() {
-    type(AccordionComponent);
-    type(AccordionHeadingComponent);
-    type(AccordionGroupComponent);
-    value(AccordionConfig, new AccordionConfig());
+    bind(AccordionComponent);
+    bind(AccordionHeadingComponent);
+    bind(AccordionGroupComponent);
+    bind(AccordionConfig, toValue:new AccordionConfig());
   }
 }
 

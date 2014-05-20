@@ -14,9 +14,9 @@ final _log = new Logger('angular.ui.accordion');
 
 class TabsModule extends Module {
   TabsModule() {
-    type(TabsetComponent);
-    type(TabComponent);
-    type(TabHeadingTranscludeComponent);
+    bind(TabsetComponent);
+    bind(TabComponent);
+    bind(TabHeadingTranscludeComponent);
   }
 }
 

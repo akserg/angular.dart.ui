@@ -20,8 +20,8 @@ final _log = new Logger('angular.ui.carousel');
 class CarouselModule extends Module {
   CarouselModule() {
     install(new TransitionModule());
-    type(Carousel);
-    type(Slide);
+    bind(Carousel);
+    bind(Slide);
   }
 }
 
@@ -46,7 +46,7 @@ class Carousel implements DetachAware {
   @NgOneWay('no-transition') 
   bool noTransition = false;
   
-  int _interval = 0;
+  int _interval;
   @NgOneWay('interval') 
   set interval(int interval) {
     _interval = interval;
@@ -67,9 +67,11 @@ class Carousel implements DetachAware {
   Transition _transition;
   async.Completer _currentTransition;
   Timeout _timeout;
+  Scope _scope;
 
-  Carousel(this._transition, this._timeout) {
+  Carousel(this._transition, this._timeout, this._scope) {
     _log.fine('CarouselComponent');
+    
   }
 
   void next() {
@@ -128,7 +130,6 @@ class Carousel implements DetachAware {
 
   void _goNext(String direction, int nextIndex) {
     Slide nextSlide = slides[nextIndex];
-    //_log.finer('goNext($direction, $nextIndex)');
     // Scope has been destroyed, stop here.
     if (_destroyed) {
       return;
@@ -143,8 +144,6 @@ class Carousel implements DetachAware {
 
       //Set all other slides to stop doing their stuff for the new transition
       slides.forEach((Slide slide) {
-//        extend({'direction': slide.direction, 'entering': slide.entering, 'leaving': slide.leaving, 'active': slide.active },
-//            [{'direction': '', 'entering': false, 'leaving': false, 'active': false}]);
         slide.direction = '';
         slide.entering = false;
         slide.leaving = false;
@@ -207,8 +206,9 @@ class Carousel implements DetachAware {
   void restartTimer() {
     resetTimer();
     if (_interval != null && _interval >= 0) {
-      //_log.fine('restartTimer - interval: ${_interval}');
-      _currentTimeout = _timeout(timerFn, delay: _interval);
+      _currentTimeout = _timeout(() {
+        timerFn();
+      }, delay: _interval);
     }
   }
 
@@ -220,22 +220,14 @@ class Carousel implements DetachAware {
   }
 
   void timerFn() {
-    // this is called from timeout. restart async so the previous can properly
-    // switch to completed before restarting
-    bool attached = slides.any((Slide slide) {
-      return slide.element.parent != null && slide.element.parent.parent != null;
+    new async.Future(() {
+      if (_isPlaying) {
+        next();
+        restartTimer();
+      } else {
+        pause();
+      }
     });
-    //_log.fine('timerFn');
-    if (attached) {
-      new async.Future(() {
-        if (_isPlaying) {
-          next();
-          restartTimer();
-        } else {
-          pause();
-        }
-      });
-    }
   }
 
   void addSlide(Slide slide, dom.Element element) {

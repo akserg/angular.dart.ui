@@ -12,7 +12,7 @@ import "package:angular_ui/utils/utils.dart";
  */
 class DropdownToggleModule extends Module {
   DropdownToggleModule() {
-    type(DropdownToggle);
+    bind(DropdownToggle);
   }
 }
 

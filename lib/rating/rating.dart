@@ -15,8 +15,8 @@ final _log = new Logger('angular.ui.rating');
 
 class RatingModule extends Module {
   RatingModule() {
-    type(RatingComponent);
-    value(RatingConfig, new RatingConfig());
+    bind(RatingComponent);
+    bind(RatingConfig, toValue:new RatingConfig());
   }
 }
 

@@ -112,9 +112,6 @@ class DatepickerPopup  {
       });
     }
     
-    // TODO: ???
-    //_ngModel.$parsers.unshift(_parseDate);
-    
     // Inner change
     _scope.context['dateSelection'] = (dt) {
       if (dt != null) {
@@ -179,12 +176,10 @@ class DatepickerPopup  {
     _scope.context['today'] = () {
       _scope.context['dateSelection'](new DateTime.now());
     };
-    // TODO: 'clear' method of Map conflicts to Scope method 
-    _scope.context['clearDate'] = () {
+    _scope.context['clear'] = () {
       _scope.context['dateSelection'](null);
     };
     
-    // var injector = _injector.createChild([new Module()..value(Scope, _scope)]);
     _compiler(rootElements, _directiveMap)(_injector, rootElements);
     
     if (_appendToBody) {
@@ -203,7 +198,6 @@ class DatepickerPopup  {
   }
 
   void _documentClickBind(dom.Event event) {
-    // if (_scope.isOpen && event.target != _element[0]) {
     if (_scope.context['isOpen'] && event.target != _element) {
      _scope.apply(() {
         setOpen(false);
@@ -217,7 +211,6 @@ class DatepickerPopup  {
     });
   }
   
-  // TODO: reverse from dateFilter string to Date object
   DateTime _parseDate(viewValue) {
     if (viewValue == null) {
 //      _ngModel.setValidity('date', true);
@@ -246,7 +239,6 @@ class DatepickerPopup  {
   
   void addWatchableAttribute(attribute, scopeProperty, [datepickerAttribute = null]) {
     if (attribute != null) {
-      // TODO: What the parser ewe needs here: _originalScope.$watch($parse(attribute), (value){
       _originalScope.watch(attribute, (value, prev) {
         _scope.context[scopeProperty] = value;
       });

@@ -8,18 +8,9 @@ import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
-import 'package:angular_ui/typeahead/module.dart';
+import 'package:angular_ui/utils/utils.dart';
 
 @MirrorsUsed(targets: const[
-//  'angular',
-//  'angular.core',
-//  'angular.core.dom',
-//  'angular.filter',
-//  'angular.perf',
-//  'angular.directive',
-//  'angular.routing',
-//  'angular.core.parser',
-//  dom.NodeTreeSanitizer,
   'angular.ui',
   'angular.ui.demo'
 ],
@@ -62,29 +53,29 @@ class DemoModule extends Module {
   DemoModule() {
     install(new AngularUIModule());
     //
-    type(GridDemoController);
-    type(PopoverDemoCtrl);
-    type(TooltipDemoCtrl);
-    type(TimepickerDemoCtrl);
-    type(DatepickerCtrl);
-    type(ModalCtrlTemplate);
-    type(ModalCtrlTagTemplate);
-    type(ModalCtrlFileTemplate);
-    type(ModalCtrlOtherTemplate);
-    type(AlertCtrl);
-    type(CollapseCtrl);
-    type(DropdownCtrl);
-    type(PaginationController);
-    type(ProgressCtrl);
-    type(ButtonsCtrl);
-    type(CarouselDemoController);
-    type(TabsCtrl);
-    type(AccordionDemoController);
-    type(RatingCtrl);
-    type(DragDropShoppingBasketDemoController);
-    type(DragDropListDemoController);
-    type(DragDropCustomImageDemoController);
-    type(DragDropHandlerDemoController);
-    type(TypeaheadDemoController);
+    bind(GridDemoController);
+    bind(PopoverDemoCtrl);
+    bind(TooltipDemoCtrl);
+    bind(TimepickerDemoCtrl);
+    bind(DatepickerCtrl);
+    bind(ModalCtrlTemplate);
+    bind(ModalCtrlTagTemplate);
+    bind(ModalCtrlFileTemplate);
+    bind(ModalCtrlOtherTemplate);
+    bind(AlertCtrl);
+    bind(CollapseCtrl);
+    bind(DropdownCtrl);
+    bind(PaginationController);
+    bind(ProgressCtrl);
+    bind(ButtonsCtrl);
+    bind(CarouselDemoController);
+    bind(TabsCtrl);
+    bind(AccordionDemoController);
+    bind(RatingCtrl);
+    bind(DragDropShoppingBasketDemoController);
+    bind(DragDropListDemoController);
+    bind(DragDropCustomImageDemoController);
+    bind(DragDropHandlerDemoController);
+    bind(TypeaheadDemoController);
   }
 }

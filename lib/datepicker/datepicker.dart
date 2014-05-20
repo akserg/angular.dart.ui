@@ -17,12 +17,12 @@ part 'popup.dart';
 class DatepickerModule extends Module {
   DatepickerModule() {
     install(new PositionModule());
-    value(DatepickerConfig, new DatepickerConfig());
-    value(DatepickerPopupConfig, new DatepickerPopupConfig());
-    type(Datepicker);
-    type(DatepickerPopupWrap);
-    type(DatepickerPopup);
-    type(WeekNumberFilter);
+    bind(DatepickerConfig, toValue:new DatepickerConfig());
+    bind(DatepickerPopupConfig, toValue:new DatepickerPopupConfig());
+    bind(Datepicker);
+    bind(DatepickerPopupWrap);
+    bind(DatepickerPopup);
+    bind(WeekNumberFilter);
   }
 }
 

@@ -20,10 +20,10 @@ class TypeaheadModule extends Module {
 
   TypeaheadModule() {
     install(new PositionModule());
-    type(TypeaheadParser);
-    type(TypeaheadHighlightFilter);
-    type(TypeaheadMatch);
-    type(TypeaheadPopup);
-    type(TypeaheadDecorator);
+    bind(TypeaheadParser);
+    bind(TypeaheadHighlightFilter);
+    bind(TypeaheadMatch);
+    bind(TypeaheadPopup);
+    bind(TypeaheadDecorator);
   }
 }

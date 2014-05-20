@@ -15,6 +15,7 @@ void carouselTests() {
     beforeEach(() {
       setUpInjector();
       module((Module module) {
+        module.install(new TimeoutModule());
         module.install(new CarouselModule());
       });
       
@@ -32,7 +33,7 @@ void carouselTests() {
     
     void cleanup() {
       microLeap();
-      timeout.flush();
+      timeout.flush(cancel:true);
     }
     
     describe('basics', () {
@@ -44,7 +45,7 @@ void carouselTests() {
           {'active':false,'content':'two'},
           {'active':false,'content':'three'}
         ];
-        scope.context['interval'] = 5000;
+        scope.context['interval'] = 50000;
         scope.context['nopause'] = null;
         
         dom.Element element = _.compile(html != null ? html : '''

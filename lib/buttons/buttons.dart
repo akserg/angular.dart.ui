@@ -11,9 +11,9 @@ import "package:angular/angular.dart";
  */
 class ButtonModule extends Module {
   ButtonModule() {
-    value(ButtonConfig, new ButtonConfig(activeClass:'active', toggleEvent: 'click'));
-    type(BtnRadio);
-    type(BtnCheckbox);
+    bind(ButtonConfig, toValue:new ButtonConfig(activeClass:'active', toggleEvent: 'click'));
+    bind(BtnRadio);
+    bind(BtnCheckbox);
   }
 }
 

@@ -1,0 +1,83 @@
+/*
+Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+https://github.com/akserg/angular.dart.ui
+All rights reserved.  Please see the LICENSE.md file.
+*/
+/* Grid */
+.sm-ng-grid {
+  vertical-align: middle;
+}
+
+/* Grid footer */
+.sm-ng-grid .sm-ng-grid-footer {
+  margin: 0px;
+}
+
+/* Footer pagination */
+.sm-ng-grid .sm-ng-grid-footer .pagination {
+  margin: 0px;
+}
+.sm-ng-grid .sm-ng-grid-footer.form-inline .form-control {
+  width: auto;
+}
+
+/* Body */
+.sm-ng-grid tbody tr td .sm-ng-cell {
+  overflow: auto;
+}
+
+/* Header */
+.sm-ng-grid thead tr td {
+  text-align: center;
+  vertical-align: top;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Header title */
+.sm-ng-grid .sm-ng-title {
+  display: inline-block;
+}
+
+/* Header filtert */
+.sm-ng-grid .sm-ng-column-filter {
+  margin-top: 0.5em;
+  margin-bottom: 0.1em;
+}
+
+
+/* Sorting */
+.sm-ng-grid .sm-ng-sort {
+  cursor: pointer;
+  display: block;
+  float: right;
+  width: 1em;
+  height: 1em;
+}
+.sm-ng-grid .sm-ng-sort:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+/* Sorting down arrow - inactive by default */ 
+.sm-ng-grid .sm-ng-sort .sm-ng-sort-inactive {
+  border-top: 0.5em solid #a1bfc6;
+  border-left: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+  border-bottom: none;
+}
+/* Sorting down arrow - active by default */
+.sm-ng-grid .sm-ng-sort .sm-ng-sort-active {
+  border-top: 0.5em solid #87596f;
+  border-left: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+  border-bottom: none;
+}
+/* Sorting up arrow */
+.sm-ng-grid .sm-ng-sort .sm-ng-sort-active.sm-ng-sort-reverse {
+  border-top: none;
+  border-left: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+  border-bottom: 0.5em solid #87596f;
+}

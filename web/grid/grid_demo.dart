@@ -27,4 +27,10 @@ class GridDemoController {
     {'id':14, 'userName':'Jeffrey'},
     {'id':15, 'userName':'Nathan'}
   ];
+  
+  List myItems2 = [
+   {'name':'Anna', 'role':'Manager'},
+   {'name':'Lana', 'role':'Admin'}
+  ];
+                  
 }

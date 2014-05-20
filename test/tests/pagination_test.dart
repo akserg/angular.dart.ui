@@ -206,7 +206,7 @@ void pagerTests() {
 
     describe('setting `pagerConfig`', () {
       beforeEach(module((Module module) {
-        module.value(PagerConfig, new PagerConfig(10, 'PR', 'NE', false));
+        module.bind(PagerConfig, toValue:new PagerConfig(10, 'PR', 'NE', false));
       }));
 
       it('should change paging text', async(inject(() {

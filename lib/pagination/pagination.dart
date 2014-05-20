@@ -7,7 +7,6 @@ library angular.ui.pagination;
 import 'dart:math' as Math;
 
 import 'package:angular/angular.dart';
-//import "package:angular/core_dom/module_internal.dart";
 import "package:angular/core/parser/syntax.dart";
 
 import "package:angular_ui/utils/utils.dart";
@@ -15,11 +14,11 @@ import "package:angular_ui/utils/utils.dart";
 class PaginationModule extends Module {
 
   PaginationModule() {
-    value(PagerConfig, new PagerConfig(10, '« Previous', 'Next »', true));
-    type(PagerComponent);
-    value(PaginationConfig, new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
-    type(PaginationComponent);
-    type(PaginationGenerator, implementedBy: BasicPaginationGenerator);
+    bind(PagerConfig, toValue:new PagerConfig(10, '« Previous', 'Next »', true));
+    bind(PagerComponent);
+    bind(PaginationConfig, toValue:new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
+    bind(PaginationComponent);
+    bind(PaginationGenerator, toImplementation: BasicPaginationGenerator);
   }
 }
 

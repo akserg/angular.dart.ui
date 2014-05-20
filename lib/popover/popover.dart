@@ -17,7 +17,7 @@ import 'package:angular_ui/utils/utils.dart';
 class PopoverModule extends Module {
   PopoverModule() {
     install(new TooltipModule());
-    type(Popover);
+    bind(Popover);
   }
 }
 

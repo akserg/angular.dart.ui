@@ -13,7 +13,7 @@ void dropdownToggleTests() {
     beforeEach(() {
       setUpInjector();
       module((Module module) {
-        module.type(DropdownToggle);
+        module.bind(DropdownToggle);
       });
       inject((TestBed tb) { 
         _ = tb;
