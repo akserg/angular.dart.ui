@@ -84,7 +84,7 @@ void main() {
     group('Tooltip', () => tooltipTests());
     group('Popover', () => popoverTests());
     group('Typeahead', () => typeaheadTests());
-    group('Grid', () => gridTests());
+//    group('Grid', () => gridTests());
   });
 }
 
