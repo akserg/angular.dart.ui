@@ -10,12 +10,13 @@ import 'package:logging/logging.dart';
 part 'tab.dart';
 part 'tab_heading.dart';
 
-final _log = new Logger('angular.ui.accordion');
+final _log = new Logger('angular.ui.tabs');
 
 class TabsModule extends Module {
   TabsModule() {
     bind(TabsetComponent);
     bind(TabComponent);
+    bind(TabHeading);
     bind(TabHeadingTranscludeComponent);
   }
 }
@@ -25,7 +26,7 @@ class TabsModule extends Module {
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/tabs/tabset.html',
     publishAs: 'tabsetCtrl',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class TabsetComponent {
   

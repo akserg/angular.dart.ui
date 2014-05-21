@@ -8,7 +8,7 @@ part of angular.ui.tabs;
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/tabs/tab.html',
     publishAs: 'tabCtrl',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class TabComponent implements DetachAware {
   
@@ -55,6 +55,7 @@ class TabComponent implements DetachAware {
     _active = newValue;
   }
 
+  @override
   void detach() {
     this.tabsetCtrl.removeTab(this);
   }
