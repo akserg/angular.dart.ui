@@ -127,6 +127,10 @@ dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, Di
   View rootView = compiler(rootElements, directives)(injector, rootElements);
   return rootElement;
 }
+
+dom.Element compile2(html, Injector injector, {Scope scope}) {
+  return compile(html, injector, injector.get(Compiler), scope:scope, directives:injector.get(DirectiveMap));
+}
   
 /**
  * Split camel case [input] words and join with spases in between.

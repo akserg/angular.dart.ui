@@ -7,8 +7,9 @@ class Renderer {
   Scope scope;
   dom.TableElement grid;
   Fields fields;
+  Injector injector;
   
-  Renderer(this.scope, this.grid, this.fields);
+  Renderer(this.scope, this.grid, this.fields, this.injector);
   
   dom.TableSectionElement get body => grid.tBodies.first;
   
@@ -29,6 +30,7 @@ class Renderer {
     List preparedItems = scope.context['renderingItems'];
     //
     preparedItems.forEach((gridItem) {
+      scope.context['gridItem'] = gridItem;
       dom.TableRowElement row;
       row = body.addRow()
       ..classes.add(scope.context['selectedItems'].indexOf(gridItem) != -1 ? 'active' : '')
@@ -36,12 +38,18 @@ class Renderer {
         markRowSelected(row, toggleItemSelection(gridItem));
       });
       //
-      scope.context['columns'].forEach((GridColumn colDef) {
+      scope.context['columns'].forEach((GridColumn column) {
         dom.TableCellElement cell = row.addCell();
-        dom.DivElement data = new dom.DivElement()
-        ..classes.add('sm-ng-cell')
-        ..attributes['field-name'] = colDef.fieldName
-        ..text = fields.getField(gridItem, colDef.fieldName);
+        dom.DivElement data = new dom.DivElement();
+        if (column.itemRenderer != null && column.itemRenderer.length > 0) {
+          data.setInnerHtml(column.itemRenderer);
+          renderItem(data);
+        } else if (column.fieldName != null) {
+          data.text = fields.getField(gridItem, column.fieldName);
+        }
+        if (column.fieldName != null) {
+          data.attributes['field-name'] = column.fieldName;
+        }
         cell.append(data);
       });
     });
@@ -70,5 +78,10 @@ class Renderer {
       }
     }
     return false;
+  }
+  
+  dom.Element renderItem(dom.Element itemRenderer) {
+    dom.Element element = compile2(itemRenderer, injector, scope:scope); // parser(itemRenderer); // eval(scope, '"${itemRenderer}"', '');
+    return element;
   }
 }

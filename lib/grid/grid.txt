@@ -1,0 +1,48 @@
+<table tr-ng-grid="" items="myItems">
+            <thead>
+                <tr>
+                    <!--Define the columns with individual TH elements-->
+                    <th field-name="name">
+                        <span class="tr-ng-title">Name</span>
+                        <div tr-ng-grid-column-sort=""></div>
+                        <div tr-ng-grid-column-filter=""></div>
+                    </th>
+                    <th>
+                        Position
+                    </th>
+                    <th field-name="address">
+                        <span class="tr-ng-title">Address</span>
+                        <div tr-ng-grid-column-sort=""></div>
+                        <div tr-ng-grid-column-filter=""></div>
+                    </th>
+                    <th>
+                        Details
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!--Create the row template, remember the tr-ng-grid-column attribute to match the columns defined in the header-->
+                    <td field-name="name">Prs: {{gridItem.name}}</td>
+                    <td class="text-center">{{gridItem.name.charCodeAt(0)}}</td>
+                    <td field-name="address">Adr: {{gridItem.address}}</td>
+                    <td>More info id:{{gridItem.id}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <form class="form-inline tr-ng-grid-footer">
+                            <div tr-ng-grid-global-filter=""></div>
+                            <div class="form-group pull-left">
+                                <span class="form-control-static">
+                                    Extra footer elements
+                                </span>
+                                <button class="btn btn-default">Ignore me</button>
+                            </div>
+                            <div tr-ng-grid-pager=""></div>
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>

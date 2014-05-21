@@ -34,6 +34,8 @@ class GridColumn {
   bool enableFiltering = true;
   String cellWidth;
   String cellHeight;
+  String headerRenderer;
+  String itemRenderer;
 }
 
 @Decorator(selector:"table[sm-ng-grid]")
@@ -124,7 +126,7 @@ class Grid {
   Updater _updater;
   Renderer _renderer;
   
-  Grid(dom.Element gridEl, Scope scope, this._attrs, FieldGetterFactory fieldGetterFactory) {
+  Grid(dom.Element gridEl, Scope scope, this._attrs, FieldGetterFactory fieldGetterFactory, Injector injector) {
     _grid = gridEl as dom.TableElement;
     _scope = scope.createChild(new PrototypeMap(scope.context));
     // Update predefined classes
@@ -188,9 +190,9 @@ class Grid {
     
     // Helpers
     Fields fields = new Fields(fieldGetterFactory);
-    _parser  = new Parser(_scope);
+    _parser  = new Parser(_scope, _grid);
     _updater = new Updater(_scope, _grid, fields);
-    _renderer = new Renderer(_scope, _grid, fields);
+    _renderer = new Renderer(_scope, _grid, fields, injector);
     
     // Initialize grid
     _parser.parse();
