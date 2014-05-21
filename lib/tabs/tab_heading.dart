@@ -8,6 +8,7 @@ part of angular.ui.tabs;
 )
 class TabHeading {
   TabHeading(Element elem, TabComponent tab) {
+    elem.remove();
     tab.heading = elem;
   }
 }

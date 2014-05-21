@@ -8,11 +8,11 @@ part of angular.ui.accordion;
     publishAs: 'ctrl',
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion_group.html',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class AccordionGroupComponent implements DetachAware {
   bool _isOpen = false;
-  @NgAttr('heading') String heading;
+  @NgAttr('heading') var heading;
   Scope scope;
   AccordionComponent accordion;
 
@@ -29,6 +29,7 @@ class AccordionGroupComponent implements DetachAware {
     }
   }
   
+  @override
   void detach() {
     this.accordion.removeGroup(this);
   }
@@ -40,15 +41,35 @@ class AccordionGroupComponent implements DetachAware {
  *   <accordion-heading>Heading containing HTML - <img src="..."></accordion-heading>
  * </accordion-group>
  */
-@Component(
-    selector: 'accordion-heading',
-    publishAs: 'ctrl',
-    template: '<content></content>',
-    applyAuthorStyles: true
+@Decorator(
+    selector: 'accordion-heading'
 )
 class AccordionHeadingComponent {
-  Scope _scope;
-  AccordionHeadingComponent(this._scope, AccordionGroupComponent accordionGroup) {
-    _log.fine('AccordionHeadingComponent');
+  AccordionHeadingComponent(html.Element elem, AccordionGroupComponent acc) {
+    elem.remove();
+    acc.heading = elem;
+  }
+}
+
+@Decorator(
+    selector: 'accordion-heading-transclude'
+)
+class AccordionHeadingTranscludeComponent {
+  
+  final html.Element elem;
+  
+  @NgOneWay('parent-accordion-group-component')
+  set accordionGroupComponent(AccordionGroupComponent acc) {
+        if (acc.heading!=null) {
+          if (acc.heading is String){
+            elem.appendText(acc.heading);
+          } else {
+            elem.append(acc.heading);
+          }
+        }
+  }
+
+  AccordionHeadingTranscludeComponent(this.elem) {
+    _log.fine('TabsetComponent');
   }
 }

@@ -3,6 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.accordion;
 
+import 'dart:html' as html;
 import 'package:angular/angular.dart';
 //import 'package:angular_ui/app/injectable_service.dart';
 import 'package:angular/utils.dart' as utils;
@@ -17,6 +18,7 @@ class AccordionModule extends Module {
     bind(AccordionComponent);
     bind(AccordionHeadingComponent);
     bind(AccordionGroupComponent);
+    bind(AccordionHeadingTranscludeComponent);
     bind(AccordionConfig, toValue:new AccordionConfig());
   }
 }
@@ -31,14 +33,14 @@ class AccordionConfig {
     publishAs: 'ctrl',
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion.html',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 @Component(
     selector: '[accordion]',
     publishAs: 'ctrl',
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/accordion/accordion.html',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class AccordionComponent {
   @NgTwoWay('close-others') bool isCloseOthers;
