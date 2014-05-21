@@ -31,13 +31,13 @@ class RatingConfig {
     selector: 'rating[ng-model]',
     publishAs: 'ctrl',
     templateUrl: 'packages/angular_ui/rating/rating.html',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 @Component(
     selector: '[rating][ng-model]',
     publishAs: 'ctrl',
     templateUrl: 'packages/angular_ui/rating/rating.html',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class RatingComponent {
   
