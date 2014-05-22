@@ -27,6 +27,7 @@ import 'package:angular_ui/pagination/pagination.dart';
 import 'package:angular_ui/utils/position.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
+import 'package:angular_ui/utils/content_append.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/modal/modal.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
@@ -45,11 +46,11 @@ part 'tests/collapse_tests.dart';
 part 'tests/dragdrop_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
 part 'tests/pagination_test.dart';
-part 'tests/position_tests.dart';
+part 'tests/utils/position_tests.dart';
 part 'tests/progressbar_tests.dart';
 part 'tests/tabs_tests.dart';
-part 'tests/timeout_tests.dart';
-part 'tests/transition_tests.dart';
+part 'tests/utils/timeout_tests.dart';
+part 'tests/utils/transition_tests.dart';
 part 'tests/modal_tests.dart';
 part 'tests/datepicker_tests.dart';
 part 'tests/timepicker_tests.dart';
@@ -57,6 +58,7 @@ part 'tests/rating_tests.dart';
 part 'tests/carousel_tests.dart';
 part 'tests/tooltip_tests.dart';
 part 'tests/popover_tests.dart';
+part 'tests/utils/content_append_tests.dart';
 
 void main() {
   useHtmlEnhancedConfiguration();
@@ -82,6 +84,7 @@ void main() {
     group('Tooltip', () => tooltipTests());
     group('Popover', () => popoverTests());
     group('Typeahead', () => typeaheadTests());
+    group('ContentAppend', () => contentAppendTests());
   });
 }
 

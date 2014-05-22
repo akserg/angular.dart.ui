@@ -12,26 +12,3 @@ class TabHeading {
     tab.heading = elem;
   }
 }
-
-@Decorator(
-    selector: 'tab-heading-transclude'
-)
-class TabHeadingTranscludeComponent {
-  
-  final Element elem;
-  
-  @NgOneWay('tab')
-  set tab(TabComponent tab) {
-        if (tab.heading!=null) {
-          if (tab.heading is String){
-            elem.appendText(tab.heading);
-          } else {
-            elem.append(tab.heading);
-          }
-        }
-  }
-
-  TabHeadingTranscludeComponent(this.elem) {
-    _log.fine('TabsetComponent');
-  }
-}

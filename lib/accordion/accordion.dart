@@ -18,7 +18,6 @@ class AccordionModule extends Module {
     bind(AccordionComponent);
     bind(AccordionHeadingComponent);
     bind(AccordionGroupComponent);
-    bind(AccordionHeadingTranscludeComponent);
     bind(AccordionConfig, toValue:new AccordionConfig());
   }
 }
