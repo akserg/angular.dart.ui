@@ -50,26 +50,3 @@ class AccordionHeadingComponent {
     acc.heading = elem;
   }
 }
-
-@Decorator(
-    selector: 'accordion-heading-transclude'
-)
-class AccordionHeadingTranscludeComponent {
-  
-  final html.Element elem;
-  
-  @NgOneWay('parent-accordion-group-component')
-  set accordionGroupComponent(AccordionGroupComponent acc) {
-        if (acc.heading!=null) {
-          if (acc.heading is String){
-            elem.appendText(acc.heading);
-          } else {
-            elem.append(acc.heading);
-          }
-        }
-  }
-
-  AccordionHeadingTranscludeComponent(this.elem) {
-    _log.fine('TabsetComponent');
-  }
-}
