@@ -30,7 +30,7 @@ dynamic eval(Scope scope, value, [defaultValue = null]) {
   return val != null ? val : defaultValue;
 }
 
-dom.Element getFirstDiv(dom.DocumentFragment doc) => doc.children.firstWhere(isDiv);
+dom.Element getFirstDiv(doc) => doc.children.firstWhere(isDiv);
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
 

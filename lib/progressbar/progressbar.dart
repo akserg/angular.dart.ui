@@ -37,6 +37,7 @@ class ProgressbarConfig {
     selector: 'progressbar',
     templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
     publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
       'value': '=>value',
       'type': '@type'
@@ -45,6 +46,7 @@ class ProgressbarConfig {
     selector: '[progressbar]',
     templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
     publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
       'value': '=>value',
       'type': '@type'
@@ -60,7 +62,7 @@ class ProgressBar extends _ProgressbarBase {
   bool animate;
   
   String get type => _type;
-  set type(value) { _type = value; }
+  set type(val) { _type = val; }
   String get classes => _classes;
   
   set value(int val) {
@@ -69,8 +71,13 @@ class ProgressBar extends _ProgressbarBase {
 
   ProgressBar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element);
 
-  evalMaxOrDefault(Scope scope) => max = (max == null) ? _config.max : toInt(scope.parentScope.eval(max.toString()));
-  evalAnimateOrDefault(Scope scope) => animate = (animate == null) ? _config.animate : toBool(scope.parentScope.eval(animate.toString()));
+  evalMaxOrDefault(Scope scope) {
+    max = (max == null) ? _config.max : toInt(scope.parentScope.eval(max.toString()));
+  }
+  
+  evalAnimateOrDefault(Scope scope) {
+    animate = (animate == null) ? _config.animate : toBool(scope.parentScope.eval(animate.toString()));
+  }
 
   NodeAttrs get nodeAttr => _attrs;
   dom.Element getShadowElement(shadowRoot) => getFirstDiv(shadowRoot).children.first;
@@ -80,11 +87,13 @@ class ProgressBar extends _ProgressbarBase {
 
 @Component(
     selector: 'stackedProgress',
+    useShadowDom: false,
     templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
 @Component(
     selector: '[stackedProgress]',
+    useShadowDom: false,
     templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
-class Progress implements ShadowRootAware, AttachAware {
+class Progress implements AttachAware {
   Scope _scope;
   dom.Element _element;
   Progress(this._scope, this._element);
@@ -92,16 +101,13 @@ class Progress implements ShadowRootAware, AttachAware {
   void attach() {
     _scope.context['classes'] = _element.classes.toString();
   }
-
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
-    shadowRoot.applyAuthorStyles = true;
-  }
 }
 
 @Component(
    selector: 'bar',
     templateUrl: 'packages/angular_ui/progressbar/bar.html',
     publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
       'value': '=>value',
       'type': '@type'
@@ -110,6 +116,7 @@ class Progress implements ShadowRootAware, AttachAware {
     selector: '[bar]',
     templateUrl: 'packages/angular_ui/progressbar/bar.html',
     publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
       'value': '=>value',
       'type': '@type'
@@ -124,7 +131,7 @@ class Bar extends _ProgressbarBase {
   bool _animate;
   
   String get type => _type;
-  set type(value) { _type = value; }
+  set type(val) { _type = val; }
   String get classes => _classes;
   set value(int val) {
     super.value = val;
@@ -146,7 +153,7 @@ class Bar extends _ProgressbarBase {
     super.attach();
   }
 
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+  void onShadowRoot(shadowRoot) {
     _lazyInitParentAttrs();
     super.onShadowRoot(shadowRoot);
   }
@@ -161,7 +168,7 @@ abstract class _ProgressbarBase implements ShadowRootAware, AttachAware {
   dom.Element _element;
   Scope _scope;
   Transition _transistion;
-  dom.ShadowRoot _shadowRoot;
+  var _shadowRoot;
 
   int _value;
   int _oldValue = 0;
@@ -179,7 +186,7 @@ abstract class _ProgressbarBase implements ShadowRootAware, AttachAware {
   int get computedMax;
   bool get isAnimate;
   NodeAttrs get nodeAttr;
-  dom.Element getShadowElement(dom.ShadowRoot shadowRoot);
+  dom.Element getShadowElement(shadowRoot);
 
   evalMaxOrDefault(Scope scope);
   evalAnimateOrDefault(Scope scope);
@@ -189,9 +196,8 @@ abstract class _ProgressbarBase implements ShadowRootAware, AttachAware {
     if (_shadowRoot != null) _update(getShadowElement(_shadowRoot));
   }
 
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+  void onShadowRoot(shadowRoot) {
     _shadowRoot = shadowRoot;
-    _shadowRoot.applyAuthorStyles = true;
     evalMaxOrDefault(_scope);
     evalAnimateOrDefault(_scope);
     if (_value != null) _update(getShadowElement(_shadowRoot));
