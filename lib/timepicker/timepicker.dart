@@ -33,10 +33,10 @@ const List AMPMS = const ['AM','PM'];
  * Timepicker.
  */
 @Component(selector: 'timepicker[ng-model]', publishAs: 't',
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
 @Component(selector: '[timepicker][ng-model]', publishAs: 't', 
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
 class Timepicker implements ShadowRootAware {
   
@@ -55,7 +55,7 @@ class Timepicker implements ShadowRootAware {
     meridians = _attrs.containsKey('meridians') ? _scope.parentScope.eval(_attrs['meridians']) : _timepickerConfig.meridians != null ? _timepickerConfig.meridians : AMPMS;
   }
   
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+  void onShadowRoot(shadowRoot) {
     var hourStep = _timepickerConfig.hourStep;
     if (_attrs.containsKey('hour-step')) {
       _scope.parentScope.watch(_attrs['hour-step'], (value, oldValue) {
