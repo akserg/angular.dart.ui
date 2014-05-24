@@ -53,12 +53,12 @@ void modalTests() {
     }
     
     bool toHaveModalOpenWithContent({String content:'', String selector:null}) {
-      return dom.document.body.querySelectorAll("modal-window").any((el) {
+      return dom.document.body.querySelectorAll("modal-window").any((dom.Element el) {
         if (el.style.display == 'block') {
           if (selector != null) {
             el = el.querySelector(selector);
           }
-          if (el.innerHtml == content) {
+          if (el.innerHtml.contains(content)) {
             return true;
           }
         }
