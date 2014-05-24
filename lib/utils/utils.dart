@@ -34,7 +34,7 @@ dom.Element getFirstDiv(doc) => doc.children.firstWhere(isDiv);
 
 bool isDiv(dom.Element element) => element is dom.DivElement;
 
-dom.Element getFirstUList(dom.DocumentFragment doc) => doc.children.firstWhere(isUList);
+dom.Element getFirstUList(doc) => doc.children.firstWhere(isUList);
 
 bool isUList(dom.Element element) => element is dom.UListElement;
 
