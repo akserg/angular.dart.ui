@@ -253,10 +253,10 @@ class DatepickerPopup  {
 }
 
 @Component(selector: 'datepicker-popup-wrap', publishAs: 'd',
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/datepicker/popup.html')
 @Component(selector: '[datepicker-popup-wrap]', publishAs: 'd', 
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/datepicker/popup.html')
 class DatepickerPopupWrap {
 

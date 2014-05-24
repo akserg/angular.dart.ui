@@ -97,10 +97,10 @@ class _Mode {
  * Datepicker.
  */
 @Component(selector: 'datepicker[ng-model]', publishAs: 'd',
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
 @Component(selector: '[datepicker][ng-model]', publishAs: 'd', 
-    applyAuthorStyles: true, 
+    useShadowDom: false, 
     templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
 class Datepicker implements ShadowRootAware {
 
@@ -223,7 +223,7 @@ class Datepicker implements ShadowRootAware {
    * Redraw component first time because ShadowRoot are available now.
    */
   @override
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+  void onShadowRoot(shadowRoot) {
     refill(true);
   }
   
@@ -258,7 +258,7 @@ class Datepicker implements ShadowRootAware {
     
     // DOM render
     
-    dom.TableCellElement titleEl = _element.shadowRoot.querySelector("#title");
+    dom.TableCellElement titleEl = _element.querySelector("#title");
     if (titleEl != null) {
       if (rows.length > 0) {
         titleEl.colSpan = rows[0].length - 2 + (showWeekNumbers ? 1 : 0);
@@ -266,7 +266,7 @@ class Datepicker implements ShadowRootAware {
       (titleEl.firstChild as dom.ButtonElement).setInnerHtml('<strong>$title</strong>');
     }
     
-    dom.TableRowElement labelsEl = _element.shadowRoot.querySelector("#labels");
+    dom.TableRowElement labelsEl = _element.querySelector("#labels");
     if (labelsEl != null) {
       labelsEl.children.clear();
       
@@ -288,7 +288,7 @@ class Datepicker implements ShadowRootAware {
       });
     }
     
-    dom.TableSectionElement rowsEl = _element.shadowRoot.querySelector("#rows");
+    dom.TableSectionElement rowsEl = _element.querySelector("#rows");
     if (rowsEl != null) {
       rowsEl.children.clear();
       
@@ -338,12 +338,12 @@ class Datepicker implements ShadowRootAware {
   }
   
   void showWeekNumbersEls() {
-    dom.TableCellElement titleEl = _element.shadowRoot.querySelector("#title");
+    dom.TableCellElement titleEl = _element.querySelector("#title");
     if (titleEl != null && rows != null && rows.length > 0) {
       titleEl.colSpan = rows[0].length - 2 + (showWeekNumbers ? 1 : 0);
     }
     //
-    List<dom.TableCellElement> showWeekNumbersEls = _element.shadowRoot.querySelectorAll("#labels > td");
+    List<dom.TableCellElement> showWeekNumbersEls = _element.querySelectorAll("#labels > td");
     if (showWeekNumbersEls != null && showWeekNumbersEls.length > 0) {
       dom.TableCellElement showWeekNumbersEl = showWeekNumbersEls.first;
       if (showWeekNumbers) {
@@ -353,7 +353,7 @@ class Datepicker implements ShadowRootAware {
       }
     }
     //
-    dom.TableSectionElement rowsEl = _element.shadowRoot.querySelector("#rows");
+    dom.TableSectionElement rowsEl = _element.querySelector("#rows");
     if (rowsEl != null) {
       rowsEl.children.forEach((dom.TableRowElement rowEl) {
         dom.TableCellElement rowWeekNumbersEl = rowEl.firstChild;
