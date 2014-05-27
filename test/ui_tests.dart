@@ -17,6 +17,8 @@ import 'package:angular/core_dom/module_internal.dart';
 
 import 'package:angular_ui/utils/utils.dart';
 
+import 'package:angular_ui/angular_ui.dart';
+
 import 'package:angular_ui/accordion/accordion.dart';
 import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/buttons/buttons.dart';
