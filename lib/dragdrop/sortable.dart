@@ -26,7 +26,7 @@ class SortableComponent extends AbstractDroppableComponent {
   List _sortableData = [];
   SortableConfig sortableListConfig;
   
-  @NgTwoWay('sortable-data')
+  @NgTwoWay('ui-sortable-data')
   get sortableData => _sortableData;
   set sortableData (var sortableData) {
     if (sortableData is List) {
@@ -34,7 +34,7 @@ class SortableComponent extends AbstractDroppableComponent {
     }
   }
   
-  @NgOneWay('sortable-zones')
+  @NgOneWay('ui-sortable-zones')
   set sortableZones (var dropZones) {
     this.dropZoneNames = dropZones;
     updateList();
