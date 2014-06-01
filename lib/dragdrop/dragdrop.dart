@@ -5,6 +5,7 @@ library angular.ui.dragdrop;
 
 import 'package:angular/angular.dart';
 import 'dart:html' as html;
+import 'dart:math' as math;
 import 'dart:async';
 
 part 'draggable.dart';
@@ -74,5 +75,6 @@ class DragDropModule extends Module {
     bind(DraggableComponent);
     bind(DroppableComponent);
     bind(SortableComponent);
+    bind(DragDropSortableDataService);
   }
 }

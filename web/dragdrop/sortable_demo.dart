@@ -8,18 +8,23 @@ part of angular.ui.demo;
     publishAs: 'sortCtrl')
 class SortableController {
 
-  List<String> listOne = ['1 - Coffee','2 - Orange Juice','3 - Red Wine','4 - Unhealty drink!','5 - Water'];
+  List<String> listOne = ['Coffee','Orange Juice','Red Wine','Unhealty drink!','Water'];
   
   SortableController() {
-    print("sort controller ready");
   }
   
-  void addEntry() {
-    listOne.add( (listOne.length + 1).toString() + " - New");
-  }
-  
-  void removeEntry() {
-      listOne.removeLast();
-  }
+}
 
+
+@Controller(
+    selector: '[sortable-multi-controller]',
+    publishAs: 'sortMultiCtrl')
+class SortableMultiController {
+
+  List<String> listOne = ['Sugar Ray Robinson','Muhammad Ali','George Foreman','Joe Frazier','Jake LaMotta'];
+  List<String> listTwo = ['Joe Louis','Jack Dempsey','Rocky Marciano','Mike Tyson','Oscar De La Hoya'];
+  
+  SortableMultiController() {
+  }
+  
 }

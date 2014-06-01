@@ -80,6 +80,7 @@ class DemoModule extends Module {
     bind(DragDropCustomImageDemoController);
     bind(DragDropHandlerDemoController);
     bind(SortableController);
-//    bind(TypeaheadDemoController);
+    bind(SortableMultiController);
+    //    bind(TypeaheadDemoController);
   }
 }

@@ -8,13 +8,21 @@ abstract class AbstractDraggableComponent extends DisposableComponent {
   final List<StreamSubscription> subscriptions = [];
 
   DraggableElementHandler _draggableHandler;
-  List<String> allowedDropZones = [];
+  List<String> _dropZoneNames = [];
   
   final html.Element elem;
   final DragDropDataService dragDropService;
 
   AbstractDDConfig _config;
   bool _enabled = true;
+  
+  set dropZoneNames(var names) {
+    if (names!=null && (names is String)) {
+      this._dropZoneNames = [names];
+    } else if (names is List<String>) {
+      this._dropZoneNames = names;
+    }
+  }
   
   get config => _config;
   set config(AbstractDDConfig config) {
@@ -58,7 +66,7 @@ abstract class AbstractDraggableComponent extends DisposableComponent {
     }
     html.Element dragTarget = event.target;
     dragTarget.classes.add(config.onDragStartClass);
-    dragDropService.allowedDropZones = allowedDropZones;
+    dragDropService.allowedDropZones = _dropZoneNames;
     onDragStartCallback(event);
   }
 
@@ -108,11 +116,7 @@ class DraggableComponent extends AbstractDraggableComponent {
 
   @NgOneWay("allowed-drop-zones")
   set dropZones (var dropZones) {
-    if (dropZones!=null && (dropZones is String)) {
-      this.allowedDropZones = [dropZones];
-    } else if (dropZones!=null && (dropZones is List<String>)) {
-      this.allowedDropZones = dropZones;
-    }
+    this.dropZoneNames = dropZones;
   }
   
   DraggableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)

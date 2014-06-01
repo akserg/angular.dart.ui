@@ -5,10 +5,16 @@ part of angular.ui.dragdrop;
 
 class SortableConfig extends AbstractDDConfig {
   SortableConfig() {
-    onDragStartClass = "ui-sortable-drag-start";
+    onDragStartClass = "ui-sortable-dragging";
     onDragEnterClass = "ui-sortable-drag-enter";
-    onDragOverClass = "ui-sortable-drag-over";
+    onDragOverClass = "ui-sortable-dragging";
   }
+}
+
+@Injectable()
+class DragDropSortableDataService {
+  int dragNodeId;
+  List sourceList;
 }
 
 @Decorator(selector: '[ui-sortable]')
@@ -16,10 +22,9 @@ class SortableComponent extends AbstractDroppableComponent {
  
   final List<DisposableComponent> disposableComponents = [];
   DragDropConfigService dragDropConfigService;
+  DragDropSortableDataService sortableDataService;
   List _sortableData = [];
   SortableConfig sortableListConfig;
-  
-  int dragNodeId;
   
   @NgTwoWay('sortable-data')
   get sortableData => _sortableData;
@@ -29,7 +34,14 @@ class SortableComponent extends AbstractDroppableComponent {
     }
   }
   
-  void updateList() {
+  @NgOneWay('sortable-zones')
+  set sortableZones (var dropZones) {
+    this.dropZoneNames = dropZones;
+    updateList();
+  }
+  get sortableZones => this._dropZoneNames;
+  
+  void updateList({var ignoreElement}) {
     
     for (DisposableComponent comp in disposableComponents) {
       comp.dispose();
@@ -38,34 +50,34 @@ class SortableComponent extends AbstractDroppableComponent {
     
     int node = 0;
     for(html.Element child in this.elem.children) {
-      int currentNodeCount = node;
-      print("set " + child.toString() + " as draggable"); 
-      
-      disposableComponents.add( new SortableDraggableComponent(child, dragDropService, this.sortableListConfig, (html.Event event) {
-        dragNodeId = currentNodeCount;
-        print('start dragging node [' + dragNodeId.toString() + ']');
-      }));
-      
-      disposableComponents.add( new SortableDroppableComponent(child, dragDropService, this.sortableListConfig, (html.Event event) {
-        if (dragNodeId != currentNodeCount) {
-          print('drag node [' + dragNodeId.toString() + '] over node [' + currentNodeCount.toString() + ']');
-          _sortableData.insert(currentNodeCount, _sortableData.removeAt(dragNodeId));    
-          dragNodeId = currentNodeCount;
-        }
-      }));
-      node++;
+      if ( child != ignoreElement) {
+        int currentNodeCount = node;
+        print("update node " + node.toString() + " - html: " + child.outerHtml);
+        disposableComponents.add( new SortableDraggableComponent(child, dragDropService, this.sortableListConfig, sortableDataService, currentNodeCount, _sortableData, sortableZones));
+        disposableComponents.add( new SortableDroppableComponent(child, dragDropService, this.sortableListConfig, sortableDataService, currentNodeCount, _sortableData, sortableZones));
+        node++;
+      } else {
+        print("ignoring element " + child.outerHtml );
+      }
     }
   }
   
-  SortableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
+  SortableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService, DragDropSortableDataService sortableDataService)
   : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+   this.sortableDataService = sortableDataService;
    this.dragDropConfigService = dragDropConfigService;
    this.sortableListConfig = this.dragDropConfigService.sortableConfig;
    this.enabled = false;
+   this.sortableZones = new math.Random().nextDouble().toString();
    
    this.elem.addEventListener('DOMNodeInserted', (_) {
-     print('node added');
+     print('DOMNodeInserted');
      updateList();
+   });
+   
+   this.elem.addEventListener('DOMNodeRemoved', (html.Event event) {
+     print('DOMNodeRemoved');
+     updateList(ignoreElement: event.target);
    });
 
   }
@@ -90,12 +102,17 @@ class SortableComponent extends AbstractDroppableComponent {
 
 class SortableDraggableComponent extends AbstractDraggableComponent {
   
-  Function dragStartCallback;  
+  DragDropSortableDataService sortableDataService;
+  int childId;
+  List data;
   
   SortableDraggableComponent(html.Element elem, DragDropDataService dragDropService, AbstractDDConfig ddConfig, 
-      void dragStartCallback(html.Event event)) 
+                             DragDropSortableDataService sortableDataService, int childId, List data, List<String> sortableZones) 
   : super(elem, dragDropService, ddConfig) {
-    this.dragStartCallback = dragStartCallback;
+    this.sortableDataService = sortableDataService;
+    this.childId = childId;
+    this.data = data;
+    this.dropZoneNames = sortableZones;
   }
 
   @override
@@ -104,18 +121,25 @@ class SortableDraggableComponent extends AbstractDraggableComponent {
 
   @override
   void onDragStartCallback(html.Event event) {
-    dragStartCallback(event);
+    sortableDataService.dragNodeId = childId;
+    sortableDataService.sourceList = data;
+    print('start dragging node [' + childId.toString() + ']');
   }
 
 }
 
 class SortableDroppableComponent extends AbstractDroppableComponent {
   
-  Function onDragOver;  
+  DragDropSortableDataService sortableDataService;
+  int childId;
+  List data;
   
-  SortableDroppableComponent(html.Element elem, DragDropDataService dragDropService, AbstractDDConfig config, void onDragOver(html.Event event))
+  SortableDroppableComponent(html.Element elem, DragDropDataService dragDropService, AbstractDDConfig config,DragDropSortableDataService sortableDataService, int childId, List data, List<String> sortableZones)
   : super(elem, dragDropService, config) {
-    this.onDragOver = onDragOver;
+    this.sortableDataService = sortableDataService;
+    this.childId = childId;
+    this.data = data;
+    this.dropZoneNames = sortableZones;
   }
 
   @override
@@ -128,7 +152,12 @@ class SortableDroppableComponent extends AbstractDroppableComponent {
 
   @override
   void onDragOverCallback(html.Event event) {
-    onDragOver(event);
+    if ((sortableDataService.dragNodeId != childId) || (sortableDataService.sourceList != data)) {
+              print('drag node [' + sortableDataService.dragNodeId.toString() + '] over node [' + childId.toString() + ']');
+              data.insert(childId, sortableDataService.sourceList.removeAt(sortableDataService.dragNodeId));    
+              sortableDataService.dragNodeId = childId;
+              sortableDataService.sourceList = data;
+        }
   }
 
   @override

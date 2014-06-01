@@ -9,12 +9,53 @@ All rights reserved.  Please see the LICENSE.md file.
   <h4>Simple sortable</h4>
   <div class="row" sortable-simple-controller>
     <div class="col-sm-3">
-      <ul class="list-group" ui-sortable sortable-data="sortCtrl.listOne">
-        <li ng-repeat="item in sortCtrl.listOne" class="list-group-item">{{item}}</li>
-      </ul>
+          <div class="panel panel-success">
+        <div class="panel-heading">
+          Favorite drinks
+        </div>
+        <div class="panel-body">
+          <ul class="list-group" ui-sortable sortable-data="sortCtrl.listOne">
+            <li ng-repeat="item in sortCtrl.listOne" class="list-group-item">{{item}}</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" ng-click="sortCtrl.addEntry()">Add entry</button>
-    <button type="button" class="btn btn-primary" ng-click="sortCtrl.removeEntry()">Remove entry</button>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          My prefences:<br/>
+          <span ng-repeat="item in sortCtrl.listOne">{{$index + 1}}) {{item}}<br/></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <h4>Multi list sortable</h4>
+  <div class="row" sortable-multi-controller>
+    <div class="col-sm-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          First Team
+        </div>
+        <div class="panel-body">
+          <ul class="list-group" ui-sortable sortable-data="sortMultiCtrl.listOne" sortable-zones="'boxers-zone'">
+            <li ng-repeat="item in sortMultiCtrl.listOne" class="list-group-item">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Second Team
+        </div>
+        <div class="panel-body">
+          <ul class="list-group" ui-sortable sortable-data="sortMultiCtrl.listTwo" sortable-zones="'boxers-zone'">
+            <li ng-repeat="item in sortMultiCtrl.listTwo" class="list-group-item">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
   
 </div>

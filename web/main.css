@@ -25,3 +25,11 @@ body {
 .ui-drag-over {
   border: 2px dashed #000;
 }
+
+.ui-sortable-dragging {
+  -moz-transform:scale(0.9);
+  -webkit-transform:scale(0.9);
+  transform:scale(0.9);
+  opacity:0.7;  
+  border: 1px dashed #000;
+}

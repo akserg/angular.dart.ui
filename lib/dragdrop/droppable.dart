@@ -9,9 +9,17 @@ abstract class AbstractDroppableComponent extends DisposableComponent {
   final List<StreamSubscription> subscriptions = [];
   final html.Element elem;
   final DragDropDataService dragDropService;
-  List<String> dropZoneNames = [];
+  List<String> _dropZoneNames = [];
   AbstractDDConfig config;
   bool enabled = true;
+  
+  set dropZoneNames(var names) {
+    if (names!=null && (names is String)) {
+      this._dropZoneNames = [names];
+    } else if (names is List<String>) {
+      this._dropZoneNames = names;
+    }
+  }
   
   AbstractDroppableComponent(this.elem, this.dragDropService, this.config) {
     subscriptions.add( elem.onDragEnter.listen(_onDragEnter) );
@@ -67,11 +75,11 @@ abstract class AbstractDroppableComponent extends DisposableComponent {
   }
   
   bool isAllowedDropZone() {
-    if (dropZoneNames.isEmpty && dragDropService.allowedDropZones.isEmpty) {
+    if (_dropZoneNames.isEmpty && dragDropService.allowedDropZones.isEmpty) {
       return true;
     }
     for (String dragZone in dragDropService.allowedDropZones) {
-      if (dropZoneNames.contains(dragZone)) {
+      if (_dropZoneNames.contains(dragZone)) {
         return true;
       }
     }
@@ -111,11 +119,7 @@ class DroppableComponent extends AbstractDroppableComponent {
   
   @NgOneWay("drop-zones")
   set dropZones (var dropZoneNames) {
-    if (dropZoneNames!=null && (dropZoneNames is String)) {
-      this.dropZoneNames = [dropZoneNames];
-    } else if (dropZoneNames!=null && (dropZoneNames is List<String>)) {
-      this.dropZoneNames = dropZoneNames;
-    }
+    this.dropZoneNames = dropZoneNames;
   }
   
   DroppableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
@@ -145,8 +149,4 @@ class DroppableComponent extends AbstractDroppableComponent {
     }
   }
 
-  @override
-  bool isActive() {
-    return true;
-  }
 }
