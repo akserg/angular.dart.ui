@@ -75,6 +75,7 @@ class DragDropModule extends Module {
     bind(DraggableComponent);
     bind(DroppableComponent);
     bind(SortableComponent);
+    bind(SortableDataComponent);
     bind(DragDropSortableDataService);
   }
 }
