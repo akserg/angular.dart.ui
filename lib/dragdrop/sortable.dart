@@ -39,7 +39,6 @@ class SortableComponent extends AbstractDroppableComponent {
    this.dragDropConfigService = dragDropConfigService;
    this.sortableListConfig = this.dragDropConfigService.sortableConfig;
    this.enabled = false;
-   this.sortableZones = new math.Random().nextDouble().toString();
   }
 
   @override

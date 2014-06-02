@@ -21,8 +21,9 @@ class SortableController {
     publishAs: 'sortMultiCtrl')
 class SortableMultiController {
 
-  List<String> listOne = ['Sugar Ray Robinson','Muhammad Ali','George Foreman','Joe Frazier','Jake LaMotta'];
-  List<String> listTwo = ['Joe Louis','Jack Dempsey','Rocky Marciano','Mike Tyson','Oscar De La Hoya'];
+  List<String> listBoxers = ['Sugar Ray Robinson','Muhammad Ali','George Foreman','Joe Frazier','Jake LaMotta','Joe Louis','Jack Dempsey','Rocky Marciano','Mike Tyson','Oscar De La Hoya'];
+  List<String> listTeamOne = [];
+  List<String> listTeamTwo = [];
   
   SortableMultiController() {
   }

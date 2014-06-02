@@ -45,10 +45,12 @@ void dragdropTests() {
             ui-draggable 
             draggable-enabled="dragEnabled" 
             draggable-data="dragData" 
+            allowed-drop-zones="'test1'"
             on-drag-success="dragSuccessCallback()">
           </div>
           <div id='dropId'
             ui-droppable 
+            drop-zones="'test1'"
             on-drop-success="dropSuccessCallback(data)">
           </div>
         </div>''';
@@ -106,11 +108,21 @@ void dragdropTests() {
       })));
  
       it('Drop events should add/remove the expected classes to the target element', async(inject(() {
+        Function dragSuccessCallback = jasmine.createSpy('drag callback');
         Function dropSuccessCallback = jasmine.createSpy('drop callback');
-        dom.Element dropElem = ngQuery(createElement(dropSuccessCallback:dropSuccessCallback), '#dropId')[0];
+        
+        dom.Element elem = createElement(dropSuccessCallback:dropSuccessCallback, dragSuccessCallback:dragSuccessCallback);
+        dom.Element dropElem = ngQuery(elem, '#dropId')[0];
+        dom.Element dragElem = ngQuery(elem, '#dragId')[0];
         
         expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
         expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragOverClass);
+        
+        //The drop events should not work before a drag is started on an element with the correct drop-zone
+        _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
+        expect(dropElem).not.toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);
+        
+        _.triggerEvent(dragElem, 'dragstart', 'MouseEvent');
         
         _.triggerEvent(dropElem, 'dragenter', 'MouseEvent');
         expect(dropElem).toHaveClass(ddConfig.dragDropConfig.onDragEnterClass);

@@ -9,7 +9,7 @@ abstract class AbstractDroppableComponent extends DisposableComponent {
   final List<StreamSubscription> subscriptions = [];
   final html.Element elem;
   final DragDropDataService dragDropService;
-  List<String> _dropZoneNames = [];
+  List<String> _dropZoneNames = [new math.Random().nextDouble().toString()];
   AbstractDDConfig config;
   bool enabled = true;
   
