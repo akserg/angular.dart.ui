@@ -46,6 +46,7 @@ part 'tests/alert_tests.dart';
 part 'tests/buttons_tests.dart';
 part 'tests/collapse_tests.dart';
 part 'tests/dragdrop_tests.dart';
+part 'tests/dragdrop_sortable_tests.dart';
 part 'tests/dropdown_toggle_tests.dart';
 part 'tests/pagination_test.dart';
 part 'tests/utils/position_tests.dart';
@@ -71,6 +72,7 @@ void main() {
     group('Buttons', () => buttonsTests());
     group('Collapse', () => collapseTests());
     group('Drag&Drop', () => dragdropTests());
+    group('Drag&Drop-Sortable', () => dragdropSortableTests());
     group('DropdownToggle', () => dropdownToggleTests());
     group('Pager', () => pagerTests());
     group('Pagination', () => paginationTests());

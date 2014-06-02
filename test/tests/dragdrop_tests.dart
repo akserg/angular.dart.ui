@@ -31,7 +31,6 @@ void dragdropTests() {
     group('Draggable and Droppable directives', () {
       
       var dragData = "Hello World at " + new DateTime.now().toString();
-      dom.Element elem;
       
       dom.Element createElement({bool dragEnabled : true, Function dragSuccessCallback, Function dropSuccessCallback }) {
         
@@ -216,8 +215,6 @@ void dragdropTests() {
     });
     
     group('Drop Zones', () {
-          
-          dom.Element elem;
           
           dom.Element createElement() {
             

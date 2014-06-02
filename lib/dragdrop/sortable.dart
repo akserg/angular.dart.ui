@@ -39,6 +39,7 @@ class SortableComponent extends AbstractDroppableComponent {
    this.dragDropConfigService = dragDropConfigService;
    this.sortableListConfig = this.dragDropConfigService.sortableConfig;
    this.enabled = false;
+   print('SortableComponent started');
   }
 
   @override
@@ -55,8 +56,10 @@ class SortableComponent extends AbstractDroppableComponent {
 
   @override
   void onDropCallback(html.Event event) {
-    print('drag node [' + sortableDataService.dragNodeId.toString() + '] over parent node');
-    sortableDataComponent._sortableData.add(sortableDataService.sourceList.removeAt(sortableDataService.dragNodeId));
+    if(this.sortableDataComponent != null) {
+      print('drag node [' + sortableDataService.dragNodeId.toString() + '] over parent node');
+      sortableDataComponent._sortableData.add(sortableDataService.sourceList.removeAt(sortableDataService.dragNodeId));
+    }
   }
   
   void refresh() {
@@ -108,9 +111,16 @@ class SortableDataComponent {
     this.sortableComponent.enabled = _sortableData.isEmpty;
   }
   
-  SortableDataComponent(this.elem, this.dragDropService, this.dragDropConfigService, this.sortableDataService, this.sortableComponent) {
+  SortableDataComponent(Scope scope, this.elem, this.dragDropService, this.dragDropConfigService, this.sortableDataService, this.sortableComponent) {
     this.sortableComponent.sortableDataComponent = this;
     
+    print('SortableDataComponent started');
+    /*
+    scope.watch(elem.attributes['ui-sortable-data'], (oldValue, newValue) {
+      print("collection is changed");
+      updateList();
+    }, collection: true); 
+    */
    this.elem.addEventListener('DOMNodeInserted', (_) {
      print('DOMNodeInserted');
      updateList();
@@ -120,9 +130,7 @@ class SortableDataComponent {
      print('DOMNodeRemoved');
      updateList(ignoreElement: event.target);
    });
-
   }
-
 }
 
 class SortableDraggableComponent extends AbstractDraggableComponent {
@@ -187,6 +195,8 @@ class SortableDroppableComponent extends AbstractDroppableComponent {
 
   @override
   void onDropCallback(html.Event event) {
+    sortableDataService.dragNodeId = null;
+    sortableDataService.sourceList = null;
   }
   
 }
