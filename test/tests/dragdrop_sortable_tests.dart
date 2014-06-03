@@ -26,10 +26,7 @@ void dragdropSortableTests() {
       });
     });
     
-    afterEach(() {
-      tearDownInjector();
-      dom.document.body = new dom.BodyElement();
-    });
+    afterEach(tearDownInjector);
 
     void swapMultiple(List<dom.Element> nodesOne, int firstNodeId, List<dom.Element> nodesTwo, int secondNodeId) {
       _.triggerEvent(nodesOne[firstNodeId], 'dragstart', 'MouseEvent');
@@ -86,10 +83,10 @@ void dragdropSortableTests() {
         expect(ulElem).toBeNotNull();
         expect(ulElem.children.length).toBe(4);
         
-        expect(ddsDataService.dragNodeId).toBeNull();
+        expect(ddsDataService.sortableData).toBeNull();
         expect(ddsDataService.sourceList).toBeNull();
         _.triggerEvent(ulElem.children[0], 'dragstart', 'MouseEvent');
-        expect(ddsDataService.dragNodeId).toBe(0);
+        expect(ddsDataService.sortableData).toBe(values[0]);
         expect(ddsDataService.sourceList).toBe(values);
         
         swap(ulElem.children, 0, 1);
@@ -97,6 +94,7 @@ void dragdropSortableTests() {
         expect(ulElem.children[0].text).toEqual('two');
         expect(values[1]).toBe('one');
         expect(ulElem.children[1].text).toEqual('one');
+        
       })));
       
       it('It should add the expected classes on drag events', async(inject(() {
@@ -112,6 +110,7 @@ void dragdropSortableTests() {
         
         _.triggerEvent(ulElem.children[1], 'dragover', 'MouseEvent');
         expect(ulElem.children[1]).toHaveClass(ddConfig.sortableConfig.onDragOverClass);    
+        
       })));
       
       it('It should work with arbitrary objects', async(inject(() {
@@ -133,7 +132,9 @@ void dragdropSortableTests() {
                 
         swap(ulElem.children, 0, 1);
         expect(values[0]).toBe(elemThree);
-        expect(values[1]).toBe(elemTwo);                
+        expect(values[1]).toBe(elemTwo);    
+        
+        //ulElem.remove();
       })));   
       
     });
@@ -233,7 +234,7 @@ void dragdropSortableTests() {
         expect(multiTwoList[1]).toBe('mFour');
         
       })));
-
+      
       it('It should not be possible to move items between lists not in the same sortable-zone', async(inject(() {
         List<String> singleList = ['sOne', 'sTwo', 'sThree']; 
         List<String> multiOneList = ['mOne', 'mTwo', 'mThree']; 
@@ -252,7 +253,7 @@ void dragdropSortableTests() {
         expect(singleList[0]).toBe('sOne');
         expect(multiOneList[0]).toBe('mOne');
       })));
-
+      
       it('When the list is empty the parent must become droppable', async(inject(() {
         List<String> singleList = ['sOne', 'sTwo', 'sThree']; 
         List<String> multiOneList = []; 
@@ -295,9 +296,8 @@ void dragdropSortableTests() {
         expect(multiTwoList[0]).toBe('mTwo');
         
       })));
-      
     });
-    
+
   });
 }
 
