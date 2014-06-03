@@ -31,6 +31,7 @@ class SortableComponent extends AbstractDraggableDroppableComponent {
   set sortableData (var sortableData) {
     if (sortableData is List) {
       _sortableData = sortableData as List;
+      onSortableDataChange();
     }
   }
   
@@ -54,14 +55,13 @@ class SortableComponent extends AbstractDraggableDroppableComponent {
    }
    
    scope.watch(elem.attributes['ui-sortable-data'], (oldValue, newValue) {
-     print("collection is changed");
-     this.dropEnabled = _sortableData.isEmpty;
+     onSortableDataChange();
    }, collection: true); 
 
   }
 
   @override
-  void onDragOverCallback(html.Event event) {
+  void onDragEnterCallback(html.Event event) {
     
     print('drag node [' + sortableDataService.index.toString() + '] over parent node');
     _sortableData.add(sortableDataService.sortableData.removeAt(sortableDataService.index));
@@ -70,6 +70,10 @@ class SortableComponent extends AbstractDraggableDroppableComponent {
 
   }
   
+  void onSortableDataChange() {
+    this.dropEnabled = _sortableData.isEmpty;
+    print("collection is changed, drop enabled: " + this.dropEnabled.toString());
+  }
 }
 
 @Decorator(selector: '[ui-sortable-item]')
@@ -96,12 +100,22 @@ class SortableItemComponent extends AbstractDraggableDroppableComponent {
   }
   
   @override
-  void onDragOverCallback(html.Event event) {
+  void onDragEnterCallback(html.Event event) {
+    /*
+    print("-------------------------------------------------------");
+    print("sortableDataService = " + sortableDataService.toString());
+    print("sortableComponent = " + sortableComponent.toString());
+    print("_sortableData = " + sortableComponent._sortableData.toString());
+    print("index = " + index.toString());
+    print("sortableDataService.index = " + sortableDataService.index.toString());
+    print("sortableDataService.sortableData = " + sortableDataService.sortableData.toString());
+   */
     if ((index != sortableDataService.index) || (sortableDataService.sortableData != sortableComponent._sortableData)) {
               print('drag node [' + index.toString() + '] over node [' + sortableDataService.index.toString() + ']');
               sortableComponent._sortableData.insert(index, sortableDataService.sortableData.removeAt(sortableDataService.index));
               sortableDataService.sortableData = sortableComponent._sortableData;
               sortableDataService.index = index;
         }
+    //print("-------------------------------------------------------");
   }
 }
