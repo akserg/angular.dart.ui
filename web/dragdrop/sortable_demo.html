@@ -15,7 +15,7 @@ All rights reserved.  Please see the LICENSE.md file.
         </div>
         <div class="panel-body">
           <ul class="list-group" ui-sortable ui-sortable-data="sortCtrl.listOne">
-            <li ng-repeat="item in sortCtrl.listOne" class="list-group-item">{{item}}</li>
+            <li ng-repeat="item in sortCtrl.listOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
           </ul>
         </div>
       </div>
@@ -29,7 +29,7 @@ All rights reserved.  Please see the LICENSE.md file.
       </div>
     </div>
   </div>
-  
+
   <h4>Multi list sortable</h4>
   <div class="row" sortable-multi-controller>
     <div class="col-sm-3">
@@ -37,9 +37,9 @@ All rights reserved.  Please see the LICENSE.md file.
         <div class="panel-heading">
           Available boxers
         </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'">
-          <ul class="list-group" ui-sortable-data="sortMultiCtrl.listBoxers">
-            <li ng-repeat="item in sortMultiCtrl.listBoxers" class="list-group-item">{{item}}</li>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listBoxers">
+          <ul class="list-group" >
+            <li ng-repeat="item in sortMultiCtrl.listBoxers" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
           </ul>
         </div>
       </div>
@@ -49,9 +49,9 @@ All rights reserved.  Please see the LICENSE.md file.
         <div class="panel-heading">
           First Team
         </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'">
-          <ul class="list-group" ui-sortable-data="sortMultiCtrl.listTeamOne">
-            <li ng-repeat="item in sortMultiCtrl.listTeamOne" class="list-group-item">{{item}}</li>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listTeamOne">
+          <ul class="list-group" >
+            <li ng-repeat="item in sortMultiCtrl.listTeamOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
           </ul>
         </div>
       </div>
@@ -61,13 +61,13 @@ All rights reserved.  Please see the LICENSE.md file.
         <div class="panel-heading">
           Second Team
         </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'">
-          <ul class="list-group" ui-sortable-data="sortMultiCtrl.listTeamTwo">
-            <li ng-repeat="item in sortMultiCtrl.listTeamTwo" class="list-group-item">{{item}}</li>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listTeamTwo">
+          <ul class="list-group">
+            <li ng-repeat="item in sortMultiCtrl.listTeamTwo" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
-  
+
 </div>

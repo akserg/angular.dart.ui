@@ -47,16 +47,13 @@ void dragdropSortableTests() {
         String html =
         '''<div>
           <ul class="list-group" ui-sortable ui-sortable-data="data.sortableList">
-            <li ng-repeat="item in data.sortableList">{{item}}</li>
+            <li ng-repeat="item in data.sortableList" ui-sortable-item="\$index">{{item}}</li>
           </ul>
         </div>''';
         dom.Element element = _.compile(html.trim());
         
         microLeap();
         scope.rootScope.apply();
-        
-        //Needed to enable the DOMNodeInserted and DOMNodeRemoved events
-        dom.document.body.append(element);
         
         scope.context['data']['sortableList'] = sortableList;
 
@@ -84,10 +81,10 @@ void dragdropSortableTests() {
         expect(ulElem.children.length).toBe(4);
         
         expect(ddsDataService.sortableData).toBeNull();
-        expect(ddsDataService.sourceList).toBeNull();
+        expect(ddsDataService.index).toBeNull();
         _.triggerEvent(ulElem.children[0], 'dragstart', 'MouseEvent');
-        expect(ddsDataService.sortableData).toBe(values[0]);
-        expect(ddsDataService.sourceList).toBe(values);
+        expect(ddsDataService.sortableData).toBe(values);
+        expect(ddsDataService.index).toBe(0);
         
         swap(ulElem.children, 0, 1);
         expect(values[0]).toBe('two');
@@ -152,17 +149,17 @@ void dragdropSortableTests() {
         '''<div>
           <div id='single'>
             <ul class="list-group" ui-sortable ui-sortable-data="data.singleList">
-              <li ng-repeat="item in data.singleList">{{item}}</li>
+              <li ng-repeat="item in data.singleList" ui-sortable-item="\$index">{{item}}</li>
             </ul>
           </div>
-          <div id='multiOne' ui-sortable ui-sortable-zones="'multiList'">
-            <ul class="list-group" ui-sortable-data="data.multiOneList" >
-              <li ng-repeat="item in data.multiOneList">{{item}}</li>
+          <div id='multiOne' ui-sortable ui-sortable-zones="'multiList'" ui-sortable-data="data.multiOneList">
+            <ul class="list-group" >
+              <li ng-repeat="item in data.multiOneList" ui-sortable-item="\$index">{{item}}</li>
             </ul>
           </div>
-          <div id='multiTwo' ui-sortable ui-sortable-zones="'multiList'">
-            <ul class="list-group" ui-sortable-data="data.multiTwoList" >
-              <li ng-repeat="item in data.multiTwoList">{{item}}</li>
+          <div id='multiTwo' ui-sortable ui-sortable-zones="'multiList'" ui-sortable-data="data.multiTwoList">
+            <ul class="list-group" >
+              <li ng-repeat="item in data.multiTwoList" ui-sortable-item="\$index">{{item}}</li>
             </ul>
           </div>
         </div>''';
@@ -170,9 +167,6 @@ void dragdropSortableTests() {
         
         microLeap();
         scope.rootScope.apply();
-        
-        //Needed to enable the DOMNodeInserted and DOMNodeRemoved events
-        dom.document.body.append(element);
         
         scope.context['data']['singleList'] = singleList;
         scope.context['data']['multiOneList'] = multiOneList;
@@ -254,7 +248,7 @@ void dragdropSortableTests() {
         expect(multiOneList[0]).toBe('mOne');
       })));
       
-      it('When the list is empty the parent must become droppable', async(inject(() {
+      it('When the list is empty the parent must handle dragover events', async(inject(() {
         List<String> singleList = ['sOne', 'sTwo', 'sThree']; 
         List<String> multiOneList = []; 
         List<String> multiTwoList = ['mOne', 'mTwo', 'mThree', 'mFour', 'mFive', 'mSix'];
@@ -266,7 +260,7 @@ void dragdropSortableTests() {
         dom.Element multiTwoUlElem = ulElem.querySelector('#multiTwo ul'); 
         
         _.triggerEvent(multiTwoUlElem.children[3], 'dragstart', 'MouseEvent');
-        _.triggerEvent(multiOneElem, 'drop', 'MouseEvent');
+        _.triggerEvent(multiOneElem, 'dragover', 'MouseEvent');
         
         expect(multiOneList.length).toBe(1);
         expect(multiTwoList.length).toBe(5);
@@ -275,7 +269,7 @@ void dragdropSortableTests() {
         expect(multiOneList[0]).toBe('mFour');
       })));
       
-      it('When the list is NOT empty the parent must NOT be droppable', async(inject(() {
+      it('When the list is NOT empty the parent must NOT handle dragover events', async(inject(() {
         List<String> singleList = ['sOne', 'sTwo', 'sThree']; 
         List<String> multiOneList = ['mOne']; 
         List<String> multiTwoList = ['mTwo', 'mThree', 'mFour', 'mFive', 'mSix'];
@@ -287,7 +281,7 @@ void dragdropSortableTests() {
         dom.Element multiTwoUlElem = ulElem.querySelector('#multiTwo ul'); 
         
         _.triggerEvent(multiTwoUlElem.children[0], 'dragstart', 'MouseEvent');
-        _.triggerEvent(multiOneElem, 'drop', 'MouseEvent');
+        _.triggerEvent(multiOneElem, 'dragover', 'MouseEvent');
         
         expect(multiOneList.length).toBe(1);
         expect(multiTwoList.length).toBe(5);

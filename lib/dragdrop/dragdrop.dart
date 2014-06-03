@@ -25,7 +25,7 @@ class DragDropConfigService {
   SortableConfig sortableConfig = new SortableConfig();
 }
 
-abstract class AbstractDDConfig {
+class BaseDDConfig {
   DragImage dragImage;
   DataTransferEffect dragEffect = DataTransferEffect.MOVE;
   DataTransferEffect dropEffect = DataTransferEffect.MOVE;
@@ -35,16 +35,12 @@ abstract class AbstractDDConfig {
   String onDragOverClass = "";
 }
 
-class DragDropConfig extends AbstractDDConfig {
+class DragDropConfig extends BaseDDConfig {
   DragDropConfig() {
     onDragStartClass = "ui-drag-start";
     onDragEnterClass = "ui-drag-enter";
     onDragOverClass = "ui-drag-over";
   }
-}
-
-abstract class DisposableComponent {
-  void dispose();
 }
 
 class DragImage {
@@ -75,7 +71,7 @@ class DragDropModule extends Module {
     bind(DraggableComponent);
     bind(DroppableComponent);
     bind(SortableComponent);
-    bind(SortableDataComponent);
+    bind(SortableItemComponent);
     bind(DragDropSortableDataService);
   }
 }

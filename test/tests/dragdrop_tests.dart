@@ -188,27 +188,27 @@ void dragdropTests() {
         
         droppableComponent.dropZones = [];
         ddService.allowedDropZones = [];
-        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
+        expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = 'zone1';
         ddService.allowedDropZones = [];
-        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
+        expect(droppableComponent.isDropAllowed()).toBeFalsy();
   
         droppableComponent.dropZones = [];
         ddService.allowedDropZones = ['zone1'];
-        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
+        expect(droppableComponent.isDropAllowed()).toBeFalsy();
         
         droppableComponent.dropZones = 'zone1';
         ddService.allowedDropZones = ['zone1','zone3'];
-        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
+        expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
         ddService.allowedDropZones = ['zone1','zone3'];
-        expect(droppableComponent.isAllowedDropZone()).toBeTruthy();
+        expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
         ddService.allowedDropZones = ['zone2'];
-        expect(droppableComponent.isAllowedDropZone()).toBeFalsy();
+        expect(droppableComponent.isDropAllowed()).toBeFalsy();
         
       })));
       
