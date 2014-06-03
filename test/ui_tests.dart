@@ -71,8 +71,8 @@ void main() {
     group('Alert', () => alertTests());
     group('Buttons', () => buttonsTests());
     group('Collapse', () => collapseTests());
-    group('Drag&Drop', () => dragdropTests());
-    group('Drag&Drop-Sortable', () => dragdropSortableTests());
+    group('Drag&Drop -', () => dragdropTests());
+    group('Drag&Drop-Sortable -', () => dragdropSortableTests());
     group('DropdownToggle', () => dropdownToggleTests());
     group('Pager', () => pagerTests());
     group('Pagination', () => paginationTests());

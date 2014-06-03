@@ -6,7 +6,7 @@ part of angular.ui.test;
 
 void dragdropTests() {
 
-  describe('Drag&Drop', () {
+  describe('Drag&Drop - ', () {
     
     TestBed _;
     Scope scope;
@@ -28,7 +28,7 @@ void dragdropTests() {
     
     afterEach(tearDownInjector);
 
-    group('Draggable and Droppable directives', () {
+    group('Draggable and Droppable directives -', () {
       
       var dragData = "Hello World at " + new DateTime.now().toString();
       
@@ -214,7 +214,7 @@ void dragdropTests() {
       
     });
     
-    group('Drop Zones', () {
+    group('Drop Zones -', () {
           
           dom.Element createElement() {
             
