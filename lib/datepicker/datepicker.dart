@@ -536,7 +536,9 @@ class Datepicker implements ShadowRootAware {
 
   List getDates(DateTime startDate, int n) {
     var dates = new List();
-    var current = startDate, i = 0;
+    var i = 0;
+    // Prevent repeated dates because of timezone bug
+    var current = new DateTime(startDate.year, startDate.month, startDate.day, 12, 0, 0);
     while (i++ < n) {
       dates.add(new DateTime.fromMillisecondsSinceEpoch(current.millisecondsSinceEpoch));
       current = current.add(new Duration(days: 1));
