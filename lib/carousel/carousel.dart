@@ -32,13 +32,13 @@ class CarouselModule extends Module {
 @Component(
     selector: 'carousel',
     publishAs: 'c',
-    applyAuthorStyles: true,
+    useShadowDom: false,
     visibility: Directive.CHILDREN_VISIBILITY, 
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
 @Component(
     selector: '[carousel]',
     publishAs: 'c',
-    applyAuthorStyles: true,
+    useShadowDom: false,
     visibility: Directive.CHILDREN_VISIBILITY, 
     templateUrl: 'packages/angular_ui/carousel/carousel.html')
 class Carousel implements DetachAware {
@@ -71,7 +71,6 @@ class Carousel implements DetachAware {
 
   Carousel(this._transition, this._timeout, this._scope) {
     _log.fine('CarouselComponent');
-    
   }
 
   void next() {
@@ -229,7 +228,7 @@ class Carousel implements DetachAware {
       }
     });
   }
-
+  
   void addSlide(Slide slide, dom.Element element) {
     slide.element = element;
     slides.add(slide);
@@ -269,9 +268,13 @@ class Carousel implements DetachAware {
 @Component(
     selector: 'slide',
     publishAs: 's',
-    applyAuthorStyles: true,
-    templateUrl: 'packages/angular_ui/carousel/slide.html',
-    cssUrl: 'packages/angular_ui/carousel/slide.css')
+    useShadowDom: false,
+    templateUrl: 'packages/angular_ui/carousel/slide.html')
+@Component(
+    selector: '[slide]',
+    publishAs: 's',
+    useShadowDom: false,
+    templateUrl: 'packages/angular_ui/carousel/slide.html')
 class Slide implements ShadowRootAware, DetachAware {
   bool _active = false;
   @NgTwoWay('active')
@@ -315,7 +318,7 @@ class Slide implements ShadowRootAware, DetachAware {
 
 
   @override
-  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+  void onShadowRoot(shadowRoot) {
     _carouselCtrl.addSlide(this, shadowRoot.querySelector('div'));
   }
 }

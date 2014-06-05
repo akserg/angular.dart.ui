@@ -3,7 +3,6 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.pagination;
 
-//import 'dart:html' as dom;
 import 'dart:math' as Math;
 
 import 'package:angular/angular.dart';
@@ -36,7 +35,23 @@ class PagerConfig {
     selector: 'pager[page][total-items]',
     templateUrl: 'packages/angular_ui/pagination/pager.html',
     publishAs: 'ctrl',
-    applyAuthorStyles: true,
+    useShadowDom: false,
+    map: const {
+      'page': '<=>currentPage',
+      'total-items' : '=>totalItems',
+      'items-per-page' : '=>itemsPerPage',
+      'num-pages': '&setNumPagesListener',
+      'on-select-page': '&onSelectChangeExtEventHandler',
+      'align': '@align',
+      'previous-text': '@previousText',
+      'next-text': '@nextText'
+    }
+)
+@Component(
+    selector: '[pager][page][total-items]',
+    templateUrl: 'packages/angular_ui/pagination/pager.html',
+    publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
       'page': '<=>currentPage',
       'total-items' : '=>totalItems',
@@ -185,7 +200,29 @@ class PaginationConfig extends PagerConfig {
     selector: 'pagination[page][total-items]',
     templateUrl: 'packages/angular_ui/pagination/pagination.html',
     publishAs: 'ctrl',
-    applyAuthorStyles: true,
+    useShadowDom: false,
+    map: const {
+        'page': '<=>currentPage',
+        'total-items': '=>totalItems',
+        'items-per-page': '=>itemsPerPage',
+        'max-size': '=>maxSize',
+        'rotate': '=>rotate',
+        'num-pages': '&setNumPagesListener',
+        'on-select-page': '&onSelectChangeExtEventHandler',
+        'boundary-links': '=>boundaryLinks',
+        'direction-links': '=>directionLinks',
+        'align': '@align',
+        'previous-text': '@previousText',
+        'next-text': '@nextText',
+        'first-text': '@firstText',
+        'last-text': '@lastText'
+    }
+)
+@Component(
+    selector: '[pagination][page][total-items]',
+    templateUrl: 'packages/angular_ui/pagination/pagination.html',
+    publishAs: 'ctrl',
+    useShadowDom: false,
     map: const {
         'page': '<=>currentPage',
         'total-items': '=>totalItems',

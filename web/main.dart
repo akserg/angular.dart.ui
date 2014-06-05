@@ -13,8 +13,7 @@ import 'package:angular_ui/utils/utils.dart';
 @MirrorsUsed(targets: const[
   'angular.ui',
   'angular.ui.demo'
-],
-  override: '*')
+], override: '*')
 import 'dart:mirrors';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
 

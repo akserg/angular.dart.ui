@@ -7,7 +7,7 @@ part of angular.ui.test;
 void tabsTests() {
   
   List<dom.Element> titles(dom.Element elm) {
-    return elm.children[0].shadowRoot.querySelectorAll('ul.nav-tabs li');
+    return elm.children[0].querySelectorAll('ul.nav-tabs li');
   }
   
   List<dom.Element> contents(dom.Element elm) {
@@ -89,7 +89,6 @@ void tabsTests() {
       
       expect(contents(elems).length).toBe(1);
       expect(contents(elems)[0]).toHaveClass('active');
-      print(ngQuery(elems ,'tab')[0].getDestinationInsertionPoints()[0].text);
       expect( renderedText ( ngQuery(elems ,'#tab-content')[0] ) ).toEqual('first content is 1');
     })));
     

@@ -15,6 +15,7 @@ import 'package:angular_ui/pagination/pagination.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/utils/content_append.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/modal/modal.dart';
@@ -52,6 +53,7 @@ class AngularUIModule extends Module {
     install(new TooltipModule());
     install(new PopoverModule());
     install(new TypeaheadModule());
+    install(new ContentAppendModule());
     install(new GridModule());
   }
 }

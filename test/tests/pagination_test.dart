@@ -33,7 +33,7 @@ void pagerTests() {
       microLeap();
       rootScope.rootScope.apply();
       element = elements[0];
-      shadowElement = getFirstUList(element.shadowRoot);
+      shadowElement = getFirstUList(element);
     }
 
     void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pager.html');
@@ -283,7 +283,7 @@ void paginationTests() {
       microLeap();
       rootScope.rootScope.apply();
       element = elements[0];
-      shadowElement = getFirstUList(element.shadowRoot);
+      shadowElement = getFirstUList(element);
     }
 
     void loadTemplatesToCache() => addToTemplateCache(cache, 'packages/angular_ui/pagination/pagination.html');

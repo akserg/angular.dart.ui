@@ -39,13 +39,13 @@ void datepickerTests() {
     }
     
     String getTitle(dom.Element element) {
-      List ths = element.shadowRoot.querySelectorAll('th');
+      List ths = element.querySelectorAll('th');
       List<dom.ButtonElement> btns = ths[1].querySelectorAll('button');
       return btns.first.text;
     }
     
     void clickTitleButton(dom.Element element, [int times = 1]) {
-      List els = element.shadowRoot.querySelectorAll('th');
+      List els = element.querySelectorAll('th');
       dom.ButtonElement btn = els[1].querySelector('button');
       for (var i = 0; i < times; i++) {
         btn.click();
@@ -53,7 +53,7 @@ void datepickerTests() {
     }
     
     void clickPreviousButton(dom.Element element, [int times = 1]) {
-      List els = element.shadowRoot.querySelectorAll('th');
+      List els = element.querySelectorAll('th');
       List<dom.ButtonElement> btns = els[0].querySelectorAll('button');
       for (var i = 0; i < times; i++) {
         _.triggerEvent(btns.first, 'click');
@@ -61,7 +61,7 @@ void datepickerTests() {
     }
     
     void clickNextButton(dom.Element element, [int times = 1]) {
-      List els = element.shadowRoot.querySelectorAll('th');
+      List els = element.querySelectorAll('th');
       List<dom.ButtonElement> btns = els[2].querySelectorAll('button');
       for (var i = 0; i < times; i++) {
         _.triggerEvent(btns.first, 'click');
@@ -69,7 +69,7 @@ void datepickerTests() {
     }
     
     dom.TableRowElement getLabelsRow(dom.Element element) {
-      List<dom.TableRowElement> rows = element.shadowRoot.querySelectorAll('thead > tr');
+      List<dom.TableRowElement> rows = element.querySelectorAll('thead > tr');
       return rows[1];
     }
     
@@ -84,7 +84,7 @@ void datepickerTests() {
     }
     
     List getWeeks(dom.Element element) {
-      List rows = element.shadowRoot.querySelectorAll('tbody > tr');
+      List rows = element.querySelectorAll('tbody > tr');
       List weeks = [];
       for (var i = 0; i < rows.length; i++) {
         weeks.add(rows[i].querySelectorAll('td').first.text);
@@ -93,7 +93,7 @@ void datepickerTests() {
     }
     
     List getOptions(dom.Element element) {
-      List tr = element.shadowRoot.querySelectorAll('tbody > tr');
+      List tr = element.querySelectorAll('tbody > tr');
       List rows = [];
 
       for (var j = 0; j < tr.length; j++) {
@@ -108,7 +108,7 @@ void datepickerTests() {
     }
     
     dom.Element _getOptionEl(dom.Element element, rowIndex, colIndex) {
-      return element.shadowRoot.querySelectorAll('tbody > tr')[rowIndex].querySelectorAll('td')[colIndex + 1];
+      return element.querySelectorAll('tbody > tr')[rowIndex].querySelectorAll('td')[colIndex + 1];
     }
     
     void clickOption(dom.Element element, rowIndex, colIndex) {
@@ -120,7 +120,7 @@ void datepickerTests() {
     }
     
     List getAllOptionsEl(dom.Element element) {
-      var tr = element.shadowRoot.querySelectorAll('tbody > tr');
+      var tr = element.querySelectorAll('tbody > tr');
       List rows = [];
       for (var i = 0; i < tr.length; i++) {
         List tds = tr[i].querySelectorAll('td');
@@ -151,9 +151,9 @@ void datepickerTests() {
       it('is a \'<table>\' element', async(inject(() {
         dom.Element element = createDatapicker();
         
-        expect(element.shadowRoot.children.length).toBe(1);
-        expect(element.shadowRoot.children[0].tagName).toEqual('TABLE');
-        expect(element.shadowRoot.children[0].querySelectorAll('thead > tr').length).toBe(2);
+        expect(element.children.length).toBe(1);
+        expect(element.children[0].tagName).toEqual('TABLE');
+        expect(element.children[0].querySelectorAll('thead > tr').length).toBe(2);
       })));
       
       it('shows the correct title', async(inject(() {
@@ -648,7 +648,7 @@ void datepickerTests() {
           scope.rootScope.apply();
           
           weekHeader = getLabelsRow(element).querySelectorAll('td').first; // TODO: TH
-          weekElement = element.shadowRoot.querySelectorAll('tbody > tr')[1].querySelectorAll('td').first;
+          weekElement = element.querySelectorAll('tbody > tr')[1].querySelectorAll('td').first;
           
           return element;
         }
@@ -1106,7 +1106,7 @@ void datepickerTests() {
           
           // TODO: TH
           expect(getLabelsRow(element).querySelectorAll('td').first.classes).toContain('ng-hide');
-          var tr = element.shadowRoot.querySelectorAll('tbody > tr');
+          var tr = element.querySelectorAll('tbody > tr');
           for (var i = 0; i < 5; i++) {
             expect(tr[i].querySelectorAll('td').first.classes).toContain('ng-hide');
           }

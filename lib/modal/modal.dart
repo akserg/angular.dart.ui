@@ -26,12 +26,12 @@ class ModalModule extends Module {
 @Component(
     selector: 'modal-window',
     publishAs: 'm',
-    applyAuthorStyles: true,
+    useShadowDom: false,
     templateUrl: 'packages/angular_ui/modal/window.html')
 @Component(
     selector: '[modal-window]',
     publishAs: 'm',
-    applyAuthorStyles: true,
+    useShadowDom: false,
     templateUrl: 'packages/angular_ui/modal/window.html')
 class ModalWindow implements AttachAware {
 

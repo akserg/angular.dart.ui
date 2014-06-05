@@ -12,7 +12,7 @@ class TypeaheadMatchItem {
 @Component(selector: 'typeahead-popup',
   templateUrl: 'packages/angular_ui/typeahead/typeahead-popup.html',
   publishAs: 'ctrl',
-  applyAuthorStyles: true,
+  useShadowDom: false,
   map: const {
     'matches': '=>matches',
     'active': '<=>active',
@@ -21,8 +21,18 @@ class TypeaheadMatchItem {
     'template-url': '=>templateUrl',
     'query': '=>query'
 })
-
-@Injectable()
+@Component(selector: '[typeahead-popup]',
+  templateUrl: 'packages/angular_ui/typeahead/typeahead-popup.html',
+  publishAs: 'ctrl',
+  useShadowDom: false,
+  map: const {
+    'matches': '=>matches',
+    'active': '<=>active',
+    'select': '&selectEventHandler',
+    'position': '=>position',
+    'template-url': '=>templateUrl',
+    'query': '=>query'
+})
 class TypeaheadPopup {
 
   final Scope scope;
@@ -100,6 +110,13 @@ class TemplateBasedComponent implements DetachAware {
 }
 
 
+@Decorator(selector : 'typeahead-match',
+  map: const {
+    'index': '=>!index',
+    'match': '=>!match',
+    'query': '=>!query',
+    'template-url': '=>!templateUrl'
+  })
 @Decorator(selector : '[typeahead-match]',
   map: const {
     'index': '=>!index',

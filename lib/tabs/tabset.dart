@@ -6,17 +6,19 @@ library angular.ui.tabs;
 import 'package:angular/angular.dart';
 import 'dart:html';
 import 'package:logging/logging.dart';
+import 'package:angular_ui/utils/content_append.dart';
 
 part 'tab.dart';
 part 'tab_heading.dart';
 
-final _log = new Logger('angular.ui.accordion');
+final _log = new Logger('angular.ui.tabs');
 
 class TabsModule extends Module {
   TabsModule() {
+    install(new ContentAppendModule());
     bind(TabsetComponent);
     bind(TabComponent);
-    bind(TabHeadingTranscludeComponent);
+    bind(TabHeading);
   }
 }
 
@@ -25,7 +27,7 @@ class TabsModule extends Module {
     visibility: Directive.CHILDREN_VISIBILITY,
     templateUrl: 'packages/angular_ui/tabs/tabset.html',
     publishAs: 'tabsetCtrl',
-    applyAuthorStyles: true
+    useShadowDom: false
 )
 class TabsetComponent {
   

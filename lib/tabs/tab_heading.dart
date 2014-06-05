@@ -3,25 +3,12 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.tabs;
 
-@Component(
-    selector: 'tab-heading-transclude',
-    applyAuthorStyles: true
+@Decorator(
+    selector: 'tab-heading'
 )
-class TabHeadingTranscludeComponent implements ShadowRootAware {
-  
-  @NgOneWay('tab')
-  TabComponent tab;
-
-  TabHeadingTranscludeComponent() {
-    _log.fine('TabsetComponent');
-  }
-  
-  void onShadowRoot(ShadowRoot shadowRoot) {
-    Element tabHeading = tab.element.querySelector('tab-heading');
-    if (tabHeading!=null) {
-      shadowRoot.append(tabHeading);
-    } else {
-      shadowRoot.appendText(tab.heading);
-    }
+class TabHeading {
+  TabHeading(Element elem, TabComponent tab) {
+    elem.remove();
+    tab.heading = elem;
   }
 }
