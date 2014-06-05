@@ -1,3 +1,13 @@
+#Version 0.5.0, (2014/06/05)
+
+##Features
+- All components have migrated away from Shadow DOM and applyAuthorStyles.
+
+##Bug Fixes
+
+- ng-click called multiple times
+- DatePicker tests fail with UTC+1
+
 #Version 0.4.0, (2014/05/16)
 
 ##Features
