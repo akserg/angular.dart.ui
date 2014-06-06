@@ -1,3 +1,8 @@
+#Version 0.5.1, (2014/06/06)
+
+##Features
+- Project migrated to follow Angular Dart 0.12.0
+
 #Version 0.5.0, (2014/06/05)
 
 ##Features
