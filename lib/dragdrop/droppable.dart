@@ -10,13 +10,14 @@ class DroppableComponent extends AbstractDraggableDroppableComponent {
   @NgCallback("on-drop-success")
   Function onDropSuccessCallback;
   
+  DragDropConfig ddConfig;
+  
   @NgOneWay("ui-droppable")
   set dragdropConfig(var config) {
     if (!(config is DragDropConfig)) {
       return;
     }
-    DragDropConfig ddConfig = config as DragDropConfig; 
-    this.config = config;
+    this.config = ddConfig = config as DragDropConfig; 
   }
   
   @NgOneWay("drop-zones")
@@ -26,19 +27,24 @@ class DroppableComponent extends AbstractDraggableDroppableComponent {
   
   DroppableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
   : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+    dragdropConfig = dragDropConfigService.dragDropConfig;
     this.dropEnabled = true;
   }
 
   @override
   void onDragEnterCallback(html.Event event) {
+    elem.classes.add(ddConfig.onDragEnterClass);
   }
 
   @override
   void onDragLeaveCallback(html.Event event) {
+    elem.classes.remove(ddConfig.onDragOverClass);
+    elem.classes.remove(ddConfig.onDragEnterClass);
   }
 
   @override
   void onDragOverCallback(html.Event event) {
+    elem.classes.add(ddConfig.onDragOverClass);
   }
 
   @override
@@ -49,6 +55,8 @@ class DroppableComponent extends AbstractDraggableDroppableComponent {
     if(dragDropService.onDragSuccessCallback!=null){
       dragDropService.onDragSuccessCallback(); 
     }
+    elem.classes.remove(ddConfig.onDragOverClass);
+    elem.classes.remove(ddConfig.onDragEnterClass);
   }
 
 }

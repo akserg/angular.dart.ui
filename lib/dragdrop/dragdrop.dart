@@ -4,13 +4,16 @@
 library angular.ui.dragdrop;
 
 import 'package:angular/angular.dart';
+import 'package:logging/logging.dart' show Logger;
 import 'dart:html' as html;
 import 'dart:math' as math;
-import 'dart:async';
 
+part 'common.dart';
 part 'draggable.dart';
 part 'droppable.dart';
 part 'sortable.dart';
+
+final _log = new Logger('angular.ui.dragdrop');
 
 @Injectable()
 class DragDropDataService {
@@ -30,17 +33,12 @@ class BaseDDConfig {
   DataTransferEffect dragEffect = DataTransferEffect.MOVE;
   DataTransferEffect dropEffect = DataTransferEffect.MOVE;
   String dragCursor = "move";
-  String onDragStartClass = "";
-  String onDragEnterClass = "";
-  String onDragOverClass = "";
 }
 
 class DragDropConfig extends BaseDDConfig {
-  DragDropConfig() {
-    onDragStartClass = "ui-drag-start";
-    onDragEnterClass = "ui-drag-enter";
-    onDragOverClass = "ui-drag-over";
-  }
+    String onDragStartClass = "ui-drag-start";
+    String onDragEnterClass = "ui-drag-enter";
+    String onDragOverClass = "ui-drag-over";
 }
 
 class DragImage {
