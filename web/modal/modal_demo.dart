@@ -47,13 +47,17 @@ class ModalCtrlTemplate {
         print('Open error is $e');
       });
     
-    modalInstance.result
-      ..then((value) {
-        selected = value;
-        print('Closed with selection $value');
-      }, onError:(e) {
-        print('Dismissed with $e');
-      });
+    // Override close to add you own functionality 
+    modalInstance.close = (result) { 
+      selected = result;
+      print('Closed with selection $selected');
+      modal.hide();
+    };
+    // Override dismiss to add you own functionality 
+    modalInstance.dismiss = (String reason) { 
+      print('Dismissed with $reason');
+      modal.hide();
+   };
   }
   
   void ok(sel) {
