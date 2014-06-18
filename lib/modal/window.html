@@ -4,8 +4,8 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div tabindex="-1" class="modal {{ m.windowClass }}" ng-class="{in: '${m.animate}'}" 
-    ng-style="{'z-index': '${1050 + index*10}', 'display': 'block'}" ng-click="m.close($event)">
+<div tabindex="-1" class="modal {{ m.windowClass }}" ng-class="{in: {{m.animate}}}"
+    ng-style="{'z-index': '{{1050 + index*10}}', 'display': 'block'}" ng-click="m.close($event)">
     <div class="modal-dialog">
       <div class="modal-content">
         <content></content>
