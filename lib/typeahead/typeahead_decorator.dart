@@ -249,7 +249,10 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       matches.add(new TypeaheadMatchItem(_getMatchItemId(index), eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), item));
     }
 
-    position = _appendToBody? _positionService.position(_element) : _positionService.offset(_element);
+    //position pop-up with matches - we need to re-calculate its position each time we are opening a window
+    //with matches as a pop-up might be absolute-positioned and position of an input might have changed on a page
+    //due to other elements being rendered
+    position = _appendToBody? _positionService.offset(_element) : _positionService.position(_element);
     position.top += _element.offsetHeight;
 
     _element.attributes['aria-expanded'] = 'true';

@@ -1,3 +1,9 @@
+#Version 0.5.3, (2014/06/18)
+
+##Bug Fixes
+- <code>Typeahead</code> placement of suggestion popover offset by approax 200px
+- Fix animation toggle and z-index calculation in <code>ModalWindow</code>
+
 #Version 0.5.2, (2014/06/17)
 
 ##Features

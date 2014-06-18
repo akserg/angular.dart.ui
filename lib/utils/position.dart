@@ -45,12 +45,12 @@ class Position {
    * @param element
    */
   dynamic _parentOffsetEl(dom.Element element) {
-    var docDomEl = dom.document;
+    var docDomEl = dom.document.body;
     var offsetParent = element.offsetParent != null ? element.offsetParent : docDomEl;
     while (offsetParent != null && offsetParent != docDomEl && _isStaticPositioned(offsetParent) ) {
       offsetParent = offsetParent.offsetParent;
     }
-    return offsetParent == null ? docDomEl : offsetParent;
+    return offsetParent != null ? offsetParent : docDomEl;
   }
 
   /**
@@ -61,7 +61,7 @@ class Position {
     var elBCR = offset(element);
     var offsetParentBCR = new Rect();
     var offsetParentEl = _parentOffsetEl(element);
-    if (offsetParentEl != dom.document) {
+    if (offsetParentEl != dom.document.body) {
       offsetParentBCR = offset(offsetParentEl);
       offsetParentBCR.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
       offsetParentBCR.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
