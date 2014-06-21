@@ -26,7 +26,7 @@ body {
   border: 2px dashed #000;
 }
 
-.ui-sortable-dragging {
+.ui-sortable-drag {
   -moz-transform:scale(0.9);
   -webkit-transform:scale(0.9);
   transform:scale(0.9);

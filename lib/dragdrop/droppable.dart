@@ -25,8 +25,10 @@ class DroppableComponent extends AbstractDraggableDroppableComponent {
     this.dropZoneNames = dropZoneNames;
   }
   
-  DroppableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
-  : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+  DragDropDataService dragDropService;
+  
+  DroppableComponent(html.Element elem, DragDropZonesService ddZonesService, this.dragDropService, DragDropConfigService dragDropConfigService)
+  : super(elem, ddZonesService, dragDropConfigService.dragDropConfig) {
     dragdropConfig = dragDropConfigService.dragDropConfig;
     this.dropEnabled = true;
   }

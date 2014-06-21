@@ -184,30 +184,31 @@ void dragdropTests() {
 
       it('Drop zones should be correctly evaluated by the DroppableComponent', async(inject(() {
         DragDropDataService ddService = new DragDropDataService();
-        DroppableComponent droppableComponent = new DroppableComponent(new dom.DivElement(), ddService, new DragDropConfigService());
+        DragDropZonesService ddZonesService = new DragDropZonesService();
+        DroppableComponent droppableComponent = new DroppableComponent(new dom.DivElement(), ddZonesService, ddService, new DragDropConfigService());
         
         droppableComponent.dropZones = [];
-        ddService.allowedDropZones = [];
+        ddZonesService.allowedDropZones = [];
         expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = 'zone1';
-        ddService.allowedDropZones = [];
+        ddZonesService.allowedDropZones = [];
         expect(droppableComponent.isDropAllowed()).toBeFalsy();
   
         droppableComponent.dropZones = [];
-        ddService.allowedDropZones = ['zone1'];
+        ddZonesService.allowedDropZones = ['zone1'];
         expect(droppableComponent.isDropAllowed()).toBeFalsy();
         
         droppableComponent.dropZones = 'zone1';
-        ddService.allowedDropZones = ['zone1','zone3'];
+        ddZonesService.allowedDropZones = ['zone1','zone3'];
         expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
-        ddService.allowedDropZones = ['zone1','zone3'];
+        ddZonesService.allowedDropZones = ['zone1','zone3'];
         expect(droppableComponent.isDropAllowed()).toBeTruthy();
         
         droppableComponent.dropZones = ['zone1','zone4'];
-        ddService.allowedDropZones = ['zone2'];
+        ddZonesService.allowedDropZones = ['zone2'];
         expect(droppableComponent.isDropAllowed()).toBeFalsy();
         
       })));

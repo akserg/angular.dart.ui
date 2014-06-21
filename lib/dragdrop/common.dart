@@ -3,13 +3,46 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
+@Injectable()
+class DragDropZonesService {
+  List<String> allowedDropZones = [];
+}
+
+class DragImage {
+  html.Element imageElement;
+  int x_offset;
+  int y_offset;
+
+  DragImage(this.imageElement, {this.x_offset: 0, this.y_offset: 0}) {}
+
+}
+
+class BaseDDConfig {
+  DragImage dragImage;
+  DataTransferEffect dragEffect = DataTransferEffect.MOVE;
+  DataTransferEffect dropEffect = DataTransferEffect.MOVE;
+  String dragCursor = "move";
+}
+
+class DataTransferEffect {
+
+  static const COPY = const DataTransferEffect('copy');
+  static const LINK = const DataTransferEffect('link');
+  static const MOVE = const DataTransferEffect('move');
+  static const NONE = const DataTransferEffect('none');
+  static const values = const <DataTransferEffect>[COPY, LINK, MOVE, NONE];
+
+  final String name;
+  const DataTransferEffect(this.name);
+}
+
 abstract class AbstractDraggableDroppableComponent {
 
   DraggableElementHandler _draggableHandler;
   List<String> _dropZoneNames = [new math.Random().nextDouble().toString()];
   
   final html.Element elem;
-  final DragDropDataService dragDropService;
+  final DragDropZonesService ddZonesService;
 
   BaseDDConfig _config;
   bool _dragEnabled = false;
@@ -36,7 +69,7 @@ abstract class AbstractDraggableDroppableComponent {
     _draggableHandler.refresh();
   }
   
-  AbstractDraggableDroppableComponent(this.elem, this.dragDropService, BaseDDConfig config) {
+  AbstractDraggableDroppableComponent(this.elem, this.ddZonesService, BaseDDConfig config) {
     _draggableHandler = new DraggableElementHandler(this);
     this.config = config;
     
@@ -116,10 +149,10 @@ abstract class AbstractDraggableDroppableComponent {
   }
   
   bool isDropAllowed() {
-    if (_dropZoneNames.isEmpty && dragDropService.allowedDropZones.isEmpty) {
+    if (_dropZoneNames.isEmpty && ddZonesService.allowedDropZones.isEmpty) {
       return true;
     }
-    for (String dragZone in dragDropService.allowedDropZones) {
+    for (String dragZone in ddZonesService.allowedDropZones) {
       if (_dropZoneNames.contains(dragZone)) {
         return true;
       }
@@ -132,13 +165,13 @@ abstract class AbstractDraggableDroppableComponent {
       return;
     }
     _log.finer("'dragStart' event");
-    dragDropService.allowedDropZones = _dropZoneNames;
+    ddZonesService.allowedDropZones = _dropZoneNames;
     onDragStartCallback(event);
   }
 
   void _onDragEnd(html.Event event) {
     _log.finer("'dragEnd' event");
-    dragDropService.allowedDropZones = [];
+    ddZonesService.allowedDropZones = [];
     onDragEndCallback(event);
   }
   

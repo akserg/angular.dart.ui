@@ -3,6 +3,24 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.dragdrop;
 
+class DragDropConfig extends BaseDDConfig {
+    String onDragStartClass = "ui-drag-start";
+    String onDragEnterClass = "ui-drag-enter";
+    String onDragOverClass = "ui-drag-over";
+}
+
+@Injectable()
+class DragDropDataService {
+  Function onDragSuccessCallback;
+  var draggableData;
+}
+
+@Injectable()
+class DragDropConfigService {
+  DragDropConfig dragDropConfig = new DragDropConfig();
+  SortableConfig sortableConfig = new SortableConfig();
+}
+
 @Decorator(selector: '[ui-draggable]',
   visibility: Directive.CHILDREN_VISIBILITY)
 class DraggableComponent extends AbstractDraggableDroppableComponent {
@@ -33,8 +51,10 @@ class DraggableComponent extends AbstractDraggableDroppableComponent {
     this.dropZoneNames = dropZones;
   }
   
-  DraggableComponent(html.Element elem, DragDropDataService dragDropService, DragDropConfigService dragDropConfigService)
-  : super(elem, dragDropService, dragDropConfigService.dragDropConfig) {
+  DragDropDataService dragDropService;
+  
+  DraggableComponent(html.Element elem, DragDropZonesService ddZonesService, this.dragDropService, DragDropConfigService dragDropConfigService)
+  : super(elem, ddZonesService, dragDropConfigService.dragDropConfig) {
     dragdropConfig = dragDropConfigService.dragDropConfig;
     this.dragEnabled = true;
   }
