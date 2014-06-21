@@ -59,13 +59,8 @@ class SortableComponent extends AbstractDraggableDroppableComponent {
   
   SortableComponent(html.Element elem, DragDropZonesService ddZonesService, DragDropConfigService dragDropConfigService, 
       this.sortableDataService, Scope scope)
-  : super(elem, ddZonesService, dragDropConfigService.dragDropConfig) {
+  : super(elem, ddZonesService, new BaseDDConfig()) {
    this.sortableConfig = dragDropConfigService.sortableConfig;
-   
-   //disable drag&drop effects on this element
-   {
-     this.config = new BaseDDConfig();
-   }
    
    scope.watch(elem.attributes['ui-sortable-data'], (oldValue, newValue) {
      onSortableDataChange();
@@ -114,7 +109,14 @@ class SortableItemComponent extends AbstractDraggableDroppableComponent {
   }
   
   @override
-  void onDragLeaveCallback(html.Event event) {
+  void onDragOverCallback(html.Event event) {
+    //This is needed to make it working on Firefox. Probably the order the events are triggered is not the same in FF
+    //and Chrome. 
+    if (elem != sortableDataService._elem) {
+      sortableDataService.sortableData = sortableComponent._sortableData;
+      sortableDataService.index = index;
+      sortableDataService.element(elem, sortableComponent._sortableConfig);
+    }
   }
   
   @override
