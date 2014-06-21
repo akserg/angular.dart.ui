@@ -1,6 +1,6 @@
 part of angular.ui.typeahead;
 
-@Decorator(selector : 'input[typeahead]', map: const {
+@Decorator(selector : 'input[typeahead][ng-model]', map: const {
     'typeahead': '@expression',
     'typeahead-template-url': '@templateUrl',
     'typeahead-min-length': '@minLength',

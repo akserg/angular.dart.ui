@@ -33,6 +33,10 @@ packages:
     description: di
     source: hosted
     version: "0.0.40"
+  ghpages_generator:
+    description: ghpages_generator
+    source: hosted
+    version: "0.1.1"
   html5lib:
     description: html5lib
     source: hosted
