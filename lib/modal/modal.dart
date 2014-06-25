@@ -87,11 +87,15 @@ class ModalWindow implements AttachAware {
 
   void close(dom.MouseEvent event) {
     if(!event.defaultPrevented) {
-      if ((_backdrop && !_staticBackdrop && (event.currentTarget == event.target ||
-          (event.target as dom.Element).dataset['dismiss'] == 'modal'))) {
+      if (_backdrop && !_staticBackdrop && event.currentTarget == event.target) {
         event.preventDefault();
         event.stopPropagation();
         _modal._top.dismiss('backdrop click');
+      }
+      if ((event.target as dom.Element).dataset['dismiss'] == 'modal') {
+        event.preventDefault();
+        event.stopPropagation();
+        _modal._top.dismiss('dismiss click');
       }
     }
   }

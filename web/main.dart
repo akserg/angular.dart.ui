@@ -56,6 +56,7 @@ class DemoModule extends Module {
     bind(TimepickerDemoCtrl);
     bind(DatepickerCtrl);
     bind(ModalCtrlTemplate);
+    bind(ModalStaticCtrlTemplate);
     bind(ModalCtrlTagTemplate);
     bind(ModalCtrlFileTemplate);
     bind(ModalCtrlOtherTemplate);

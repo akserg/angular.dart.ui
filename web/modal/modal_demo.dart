@@ -37,8 +37,78 @@ class ModalCtrlTemplate {
   
   ModalCtrlTemplate(this.modal, this.scope);
   
+  ModalInstance getModalInstance() {
+    return modal.open(new ModalOptions(template:template), scope);
+  }
+  
   void open() {
-    modalInstance = modal.open(new ModalOptions(template:template), scope);
+    modalInstance = getModalInstance();
+    
+    modalInstance.opened
+      ..then((v) {
+        print('Opened');
+      }, onError: (e) {
+        print('Open error is $e');
+      });
+    
+    // Override close to add you own functionality 
+    modalInstance.close = (result) { 
+      selected = result;
+      print('Closed with selection $selected');
+      modal.hide();
+    };
+    // Override dismiss to add you own functionality 
+    modalInstance.dismiss = (String reason) { 
+      print('Dismissed with $reason');
+      modal.hide();
+   };
+  }
+  
+  void ok(sel) {
+    modalInstance.close(sel);
+  }
+}
+
+/**
+ * Modal controller with template and static backdrop.
+ */
+@Controller(selector: '[modal-static-ctrl-tmpl]', publishAs: 'ctrl')
+class ModalStaticCtrlTemplate {
+  List<String> items = ["First", "Second", "Third", "Fourth"];
+  String selected;
+  String tmp;
+  
+  Modal modal;
+  ModalInstance modalInstance;
+  Scope scope;
+  
+  String template = """
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">I'm a modal with a <b>static</b> backdrop!</h4>
+</div>
+<div class="modal-body">
+  <ul>
+    <li ng-repeat="item in ctrl.items">
+      <a ng-click="ctrl.tmp = item">{{ item }}</a>
+    </li>
+  </ul>
+  Selected: <b>{{ctrl.tmp}}</b>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  <button type="button" class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
+</div>
+""";
+  
+  ModalStaticCtrlTemplate(this.modal, this.scope);
+  
+  ModalInstance getModalInstance() {
+    return modal.open(new ModalOptions(template:template, backdrop: 'static'), scope);
+  }
+  
+  void open() {
+    modalInstance = getModalInstance();
     
     modalInstance.opened
       ..then((v) {

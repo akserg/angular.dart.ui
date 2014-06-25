@@ -205,6 +205,21 @@ void modalTests() {
       expect(inst.opened, completes);
     });
     
+    it('should close modal on button (with dismiss="modal") click if backdrop is specified as "static"', () {
+      ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content</div><button type="button" class="btn btn-default" data-dismiss="modal">Close</button>', backdrop: 'static'), scope);
+      inst.opened.then((value) {
+        expect(toHaveModalOpen()).toEqual(1);
+        // Trigger click event on close button
+        dismiss('closing in test');
+        //
+        expect(toHaveModalOpen()).toEqual(0);
+        expect(toHaveBackdrop()).toBeFalsy();
+        //
+        houskeepking();
+      });
+      expect(inst.opened, completes);
+    });
+    
     it('it should allow opening of multiple modals', () {
 
       ModalInstance inst = modal.open(new ModalOptions(template: '<div>Content1</div>'), scope);
