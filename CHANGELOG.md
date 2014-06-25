@@ -1,3 +1,8 @@
+#Version 0.5.5, (2014/06/25)
+
+##Bug Fixes
+- Modal Dialog with backdrop:'static' cannot be closed by click on button with data-dismiss='modal'
+
 #Version 0.5.4, (2014/06/21)
 
 ##Bug Fixes
