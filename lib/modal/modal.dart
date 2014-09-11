@@ -159,7 +159,7 @@ class Modal {
   TemplateCache _templateCache;
   Http _http;
   Compiler _compiler;
-  Injector _injector;
+  DirectiveInjector _injector;
   DirectiveMap _directiveMap;
 
   /**
@@ -187,7 +187,6 @@ class Modal {
 
     contentFuture
       ..then((String content){
-        var injector = _injector.createChild([new Module()..bind(Scope, toValue:scope)]);
         // Check is content valid from modal-window perspective
         if (content.contains('modal-window')) {
           throw new Exception("It is not allowing to have modal-window inside othermodal-window" );
@@ -205,7 +204,7 @@ class Modal {
           return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
         });
         //
-        _compiler(rootElements, _directiveMap)(injector, rootElements);
+        _compiler(rootElements, _directiveMap)(scope, _injector, rootElements);
         //
         _show(instance, options);
         //
