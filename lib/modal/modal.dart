@@ -196,6 +196,7 @@ class Modal {
         if (options.animate != null) html += " animate=\"${options.animate}\"";
         if (options.backdrop != null) html += " backdrop=\"${options.backdrop}\"";
         if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
+        if (options.windowClass != null) html += " windowclass=\"${options.windowClass}\"";
         html += ">$content</modal-window>";
         //
         List<dom.Element> rootElements = toNodeList(html);
