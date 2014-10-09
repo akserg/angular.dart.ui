@@ -253,10 +253,15 @@ class Modal {
 
       _timeout.call((){
         // Add transparancy to backdrop
+        // Start animation
         modalInstance._backDropElement.classes
-          ..remove("fade")
           ..add("in");
-      }, delay:250);
+        _timeout.call((){
+          // Animation is done
+          modalInstance._backDropElement.classes
+            ..remove("fade");
+        }, delay:250);
+      }, delay:1);
 
       modalInstance._backDropElement.onClick.listen((dom.MouseEvent e) {
         // Call only backdrop on top element
