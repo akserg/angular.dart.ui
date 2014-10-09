@@ -73,15 +73,19 @@ class ModalWindow implements AttachAware {
 
   dom.Element _element;
   Modal _modal;
+  Timeout _timeout;
 
-  ModalWindow(this._element, this._modal);
+  ModalWindow(this._element, this._modal, this._timeout);
 
   void attach() {
     if (_element != null) {
-      // trigger CSS transitions
-      animate = true;
-      // focus a freshly-opened modal
-      _element.focus();
+      // wait 50ms such that .in is added after .fade
+      _timeout.call(() {
+        // trigger CSS transitions
+        animate = true;
+        // focus a freshly-opened modal
+        _element.focus();
+      }, delay:50);
     }
   }
 
