@@ -39,7 +39,7 @@ class ModalWindow implements AttachAware {
   String windowClass = '';
 
   @NgOneWay('animate')
-  bool animate = false;
+  bool visible = false;
 
   @NgOneWay('keyboard')
   bool keyboard = true;
@@ -82,7 +82,7 @@ class ModalWindow implements AttachAware {
       // wait 50ms such that .in is added after .fade
       _timeout.call(() {
         // trigger CSS transitions
-        animate = true;
+        visible = true;
         // focus a freshly-opened modal
         _element.focus();
       }, delay:50);
