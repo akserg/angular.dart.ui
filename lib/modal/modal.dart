@@ -39,7 +39,13 @@ class ModalWindow implements AttachAware {
   String windowClass = '';
 
   @NgOneWay('preventAnimation')
-  bool visible = false;
+  void set visible(bool value) {
+    if (_modal._top != null) {
+      _modal._top._visible = value;
+    }
+  }
+  
+  bool get visible => _modal._top == null ? false : _modal._top._visible;
 
   @NgOneWay('keyboard')
   bool keyboard = true;
@@ -153,9 +159,13 @@ class ModalInstance {
   async.Future get result => _resultCompleter.future;
   async.Future get opened => _openCompleter.future;
   
-  bool get _visible => _element.style.display == 'block';
+  dom.Element get _modalElement => _element.querySelector('.modal');
+  
+  bool get _visible => _modalElement == null ? false : _modalElement.classes.contains('in');
   void set _visible(bool value) {
-    _element.style.display = value ? 'block' : 'none';
+    if (_modalElement != null) {
+      _modalElement.classes.toggle('in', value);
+    }
   }
   
   CloseHandler close;
@@ -248,7 +258,6 @@ class Modal {
   void _show(ModalInstance modalInstance, ModalOptions options) {
     modalInstance._backDropElement = _createBackdrop(modalInstance._element.ownerDocument, options.backdrop);
     
-    modalInstance._visible = true;
     modalInstance._element.attributes["index"] = "${openedWindows.length}";
     
     dom.document.onKeyDown.listen((dom.KeyboardEvent event) {
@@ -304,13 +313,19 @@ class Modal {
         modalInstance._element.attributes.remove("index");
 
         if(modalInstance._backDropElement != null) {
-          modalInstance._backDropElement.classes.remove('in');
-          modalInstance._backDropElement.remove();
+          modalInstance._backDropElement.classes
+            ..add('fade')
+            ..remove('in');
+          _timeout.call(() {
+            modalInstance._backDropElement.remove();
+          }, delay:250);
         }
       }
       openedWindows.remove(modalInstance);
-      modalInstance._element.remove();
-      modalInstance = null;
+      _timeout.call(() {
+        modalInstance._element.remove();
+        modalInstance = null;
+      }, delay:250);
     }
   }
   
