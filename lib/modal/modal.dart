@@ -71,6 +71,16 @@ class ModalWindow implements AttachAware {
   /** If false, clicking the backdrop closes the dialog. */
   bool _staticBackdrop = false;
 
+  String _sizeClass = '';
+  @NgAttr('size')
+  void set size(String value) {
+    if (value == 'lg' || value == 'sm') {
+      _sizeClass = 'modal-$value';
+    }
+  }
+  
+  String get sizeClass => _sizeClass;
+
   dom.Element _element;
   Modal _modal;
   Timeout _timeout;
@@ -110,13 +120,14 @@ class ModalWindow implements AttachAware {
  */
 class ModalOptions {
   String windowClass;
+  String size;
   bool preventAnimation;
   bool keyboard;
   String backdrop;
   String template;
   String templateUrl;
 
-  ModalOptions({this.windowClass:'', this.preventAnimation:false,
+  ModalOptions({this.windowClass:'', this.size, this.preventAnimation:false,
     this.keyboard:true, this.backdrop:'true', this.template, this.templateUrl});
 }
 
@@ -202,6 +213,7 @@ class Modal {
         if (options.backdrop != null) html += " backdrop=\"${options.backdrop}\"";
         if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
         if (options.windowClass != null) html += " windowClass=\"${options.windowClass}\"";
+        if (options.size != null) html += " size=\"${options.size}\"";
         html += ">$content</modal-window>";
         //
         List<dom.Element> rootElements = toNodeList(html);
