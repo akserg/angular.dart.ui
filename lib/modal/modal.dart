@@ -38,8 +38,8 @@ class ModalWindow implements AttachAware {
   @NgAttr('windowClass')
   String windowClass = '';
 
-  @NgOneWay('animate')
-  bool animate = false;
+  @NgOneWay('preventAnimation')
+  bool visible = false;
 
   @NgOneWay('keyboard')
   bool keyboard = true;
@@ -73,15 +73,19 @@ class ModalWindow implements AttachAware {
 
   dom.Element _element;
   Modal _modal;
+  Timeout _timeout;
 
-  ModalWindow(this._element, this._modal);
+  ModalWindow(this._element, this._modal, this._timeout);
 
   void attach() {
     if (_element != null) {
-      // trigger CSS transitions
-      animate = true;
-      // focus a freshly-opened modal
-      _element.focus();
+      // wait 50ms such that .in is added after .fade
+      _timeout.call(() {
+        // trigger CSS transitions
+        visible = true;
+        // focus a freshly-opened modal
+        _element.focus();
+      }, delay:50);
     }
   }
 
@@ -106,13 +110,13 @@ class ModalWindow implements AttachAware {
  */
 class ModalOptions {
   String windowClass;
-  bool animate;
+  bool preventAnimation;
   bool keyboard;
   String backdrop;
   String template;
   String templateUrl;
 
-  ModalOptions({this.windowClass:'', this.animate:true,
+  ModalOptions({this.windowClass:'', this.preventAnimation:false,
     this.keyboard:true, this.backdrop:'true', this.template, this.templateUrl});
 }
 
@@ -194,7 +198,7 @@ class Modal {
         }
         // Add ModalWindow wrapper
         String html = "<modal-window";
-        if (options.animate != null) html += " animate=\"${options.animate}\"";
+        if (options.preventAnimation != null) html += " preventAnimation=\"${options.preventAnimation}\"";
         if (options.backdrop != null) html += " backdrop=\"${options.backdrop}\"";
         if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
         if (options.windowClass != null) html += " windowClass=\"${options.windowClass}\"";
