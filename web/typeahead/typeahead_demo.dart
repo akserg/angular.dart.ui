@@ -4,7 +4,9 @@
 part of angular.ui.demo;
 
 
-@Controller(selector: '[typeahead_demo_controller]', publishAs: 'demoCtrl')
+@Controller(selector: '[typeahead_demo_controller]', 
+    publishAs: 'demoCtrl',
+    exportExpressions: const ["states", r"$viewValue", "state", "statesWithFlags", "getLocation", "address", "popupId", "activeIdx"])
 class TypeaheadDemoController {
 
   Http _http;

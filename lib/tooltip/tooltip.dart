@@ -113,7 +113,6 @@ class Tooltip extends TooltipBase {
 /**
  * Base class for all tooltipable components.
  */
-@Injectable()
 abstract class TooltipBase {
   
   Map options;

@@ -95,9 +95,8 @@ class DatepickerPopup  {
     ///////////////
     String html = '<div datepicker-popup-wrap><div datepicker></div></div>';
     // Convert to html
-    List<dom.Element> rootElements = toNodeList(html);
-  
-    popupEl = rootElements.first;
+
+    popupEl = compile(html, _injector, _compiler, scope:_scope, directives: _directiveMap);
     datepickerEl = popupEl.querySelector('[datepicker]');
     //
     popupEl.attributes['ng-model'] = 'date';
@@ -179,8 +178,6 @@ class DatepickerPopup  {
     _scope.context['clear'] = () {
       _scope.context['dateSelection'](null);
     };
-    
-    _compiler(rootElements, _directiveMap)(_injector, rootElements);
     
     if (_appendToBody) {
       dom.document.body.append(popupEl);

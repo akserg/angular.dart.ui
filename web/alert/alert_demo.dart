@@ -6,7 +6,9 @@ part of angular.ui.demo;
 /**
  * Alert controller.
  */
-@Controller(selector: '[alert-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[alert-ctrl]', 
+    publishAs: 'ctrl',
+    exportExpressions: const ["alerts", "closeAlert", "addAlert"])
 class AlertCtrl {
   
   List<AlertItem> alerts = [

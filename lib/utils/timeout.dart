@@ -19,11 +19,11 @@ class TimeoutModule extends Module {
 }
 
 @Injectable()
-class _TimeItem {
+class TimeItem {
   Function fn;
   async.Timer timer;
   
-  _TimeItem(this.fn, this.timer);
+  TimeItem(this.fn, this.timer);
 }
 
 /**
@@ -41,7 +41,7 @@ class _TimeItem {
  */
 @Injectable()
 class Timeout {
-  Map<async.Completer, _TimeItem> deferreds = new Map<async.Completer, _TimeItem>();
+  Map<async.Completer, TimeItem> deferreds = new Map<async.Completer, TimeItem>();
 
   Scope scope;
   ExceptionHandler exceptionHandler;
@@ -86,7 +86,7 @@ class Timeout {
       }
     });
 
-    deferreds[deferred] = new _TimeItem(fn, timeoutId);
+    deferreds[deferred] = new TimeItem(fn, timeoutId);
 
     return deferred;
   }
@@ -109,7 +109,7 @@ class Timeout {
    * Call all functions in [deferreds].
    */
   void flush({bool cancel:false}) {
-    deferreds.forEach((async.Completer deferred, _TimeItem timeItem) {
+    deferreds.forEach((async.Completer deferred, TimeItem timeItem) {
       try {
         if (cancel) {
           deferred.completeError('canceled');

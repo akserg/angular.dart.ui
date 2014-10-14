@@ -4,10 +4,14 @@
 part of angular.ui.demo;
 
 /**
- * Buttons controller.
+ * Buttons demo component.
  */
-@Controller(selector: '[buttons-ctrl]', publishAs: 'ctrl')
-class ButtonsCtrl {
+@Component(selector: 'buttons-demo', 
+    templateUrl: 'buttons/buttons_demo_tpl.html',
+    useShadowDom: false)
+class ButtonsDemo implements ScopeAware {
+  
+  Scope scope;
   
   var singleModel = 1;
   

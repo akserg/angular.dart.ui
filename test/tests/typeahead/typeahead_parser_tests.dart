@@ -20,7 +20,7 @@ void typeaheadParserTests(){
     }));
 
     dynamic evaluateExpression(expression, locals) {
-      return expression.eval(new ScopeLocals(rootScope.context, locals), formatters);
+      return expression.eval(new ContextLocals(rootScope.context, locals), formatters);
     }
 
     it('should parse the simplest array-based syntax', async(inject((){

@@ -54,7 +54,6 @@ class ModalWindow implements AttachAware {
   @NgOneWay('index')
   void set index(int value) {
     _index = value;
-    print('Index is $value');
   }
   
   int get index => _index;
@@ -212,7 +211,8 @@ class Modal {
 
     contentFuture
       ..then((String content){
-        var injector = _injector.createChild([new Module()..bind(Scope, toValue:scope)]);
+        //var injector = _injector.createChild([new Module()..bind(Scope, toValue:scope)]);
+        var injector = new ModuleInjector([new Module()..bind(Scope, toValue:scope)], _injector); 
         // Check is content valid from modal-window perspective
         if (content.contains('modal-window')) {
           throw new Exception("It is not allowing to have modal-window inside othermodal-window" );
@@ -226,13 +226,7 @@ class Modal {
         if (options.size != null) html += " size=\"${options.size}\"";
         html += ">$content</modal-window>";
         //
-        List<dom.Element> rootElements = toNodeList(html);
-  
-        instance._element = rootElements.firstWhere((el) {
-          return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
-        });
-        //
-        _compiler(rootElements, _directiveMap)(injector, rootElements);
+        instance._element = compile(html, injector, _compiler, scope:scope, directives: _directiveMap);
         //
         _show(instance, options);
         //
@@ -308,7 +302,8 @@ class Modal {
     ModalInstance modalInstance = _top;
     
     if (modalInstance != null) {
-      if (modalInstance._visible) {
+      // I commented out the statement below because somtimes modalInstance doesn't contain 'in' class.
+//      if (modalInstance._visible) {
         modalInstance._visible = false;
         modalInstance._element.attributes.remove("index");
 
@@ -320,7 +315,7 @@ class Modal {
             modalInstance._backDropElement.remove();
           }, delay:250);
         }
-      }
+//      }
       openedWindows.remove(modalInstance);
       _timeout.call(() {
         modalInstance._element.remove();

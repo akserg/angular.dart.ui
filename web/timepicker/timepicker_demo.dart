@@ -3,9 +3,9 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Controller(
+@Decorator(
     selector: '[timepicker-demo-controller]',
-    publishAs: 'timepickerCtrl')
+    exportExpressions: const ["ismeridian"])
 class TimepickerDemoCtrl {
   
   DateTime mytime = new DateTime.now();

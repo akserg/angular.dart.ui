@@ -79,7 +79,7 @@ void collapseTests() {
       timeout.flush();
       expect(element.style.height, equals('0px'));
 
-      Collapse collapse = (ngProbe(element).directives as List).firstWhere((d) => d is Collapse);
+      Collapse collapse = ngProbe(element).directives.firstWhere((d) => d is Collapse);
       collapse.currentTransition.complete(true);
       expect(element.style.height).toEqual('0px');
     });
@@ -115,7 +115,7 @@ void collapseTests() {
 
     it('should grow accordingly when content size inside collapse increases', () {
       scope.context['hid'] = true;
-      Collapse collapse = (ngProbe(element).directives as List).firstWhere((d) => d is Collapse);
+      Collapse collapse = ngProbe(element).directives.firstWhere((d) => d is Collapse);
       collapse.isCollapsed = false;
       scope.rootScope.apply();
       var collapseHeight = element.clientHeight;

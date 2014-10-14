@@ -109,7 +109,7 @@ DateTime parseDate(model, [intl.DateFormat format = null]) {
 dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, DirectiveMap directives}) {
   List<dom.Node> rootElements;
   if (scope != null) {
-    injector = injector.createChild([new Module()..bind(Scope, toValue:scope)]);
+    injector = new ModuleInjector([new Module()..bind(Scope, toValue:scope)], injector);
   }
   if (html is String) {
     rootElements = toNodeList(html.trim());
@@ -124,7 +124,10 @@ dom.Element compile(html, Injector injector, Compiler compiler, {Scope scope, Di
   if (directives == null) {
     directives = injector.get(DirectiveMap);
   }
-  View rootView = compiler(rootElements, directives)(injector, rootElements);
+  ViewFactory viewFactory = compiler(rootElements, directives);
+  Scope _scope = scope != null ? scope : injector.get(Scope);
+  DirectiveInjector directiveInjector = injector.get(DirectiveInjector);
+  View rootView = viewFactory(_scope, directiveInjector, rootElements);
   return rootElement;
 }
   
