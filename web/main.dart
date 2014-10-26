@@ -3,12 +3,12 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
-//import 'dart:html' as dom;
+import 'dart:html' as dom;
 //import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
-import 'package:angular_ui/utils/utils.dart';
+//import 'package:angular_ui/utils/utils.dart';
 import 'package:logging/logging.dart';
 
 @MirrorsUsed(targets: const[
@@ -16,11 +16,11 @@ import 'package:logging/logging.dart';
   'angular.ui.demo'
 ], override: '*')
 import 'dart:mirrors';
-//import 'package:angular_ui/dragdrop/dragdrop.dart';
+import 'package:angular_ui/dragdrop/dragdrop.dart';
 
 //part 'accordion/accordion_demo.dart';
 //part 'alert/alert_demo.dart';
-part 'buttons/buttons_demo.dart';
+//part 'buttons/buttons_demo.dart';
 //part 'carousel/carousel_demo.dart';
 //part 'collapse/collapse_demo.dart';
 part 'dragdrop/dragdrop_demo.dart';
@@ -80,7 +80,7 @@ class DemoModule extends Module {
 //    bind(DropdownCtrl);
 //    bind(PaginationController);
 //    bind(ProgressCtrl);
-    bind(ButtonsDemo);
+//    bind(ButtonsDemo);
 //    bind(CarouselDemoController);
 //    bind(TabsCtrl);
 //    bind(AccordionDemoController);

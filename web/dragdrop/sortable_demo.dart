@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Controller(
+@Component(
     selector: '[sortable-simple-controller]',
     publishAs: 'sortCtrl')
 class SortableController {
@@ -16,7 +16,7 @@ class SortableController {
 }
 
 
-@Controller(
+@Component(
     selector: '[sortable-multi-controller]',
     publishAs: 'sortMultiCtrl')
 class SortableMultiController {

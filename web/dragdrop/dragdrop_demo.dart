@@ -3,19 +3,24 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Controller(
-    selector: '[dd-shopping-demo-controller]',
-    publishAs: 'shoppingCtrl')
+@Decorator(selector: '[dd-shopping-demo-controller]'
+  //,useShadowDom: false
+  )
 class DragDropShoppingBasketDemoController {
   
+  bool get valid => true;
+  
+  String value = "me";
   List<Product> availableProducts = [];
   List<Product> shoppingBasket = [];
   
   DragDropShoppingBasketDemoController() {
+    print("Starting DragDropShoppingBasketDemoController");
     availableProducts.add(new Product("Blue Shoes", 3, 35));
     availableProducts.add(new Product("Good Jacket", 1, 90));
     availableProducts.add(new Product("Red Shirt", 5, 12));
     availableProducts.add(new Product("Blue Jeans", 4, 60));
+    print("Available products: " + availableProducts.toString());
   }
   
   void orderedProduct(Product orderedProduct) {
@@ -54,9 +59,10 @@ class Product {
 }
 
 
-@Controller(
+@Component(
     selector: '[dd-list-demo-controller]',
-    publishAs: 'listCtrl')
+    publishAs: 'listCtrl',
+    useShadowDom: false)
 class DragDropListDemoController {
   
   List<String> todoList = ['Task 1: Fix Blu Bug','Task 2: Create Sortable','Task 3: Improve Tabs','Task 4: Publish new version'];
@@ -73,9 +79,10 @@ class DragDropListDemoController {
 }
 
 
-@Controller(
+@Component(
     selector: '[dd-custom-image-demo-controller]',
-    publishAs: 'customImageCtrl')
+    publishAs: 'customImageCtrl',
+    useShadowDom: false)
 class DragDropCustomImageDemoController {
   
   DragDropConfig dragdropConfig = new DragDropConfig();
@@ -89,9 +96,10 @@ class DragDropCustomImageDemoController {
 }
 
 
-@Controller(
+@Component(
     selector: '[dd-handler-demo-controller]',
-    publishAs: 'listCtrl')
+    publishAs: 'listCtrl',
+    useShadowDom: false)
 class DragDropHandlerDemoController {
   
   List<String> todoList = ['Task 1: Fix Blu Bug','Task 2: Create Sortable','Task 3: Improve Tabs','Task 4: Publish new version'];
