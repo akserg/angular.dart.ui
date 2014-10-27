@@ -1,0 +1,58 @@
+<div>
+  <h4>Drag And Drop - Use multiple drop-zones</h4>
+  <div class="row">
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop only in zone <b>ONE</b></div>
+        <div class="panel-body">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="'demo4-zone-one'">
+            <div class="panel-body">
+              Drag me
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop only in zone <b>TWO</b></div>
+        <div class="panel-body">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="'demo4-zone-two'">
+            <div class="panel-body">
+              Drag me
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+     <div class="col-sm-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">I can drop in both zone <b>ONE</b> or <b>TWO</b></div>
+        <div class="panel-body">
+          <div class="panel panel-default"
+            ui-draggable allowed-drop-zones="['demo4-zone-one','demo4-zone-two']">
+            <div class="panel-body">
+              Drag me
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>    
+    <div class="col-sm-2">
+      <div class="panel panel-success" ui-droppable drop-zones="'demo4-zone-one'">
+        <div class="panel-heading">Drop Zone <b>ONE</b></div>
+        <div class="panel-body">
+        </div>
+      </div>
+    </div> 
+    <div class="col-sm-2">
+      <div class="panel panel-success" ui-droppable drop-zones="'demo4-zone-two'">
+        <div class="panel-heading">Drop Zone <b>TWO</b></div>
+        <div class="panel-body">
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>

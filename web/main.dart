@@ -88,7 +88,7 @@ class DemoModule extends Module {
     bind(DragDropShoppingBasketDemoController);
     bind(DragDropListDemoController);
     bind(DragDropCustomImageDemoController);
-    bind(DragDropHandlerDemoController);
+    bind(DragDropMultiDropZonesDemoController);
     bind(SortableController);
     bind(SortableMultiController);
     //    bind(TypeaheadDemoController);

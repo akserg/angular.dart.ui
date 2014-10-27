@@ -23,6 +23,10 @@ transformers:
       - web/tooltip/tooltip_demo_tpl.html
       - web/timepicker/timepicker_demo_tpl.html
       - web/dragdrop/dragdrop_demo_tpl.html
+      - web/dragdrop/dragdrop_demo_image.html
+      - web/dragdrop/dragdrop_demo_list.html
+      - web/dragdrop/dragdrop_demo_multidropzones.html
+      - web/dragdrop/dragdrop_demo_shopping.html
       - web/datepicker/datepicker_demo_tpl.html
       - web/modal/modal_demo_embedded_template_tpl.html
       - web/modal/modal_demo_embedded_template_static_backdrop_tpl.html

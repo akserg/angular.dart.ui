@@ -1,0 +1,28 @@
+<div>
+  <h4>Drag And Drop - Custom Drag Image</h4>
+  <p><i>Note: custom drag images are not supported in IE9/IE10.</i></p>
+  <div class="row">
+
+    <div class="col-sm-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">Drag me</div>
+        <div class="panel-body">
+          <div class="panel panel-default"
+            ui-draggable="dragdropConfig" allowed-drop-zones="'demo3'">
+            <div class="panel-body">
+              I show a custom image on drag
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-success" ui-droppable drop-zones="'demo3'">
+        <div class="panel-heading">Drop here</div>
+        <div class="panel-body">
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>

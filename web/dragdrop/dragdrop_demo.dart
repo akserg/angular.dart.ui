@@ -3,14 +3,12 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Decorator(selector: '[dd-shopping-demo-controller]'
-  //,useShadowDom: false
-  )
+@Component(selector: '[dd-shopping-demo-controller]',
+    templateUrl: 'dragdrop/dragdrop_demo_shopping.html',
+    useShadowDom: false
+  ) 
 class DragDropShoppingBasketDemoController {
   
-  bool get valid => true;
-  
-  String value = "me";
   List<Product> availableProducts = [];
   List<Product> shoppingBasket = [];
   
@@ -50,9 +48,9 @@ class DragDropShoppingBasketDemoController {
 
 class Product {
   
-  int quantity;
-  int cost;
-  String name;
+  int quantity = 0;
+  int cost = 0;
+  String name = "";
   
   Product(this.name, this.quantity, this.cost);
 
@@ -61,7 +59,7 @@ class Product {
 
 @Component(
     selector: '[dd-list-demo-controller]',
-    publishAs: 'listCtrl',
+    templateUrl: 'dragdrop/dragdrop_demo_list.html',
     useShadowDom: false)
 class DragDropListDemoController {
   
@@ -81,7 +79,7 @@ class DragDropListDemoController {
 
 @Component(
     selector: '[dd-custom-image-demo-controller]',
-    publishAs: 'customImageCtrl',
+    templateUrl: 'dragdrop/dragdrop_demo_image.html',
     useShadowDom: false)
 class DragDropCustomImageDemoController {
   
@@ -97,21 +95,9 @@ class DragDropCustomImageDemoController {
 
 
 @Component(
-    selector: '[dd-handler-demo-controller]',
-    publishAs: 'listCtrl',
+    selector: '[dd-multidropzones-demo-controller]',
+    templateUrl: 'dragdrop/dragdrop_demo_multidropzones.html',
     useShadowDom: false)
-class DragDropHandlerDemoController {
+class DragDropMultiDropZonesDemoController {
   
-  List<String> todoList = ['Task 1: Fix Blu Bug','Task 2: Create Sortable','Task 3: Improve Tabs','Task 4: Publish new version'];
-  List<String> doneList = ['Task 6: Create Alert', 'Task 7: Test Accordion'];
-  
-  void done(String value) {
-    todoList.remove(value);
-    doneList.add(value);
-  }
-  
-  void undo(String value) {
-    doneList.remove(value);
-    todoList.add(value);
-  }
 }

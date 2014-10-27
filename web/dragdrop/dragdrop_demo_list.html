@@ -1,0 +1,48 @@
+<div>
+  <h4>Drag And Drop - Move from list to list</h4>
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-warning" 
+      ui-droppable on-drop-success="add(todoList, data)" drop-zones="'demo2'">
+        <div class="panel-heading">To Do</div>
+        <div class="panel-body">
+          <div ng-repeat="item in todoList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="remove(todoList, item)" allowed-drop-zones="'demo2'">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-info" ui-droppable on-drop-success="add(ongoingList, data)" drop-zones="'demo2'">
+        <div class="panel-heading">Ongoing</div>
+        <div class="panel-body">
+          <div ng-repeat="item in ongoingList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="remove(ongoingList, item)" allowed-drop-zones="'demo2'">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-sm-3">
+      <div class="panel panel-success" ui-droppable on-drop-success="add(doneList, data)" drop-zones="'demo2'">
+        <div class="panel-heading">Done</div>
+        <div class="panel-body">
+          <div ng-repeat="item in doneList" class="panel panel-default"
+            ui-draggable draggable-data="item" on-drag-success="remove(doneList, item)" allowed-drop-zones="'demo2'">
+            <div class="panel-body">
+              {{item}}
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>

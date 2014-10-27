@@ -1,0 +1,32 @@
+<div>
+  <h4>Drag And Drop - Shopping basket</h4>  
+  <div class="row">
+
+    <div class="col-sm-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">Available products</div>
+        <div class="panel-body">
+          <div ng-repeat="product in availableProducts" class="panel panel-default"
+            ui-draggable draggable-enabled="product.quantity>0" draggable-data="product" on-drag-success="orderedProduct(product)" allowed-drop-zones="'demo1'">
+            <div class="panel-body">
+              <div ng-show="product.quantity>0">{{product.name}} - ${{product.cost}} (available: {{product.quantity}})</div>
+              <div ng-hide="product.quantity>0"><del>{{product.name}}</del> (NOT available)</div>
+            </div>
+          </div>        
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div ui-droppable on-drop-success="addToBasket(data)" drop-zones="'demo1'" class="panel panel-info">
+        <div class="panel-heading">Shopping Basket (to pay: ${{totalCost()}})</div>
+        <div class="panel-body">
+          <div ng-repeat="product in shoppingBasket" class="panel panel-default">
+            <div class="panel-body">
+              {{product.name}} (ordered: {{product.quantity}} cost: ${{product.cost * product.quantity}})
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
