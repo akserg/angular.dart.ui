@@ -27,6 +27,8 @@ transformers:
       - web/dragdrop/dragdrop_demo_list.html
       - web/dragdrop/dragdrop_demo_multidropzones.html
       - web/dragdrop/dragdrop_demo_shopping.html
+      - web/dragdrop/sortable_demo_simple.html
+      - web/dragdrop/sortable_demo_multi.html
       - web/datepicker/datepicker_demo_tpl.html
       - web/modal/modal_demo_embedded_template_tpl.html
       - web/modal/modal_demo_embedded_template_static_backdrop_tpl.html

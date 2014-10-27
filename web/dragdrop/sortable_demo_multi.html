@@ -1,0 +1,41 @@
+<div>
+  <h4>Multi list sortable</h4>
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          Available boxers
+        </div>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="listBoxers">
+          <ul class="list-group" >
+            <li ng-repeat="item in listBoxers" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>  
+    <div class="col-sm-3">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          First Team
+        </div>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="listTeamOne">
+          <ul class="list-group" >
+            <li ng-repeat="item in listTeamOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Second Team
+        </div>
+        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="listTeamTwo">
+          <ul class="list-group">
+            <li ng-repeat="item in listTeamTwo" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

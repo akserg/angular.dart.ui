@@ -6,68 +6,10 @@ All rights reserved.  Please see the LICENSE.md file.
 -->
 <div>
 
-  <h4>Simple sortable</h4>
-  <div class="row" sortable-simple-controller>
-    <div class="col-sm-3">
-          <div class="panel panel-success">
-        <div class="panel-heading">
-          Favorite drinks
-        </div>
-        <div class="panel-body">
-          <ul class="list-group" ui-sortable ui-sortable-data="sortCtrl.listOne">
-            <li ng-repeat="item in sortCtrl.listOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          My prefences:<br/>
-          <span ng-repeat="item in sortCtrl.listOne">{{$index + 1}}) {{item}}<br/></span>
-        </div>
-      </div>
-    </div>
+  <div sortable-simple-controller>
   </div>
 
-  <h4>Multi list sortable</h4>
-  <div class="row" sortable-multi-controller>
-    <div class="col-sm-3">
-      <div class="panel panel-warning">
-        <div class="panel-heading">
-          Available boxers
-        </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listBoxers">
-          <ul class="list-group" >
-            <li ng-repeat="item in sortMultiCtrl.listBoxers" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>  
-    <div class="col-sm-3">
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          First Team
-        </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listTeamOne">
-          <ul class="list-group" >
-            <li ng-repeat="item in sortMultiCtrl.listTeamOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Second Team
-        </div>
-        <div class="panel-body" ui-sortable ui-sortable-zones="'boxers-zone'" ui-sortable-data="sortMultiCtrl.listTeamTwo">
-          <ul class="list-group">
-            <li ng-repeat="item in sortMultiCtrl.listTeamTwo" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div sortable-multi-controller>
   </div>
 
 </div>

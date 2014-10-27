@@ -1,0 +1,25 @@
+<div>
+  <h4>Simple sortable</h4>
+  <div class="row">
+    <div class="col-sm-3">
+          <div class="panel panel-success">
+        <div class="panel-heading">
+          Favorite drinks
+        </div>
+        <div class="panel-body">
+          <ul class="list-group" ui-sortable ui-sortable-data="listOne">
+            <li ng-repeat="item in listOne" class="list-group-item" ui-sortable-item="$index">{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          My prefences:<br/>
+          <span ng-repeat="item in listOne">{{$index + 1}}) {{item}}<br/></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

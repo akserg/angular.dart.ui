@@ -5,7 +5,9 @@ part of angular.ui.demo;
 
 @Component(
     selector: '[sortable-simple-controller]',
-    publishAs: 'sortCtrl')
+    templateUrl: 'dragdrop/sortable_demo_simple.html',
+    useShadowDom: false
+    )
 class SortableController {
 
   List<String> listOne = ['Coffee','Orange Juice','Red Wine','Unhealty drink!','Water'];
@@ -18,7 +20,9 @@ class SortableController {
 
 @Component(
     selector: '[sortable-multi-controller]',
-    publishAs: 'sortMultiCtrl')
+    templateUrl: 'dragdrop/sortable_demo_multi.html',
+    useShadowDom: false
+    )
 class SortableMultiController {
 
   List<String> listBoxers = ['Sugar Ray Robinson','Muhammad Ali','George Foreman','Joe Frazier','Jake LaMotta','Joe Louis','Jack Dempsey','Rocky Marciano','Mike Tyson','Oscar De La Hoya'];
