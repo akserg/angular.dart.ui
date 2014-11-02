@@ -7,7 +7,7 @@ part of angular.ui.demo;
  * Buttons demo component.
  */
 @Component(selector: 'buttons-demo', 
-    templateUrl: 'buttons/buttons_demo_tpl.html',
+    templateUrl: 'buttons/buttons_demo.html',
     useShadowDom: false)
 class ButtonsDemo implements ScopeAware {
   
