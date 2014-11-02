@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-testPosition(){;
+testPosition() {
   describe("[Position]", () {
     TestBed _;
     Scope scope;

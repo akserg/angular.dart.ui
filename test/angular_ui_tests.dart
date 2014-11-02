@@ -13,11 +13,15 @@ import 'package:angular/mock/module.dart';
 import 'package:angular/mock/test_injection.dart';
 
 import 'package:angular_ui/utils/position.dart';
+import 'package:angular_ui/utils/timeout.dart';
+import 'package:angular_ui/utils/transition.dart';
 
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/alert/alert.dart'; 
 
 part 'unit/utils/position_test.dart';
+part 'unit/utils/timeout_test.dart';
+part 'unit/utils/transition_test.dart';
 
 part 'unit/buttons/checkbox_component_test.dart';
 part 'unit/buttons/radiobutton_component_test.dart';
@@ -27,6 +31,8 @@ main(){
   guinnessEnableHtmlMatchers();
 
   testPosition();
+  testTimeout();
+  testTransition();
   
   testCheckboxComponent();
   testRadiobuttonComponent();
