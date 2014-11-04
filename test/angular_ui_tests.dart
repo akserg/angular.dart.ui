@@ -15,17 +15,21 @@ import 'package:angular/mock/test_injection.dart';
 import 'package:angular_ui/utils/position.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
+import 'package:angular_ui/utils/content_append.dart';
 
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/alert/alert.dart'; 
+//import 'package:angular_ui/accordion/accordion.dart'; 
 
 part 'unit/utils/position_test.dart';
 part 'unit/utils/timeout_test.dart';
 part 'unit/utils/transition_test.dart';
+part 'unit/utils/content_append_test.dart';
 
 part 'unit/buttons/checkbox_component_test.dart';
 part 'unit/buttons/radiobutton_component_test.dart';
 part 'unit/alert/alert_component_test.dart';
+//part 'unit/accordion/accordion_component_test.dart';
 
 main(){
   guinnessEnableHtmlMatchers();
@@ -33,10 +37,12 @@ main(){
   testPosition();
   testTimeout();
   testTransition();
+  testContentAppendComponent();
   
   testCheckboxComponent();
   testRadiobuttonComponent();
   testAlertComponent();
+//  testAccordionComponent();
 
   guinness.initSpecs();
 }

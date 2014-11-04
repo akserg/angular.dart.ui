@@ -18,7 +18,7 @@ testPosition() {
       );
     });
 
-    it('position msut not be null', inject((Position position) {
+    it('position must not be null', inject((Position position) {
       expect(position).toBeNotNull();
     }));
   });
