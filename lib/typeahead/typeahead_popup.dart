@@ -4,7 +4,7 @@ part of angular.ui.typeahead;
 class TypeaheadMatchItem {
   String id;
   String label;
-  var model;
+  Object model;
 
   TypeaheadMatchItem(this.id, this.label, this.model);
 }
@@ -65,7 +65,7 @@ class TypeaheadPopup {
 @Injectable()
 class TemplateBasedComponent implements DetachAware {
 
-  final ViewCache _viewCache;
+  final ViewFactoryCache _viewCache;
 
   Scope _viewScope;
   View _view;
@@ -84,8 +84,10 @@ class TemplateBasedComponent implements DetachAware {
       map.addAll(locals);
 
       _viewScope = scope.createChild(map);
-      _view = viewFactory(
-          injector.createChild([new Module()..bind(Scope, toValue: _viewScope)]));
+//      _view = viewFactory(
+//          injector.createChild([new Module()..bind(Scope, toValue: _viewScope)]));
+      Injector childInjector = new ModuleInjector([new Module()..bind(Scope, toValue: _viewScope)], injector);
+      _view = viewFactory(scope, childInjector.get(DirectiveInjector));
 
       if(replace) {
 
@@ -137,7 +139,7 @@ class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
   String query;
   String _templateUrl = DEFAULT_MATCHED_ITEM_TEMPLATE;
 
-  TypeaheadMatch(this._element, this._injector, this._scope, ViewCache viewCache) : super(viewCache);
+  TypeaheadMatch(this._element, this._injector, this._scope, ViewFactoryCache viewCache) : super(viewCache);
 
   set templateUrl(String value) => _templateUrl = (value == null || value.isEmpty)? DEFAULT_MATCHED_ITEM_TEMPLATE: value;
 

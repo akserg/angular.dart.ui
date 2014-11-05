@@ -4,10 +4,15 @@
 part of angular.ui.demo;
 
 /**
- * Alert controller.
+ * Alert component.
  */
-@Controller(selector: '[alert-ctrl]', publishAs: 'ctrl')
-class AlertCtrl {
+@Component(
+  selector: 'alert-demo',
+  templateUrl: "alert/alert_demo.html",
+  useShadowDom: false)
+class AlertDemo implements ScopeAware {
+  
+  Scope scope;
   
   List<AlertItem> alerts = [
     new AlertItem(type:'danger', msg:'Oh snap! Change a few things up and try submitting again.'),
@@ -23,6 +28,7 @@ class AlertCtrl {
   }
 }
 
+@Injectable()
 class AlertItem {
   var type;
   var msg;

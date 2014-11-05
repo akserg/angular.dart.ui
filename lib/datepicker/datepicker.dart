@@ -26,7 +26,7 @@ class DatepickerModule extends Module {
   }
 }
 
-typedef _VisibleDates _GetVisibleDates(DateTime date, DateTime selected);
+typedef VisibleDates _GetVisibleDates(DateTime date, DateTime selected);
 
 /**
  * Datepicker configuration.
@@ -50,7 +50,7 @@ class DatepickerConfig {
  * List of visible dates.
  */
 @Injectable()
-class _VisibleDates {
+class VisibleDates {
   List objects = [];
   String title = '';
   List labels = [];
@@ -60,7 +60,7 @@ class _VisibleDates {
  * Date format to show.
  */
 @Injectable()
-class _Format {
+class Format {
   String day;
   String month;
   String year;
@@ -73,7 +73,7 @@ class _Format {
  * Date Value Object
  */
 @Injectable()
-class _DateVO {
+class DateVO {
   DateTime date;
   String label = '';
   bool selected = false;
@@ -85,7 +85,7 @@ class _DateVO {
  * Datepicker mode.
  */
 @Injectable()
-class _Mode {
+class Mode {
   String name;
   _GetVisibleDates getVisibleDates;
   int split;
@@ -116,12 +116,12 @@ class Datepicker implements ShadowRootAware {
     return res;
   }
 
-  _Mode get currentMode {
+  Mode get currentMode {
     return modes[mode];
   }
   
   var format;
-  List<_Mode> modes;
+  List<Mode> modes;
   
   @NgOneWay('day-format')
   void set dayFormat(String value) {
@@ -247,8 +247,8 @@ class Datepicker implements ShadowRootAware {
     }
     
     var currentMode = modes[mode];
-    _VisibleDates data = currentMode.getVisibleDates(selected, date);
-    data.objects.forEach((_DateVO obj) {
+    VisibleDates data = currentMode.getVisibleDates(selected, date);
+    data.objects.forEach((DateVO obj) {
       obj.disabled = isDisabled(obj.date, mode);
     });
 
@@ -306,7 +306,7 @@ class Datepicker implements ShadowRootAware {
         rowWeekNumbersEl.setInnerHtml('<em>${getWeekNumber(row)}</em>');
         rowEl.append(rowWeekNumbersEl);
   
-        row.forEach((_DateVO dt) {
+        row.forEach((DateVO dt) {
           dom.TableCellElement dtEl = new dom.TableCellElement();
           dtEl.classes.add("text-center");
           rowEl.append(dtEl);
@@ -426,7 +426,7 @@ class Datepicker implements ShadowRootAware {
   }
 
   void init() {
-    format = new _Format()
+    format = new Format()
     ..day = eval(_scope, _attrs['day-format'], _datepickerConfig.dayFormat)
     ..month = eval(_scope, _attrs['month-format'], _datepickerConfig.monthFormat)
     ..year = eval(_scope, _attrs['year-format'], _datepickerConfig.yearFormat)
@@ -441,7 +441,7 @@ class Datepicker implements ShadowRootAware {
     maxDate = _datepickerConfig.maxDate != null ? DateTime.parse(_datepickerConfig.maxDate) : null;
 
     modes = [
-        new _Mode()
+        new Mode()
         ..name = 'day'
         ..getVisibleDates = (DateTime date, DateTime selected) {
           var year = date.year, 
@@ -470,7 +470,7 @@ class Datepicker implements ShadowRootAware {
           for (var j = 0; j < 7; j++) {
             labels.add(_dateFilter(days[j].date, format.dayHeader));
           }
-          return new _VisibleDates()
+          return new VisibleDates()
           ..objects = days
           ..title = _dateFilter(date, format.dayTitle)
           ..labels = labels;
@@ -483,7 +483,7 @@ class Datepicker implements ShadowRootAware {
         ..step = {
           'months': 1
         }, 
-        new _Mode()
+        new Mode()
         ..name = 'month'
         ..getVisibleDates = (DateTime date, DateTime selected) {
           var months = new List(), 
@@ -493,7 +493,7 @@ class Datepicker implements ShadowRootAware {
             months.add(makeDate(dt, format.month, 
                 (selected != null && selected.month == i && selected.year == year)));
           }
-          return new _VisibleDates()
+          return new VisibleDates()
           ..objects = months
           ..title = _dateFilter(date, format.monthTitle);
         }
@@ -505,7 +505,7 @@ class Datepicker implements ShadowRootAware {
         ..step = {
           'years': 1
         }, 
-        new _Mode()
+        new Mode()
         ..name = 'year'
         ..getVisibleDates = (DateTime date, DateTime selected) {
           var years = new List(), 
@@ -516,7 +516,7 @@ class Datepicker implements ShadowRootAware {
             years.add(makeDate(dt, format.year, 
                 (selected != null && selected.year == dt.year)));
           }
-          return new _VisibleDates()
+          return new VisibleDates()
           ..objects = years
           ..title = [years[0].label, years[yearRange - 1].label].join(' - ');
         }
@@ -546,9 +546,9 @@ class Datepicker implements ShadowRootAware {
     return dates;
   }
 
-  _DateVO makeDate(DateTime date, String format, bool isSelected, [bool
+  DateVO makeDate(DateTime date, String format, bool isSelected, [bool
       isSecondary = false]) {
-    return new _DateVO()
+    return new DateVO()
         ..date = date
         ..label = _dateFilter(date, format)
         ..selected = !!isSelected

@@ -95,7 +95,7 @@ class Position {
  */
 @Injectable()
 class Rect {
-  var left, top, width, height;
+  num left, top, width, height;
 
   Rect({this.left:0, this.top:0, this.width:0, this.height:0});
 }

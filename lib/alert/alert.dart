@@ -4,7 +4,7 @@
 library angular.ui.alert;
 
 import "package:angular/angular.dart";
-import "package:angular/core/parser/syntax.dart";
+import "package:angular/core_dom/module_internal.dart";
 
 /**
  * Alert Module.
@@ -18,33 +18,35 @@ class AlertModule extends Module {
 /**
  * Alert component.
  */
-@Component(selector: 'alert', publishAs: 't', useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/alert/alert.html')
-@Component(selector: '[alert]', publishAs: 't', useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/alert/alert.html')
-class Alert {
+@Component(selector: 'alert', 
+  useShadowDom: false,
+  templateUrl: 'packages/angular_ui/alert/alert.html')
+//@Component(selector: '[alert]', 
+//  useShadowDom: false,
+//  templateUrl: 'packages/angular_ui/alert/alert.html')
+class Alert implements ScopeAware {
   @NgOneWay('type')
   String type;
   
   @NgCallback('close')
   var close;
+  
+  Scope scope;
 
   /**
    * Flag helps show or hide close button depends on availability of [close] 
    * attribute.
    */
-  bool get showable => (close as BoundExpression).expression.isChain;
-  
+  var _closeable = false;
+  bool get closeable => _closeable;
+
   /**
    * Calculate and return alert type as string depnds on type. If type is null
    * methods returns 'warning' as default value.
    */
   String get alertTypeAsString => "alert-${type != null ? type : 'warning'}";
   
-  /**
-   * Thst method calls [close] callback
-   */
-  void closeHandler() {
-    close();
+  Alert(NodeAttrs attr) {
+    _closeable = attr.containsKey('close');
   }
 }

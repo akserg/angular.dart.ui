@@ -12,3 +12,5 @@ packages/
 content_shell*.zip
 drt-*
 test.log
+node_modules
+.pub

@@ -30,7 +30,7 @@ void tooltipTests() {
     afterEach(tearDownInjector);
     
     Scope getElementScope(dom.Element el) {
-      Tooltip tooltip = (ngProbe(elm).directives as List).firstWhere((e) => e is Tooltip);
+      Tooltip tooltip = ngProbe(elm).directives.firstWhere((e) => e is Tooltip);
       return tooltip.scope;
     }
     

@@ -48,7 +48,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   Rect position;
   String query;
 
-  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache) {
+  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewFactoryCache viewCache, this._positionService) : super(viewCache) {
     this._element = element as dom.InputElement;
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
 
@@ -137,7 +137,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     super.detach();
   }
 
-  eval(expression, locals) => expression.eval(new ScopeLocals(_scope.context, locals), _formatters);
+  eval(expression, locals) => expression.eval(new ContextLocals(_scope.context, locals), _formatters);
 
   _scheduleSearchWithTimeout(inputValue) {
     _matchesLookupTimer = new Timer(new Duration(milliseconds : _waitInMs), ()=>_getMatchesAsync(inputValue));
@@ -221,9 +221,11 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       var onCurrentRequest = (inputValue == _ngModel.viewValue);
       if(onCurrentRequest && _hasFocus) {
         if (matches.length > 0) {
-          _scope.apply(() => _updatePopup(inputValue, matches));
+          //_scope.apply(() => _updatePopup(inputValue, matches));
+          _updatePopup(inputValue, matches);
         } else {
-          _scope.apply(() => _resetMatches());
+//          _scope.apply(() => _resetMatches());
+          _resetMatches();
         }
       }
       if(onCurrentRequest)

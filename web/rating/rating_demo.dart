@@ -6,7 +6,9 @@ part of angular.ui.demo;
 /**
  * Rating bar controller.
  */
-@Controller(selector: '[rating-ctrl]', publishAs: 'ctrl')
+@Controller(selector: '[rating-ctrl]', 
+    publishAs: 'ctrl',
+    exportExpressions: const ["ratingStates", "rate", "max", "isReadonly", "hoveringOver", "overStar", "percent", "x", "y"])
 class RatingCtrl {
   int rate = 7;
   int max = 10;
