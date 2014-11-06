@@ -2,31 +2,23 @@
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 
-part of angular.ui.test;
+part of angular_ui_test;
 
-void timeoutTests() {
-
-  
-  describe('Testing timeout:', () {
+testTimeout() {
+  describe("[Timeout]", () {
     TestBed _;
     Scope scope;
-    Timeout timeout;
-    
-    beforeEach(() {
-      setUpInjector();
-      module((Module module) {
-        module.install(new TimeoutModule());
-      });
-      inject((TestBed tb, Scope s, Timeout t) { 
-        _ = tb;
-        scope = s;
-        timeout = t;
-      });
-    });
-    
+        
+    beforeEach(setUpInjector);
     afterEach(tearDownInjector);
-    
-    it('should delegate functions to timeout', () {
+
+    beforeEach(() {
+      module((Module _) => _
+        ..install(new TimeoutModule())
+      );
+    });
+
+    it('should delegate functions to timeout', inject((Timeout timeout) {
       var counter = 0;
       timeout(() { 
         counter++; 
@@ -36,58 +28,52 @@ void timeoutTests() {
 
       timeout.flush();
       expect(counter).toBe(1);
-    });
+    }));
   });
   
-  describe('Testing timeout exceptiong handler:', () {
+  describe("[Timeout Exception Handler]", () {
     TestBed _;
     Scope scope;
-    Timeout timeout;
-    TestExceptionHandler exceptionHandler;
-    
+        
     beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new TimeoutModule());
-      module.bind(ExceptionHandler, toImplementation:TestExceptionHandler);
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-    beforeEach(inject((Timeout t) => timeout = t));
-    beforeEach(inject((ExceptionHandler e) => exceptionHandler = e));
-    
-    
     afterEach(tearDownInjector);
-    
-    it('should delegate exception to the exceptionHandler service', () {
+
+    beforeEach(() {
+      module((Module _) => _
+        ..install(new TimeoutModule())
+        ..bind(ExceptionHandler, toImplementation:TestExceptionHandler)
+      );
+    });
+
+    it('should delegate exception to the exceptionHandler service', inject((Timeout timeout, ExceptionHandler handler) {
       timeout(() { throw new Exception("Test Error"); });
       
+      expect(handler).toBeAnInstanceOf(TestExceptionHandler);
+      TestExceptionHandler exceptionHandler = handler as TestExceptionHandler;
       expect(exceptionHandler.errors).toEqual([]);
 
       timeout.flush();
       expect(exceptionHandler.errors.length).toEqual(1);
-    });
+    }));
   });
   
-  describe('Testing timeout cancel:', () {
+  describe("[Timeout cancel]", () {
     TestBed _;
     Scope scope;
-    Timeout timeout;
-    
+        
     beforeEach(setUpInjector);
-    beforeEach(module((Module module) {
-      module.install(new TimeoutModule());
-    }));
-    beforeEach(inject((TestBed tb) => _ = tb));
-    beforeEach(inject((Scope s) => scope = s));
-    beforeEach(inject((Timeout t) => timeout = t));
-    
-    
     afterEach(tearDownInjector);
-    
-    it('should cancel tasks', () {
-      var task1 = jasmine.createSpy('task1'),
-          task2 = jasmine.createSpy('task2'),
-          task3 = jasmine.createSpy('task3'),
+
+    beforeEach(() {
+      module((Module _) => _
+        ..install(new TimeoutModule())
+      );
+    });
+
+    it('should cancel tasks', inject((Timeout timeout) {
+      var task1 = guinness.createSpy('task1'),
+          task2 = guinness.createSpy('task2'),
+          task3 = guinness.createSpy('task3'),
           promise1, promise3;
 
       promise1 = timeout(task1);
@@ -101,11 +87,11 @@ void timeoutTests() {
       expect(task1).not.toHaveBeenCalled();
       expect(task2).toHaveBeenCalledOnce();
       expect(task3).not.toHaveBeenCalled();
-    });
+    }));
     
-    it('should return true if a task was successfully canceled', () {
-      var task1 = jasmine.createSpy('task1'),
-          task2 = jasmine.createSpy('task2'),
+    it('should return true if a task was successfully canceled', inject((Timeout timeout) {
+      var task1 = guinness.createSpy('task1'),
+          task2 = guinness.createSpy('task2'),
           promise1, promise2;
 
       promise1 = timeout(task1);
@@ -114,11 +100,11 @@ void timeoutTests() {
 
       expect(timeout.cancel(promise1)).toBe(false);
       expect(timeout.cancel(promise2)).toBe(true);
-    });
+    }));
     
-    it('should not throw a runtime exception when given an undefined promise', () {
+    it('should not throw a runtime exception when given an undefined promise', inject((Timeout timeout) {
       expect(timeout.cancel()).toBe(false);
-    });
+    }));
   });
 }
 
@@ -137,3 +123,4 @@ class TestExceptionHandler implements ExceptionHandler {
     errors.add(error);
   }
 }
+

@@ -9,19 +9,18 @@ authors:
 description: Port of Angular-UI to Dart.
 homepage: http://akserg.github.io/angular.dart.ui
 environment:
-  sdk: '>=1.6.0 <2.0.0'
+  sdk: '>=1.7.2 <2.0.0'
 dependencies:
   angular: '1.0.0'
 dev_dependencies:
-  mock: '>=0.11.0+1 <0.12.0'
-  unittest: '>=0.11.0+2 <0.12.0'
+  dartmocks: '>= 0.5.0'
+  guinness: '>= 0.1.3'
 transformers:
 - angular:
     html_files:
-      - web/typeahead/typeahead_demo_tpl.html
-      - web/popover/popover_demo_tpl.html
-      - web/tooltip/tooltip_demo_tpl.html
-      - web/timepicker/timepicker_demo_tpl.html
+      - packages/angular_ui/alert/alert.html
+      - web/buttons/buttons_demo.html
+      - web/alert/alert_demo.html
       - web/dragdrop/dragdrop_demo_tpl.html
       - web/dragdrop/dragdrop_demo_image.html
       - web/dragdrop/dragdrop_demo_list.html
@@ -29,19 +28,3 @@ transformers:
       - web/dragdrop/dragdrop_demo_shopping.html
       - web/dragdrop/sortable_demo_simple.html
       - web/dragdrop/sortable_demo_multi.html
-      - web/datepicker/datepicker_demo_tpl.html
-      - web/modal/modal_demo_embedded_template_tpl.html
-      - web/modal/modal_demo_embedded_template_static_backdrop_tpl.html
-      - web/modal/modal_demo_template_element_tpl.html
-      - web/modal/modal_demo_template_from_other_file_tpl.html
-      - web/modal/modal_demo_template_from_file_tpl.html
-      - web/rating/rating_demo_tpl.html
-      - web/accordion/accordion_demo_tpl.html
-      - web/alert/alert_demo_tpl.html
-      - web/collapse/collapse_demo_tpl.html
-      - web/dropdown_toggle/dropdown_toggle_demo_tpl.html
-      - web/pagination/pagination_demo_tpl.html
-      - web/progressbar/progressbar_demo_tpl.html
-      - web/buttons/buttons_demo_tpl.html
-      - web/tabs/tabs_demo_tpl.html
-      - web/carousel/carousel_demo_tpl.html

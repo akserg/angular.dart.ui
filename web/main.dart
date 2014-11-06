@@ -19,8 +19,8 @@ import 'dart:mirrors';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
 
 //part 'accordion/accordion_demo.dart';
-//part 'alert/alert_demo.dart';
-//part 'buttons/buttons_demo.dart';
+part 'alert/alert_demo.dart';
+part 'buttons/buttons_demo.dart';
 //part 'carousel/carousel_demo.dart';
 //part 'collapse/collapse_demo.dart';
 part 'dragdrop/dragdrop_demo.dart';
@@ -75,7 +75,7 @@ class DemoModule extends Module {
 //    bind(ModalCtrlTagTemplate);
 //    bind(ModalCtrlFileTemplate);
 //    bind(ModalCtrlOtherTemplate);
-//    bind(AlertCtrl);
+    bind(AlertDemo);
 //    bind(CollapseCtrl);
 //    bind(DropdownCtrl);
 //    bind(PaginationController);
