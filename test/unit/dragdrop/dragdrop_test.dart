@@ -2,7 +2,7 @@
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 
-part of angular.ui.test;
+part of angular_ui_test;
 
 void dragdropTests() {
 
@@ -28,7 +28,7 @@ void dragdropTests() {
     
     afterEach(tearDownInjector);
 
-    group('Draggable and Droppable directives -', () {
+    it('Draggable and Droppable directives -', () {
       
       var dragData = "Hello World at " + new DateTime.now().toString();
       
@@ -215,7 +215,7 @@ void dragdropTests() {
       
     });
     
-    group('Drop Zones -', () {
+    it('Drop Zones -', () {
           
           dom.Element createElement() {
             

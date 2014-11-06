@@ -2,7 +2,6 @@ library angular.ui.typeahead.tests;
 
 import 'dart:html' as dom;
 
-import '../../_specs.dart';
 import 'package:angular_ui/utils/utils.dart';
 import 'package:angular_ui/typeahead/module.dart';
 

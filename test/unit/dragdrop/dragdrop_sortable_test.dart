@@ -2,7 +2,7 @@
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 
-part of angular.ui.test;
+part of angular_ui_test;
 
 void dragdropSortableTests() {
 
@@ -37,7 +37,7 @@ void dragdropSortableTests() {
       swapMultiple(nodes, firstNodeId, nodes, secondNodeId);
     }
     
-    group('Single List Sortable -', () {
+    it('Single List Sortable -', () {
       
       dom.Element createElement(List sortableList) {
         
@@ -138,7 +138,7 @@ void dragdropSortableTests() {
       
     });
     
-    group('Multi List Sortable -', () {
+    it('Multi List Sortable -', () {
       
       dom.Element createElement(List<String> singleList, List<String> multiOneList, List<String> multiTwoList) {
         
