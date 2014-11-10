@@ -21,7 +21,7 @@ import 'dart:mirrors';
 part 'alert/alert_demo.dart';
 part 'buttons/buttons_demo.dart';
 //part 'carousel/carousel_demo.dart';
-//part 'collapse/collapse_demo.dart';
+part 'collapse/collapse_demo.dart';
 //part 'dragdrop/dragdrop_demo.dart';
 //part 'datepicker/datepicker_demo.dart';
 //part 'dropdown_toggle/dropdown_toggle_demo.dart';
@@ -65,7 +65,7 @@ class DemoModule extends Module {
 //    bind(ModalCtrlFileTemplate);
 //    bind(ModalCtrlOtherTemplate);
     bind(AlertDemo);
-//    bind(CollapseCtrl);
+    bind(CollapseDemo);
 //    bind(DropdownCtrl);
 //    bind(PaginationController);
 //    bind(ProgressCtrl);

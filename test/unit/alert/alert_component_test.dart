@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-testAlertComponent(){;
+testAlertComponent() {
   describe("[AlertComponent]", () {
     TestBed _;
     Scope scope;

@@ -6,8 +6,13 @@ part of angular.ui.demo;
 /**
  * Collapse controller.
  */
-@Controller(selector: '[collapse-ctrl]', publishAs: 'ctrl')
-class CollapseCtrl {
+@Component(
+    selector: 'collapse-demo',
+    templateUrl: 'collapse/collapse_demo.html',
+    useShadowDom: false)
+class CollapseDemo implements ScopeAware {
+  
+  Scope scope;
   
   var isCollapsed = true;
 }

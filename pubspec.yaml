@@ -21,3 +21,4 @@ transformers:
       - packages/angular_ui/alert/alert.html
       - web/buttons/buttons_demo.html
       - web/alert/alert_demo.html
+      - web/collapse/collapse_demo.html
