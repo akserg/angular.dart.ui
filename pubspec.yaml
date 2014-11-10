@@ -23,3 +23,4 @@ transformers:
       - web/alert/alert_demo.html
       - web/collapse/collapse_demo.html
       - web/dropdown_toggle/dropdown_toggle_demo.html
+      - web/tooltip/tooltip_demo.html

@@ -4,17 +4,17 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div tooltip-demo-controller>
+<div>
     <div class="form-group">
       <label>Dynamic Tooltip Text</label>
-      <input type="text" ng-model="c.dynamicTooltipText" class="form-control">
+      <input type="text" ng-model="dynamicTooltipText" class="form-control">
     </div>
     <div class="form-group">
       <label>Dynamic Tooltip Popup Text</label>
-      <input type="text" ng-model="c.dynamicTooltip" class="form-control">
+      <input type="text" ng-model="dynamicTooltip" class="form-control">
     </div>
     <p>
-      Pellentesque <a href="#" tooltip="{{c.dynamicTooltip}}">{{c.dynamicTooltipText}}</a>,
+      Pellentesque <a href="#" tooltip="{{dynamicTooltip}}">{{dynamicTooltipText}}</a>,
       sit amet venenatis urna cursus eget nunc scelerisque viverra mauris, in
       aliquam. Tincidunt lobortis feugiat vivamus at 
       <a href="#" tooltip-placement="left" tooltip="On the Left!">left</a> eget
@@ -29,7 +29,7 @@ All rights reserved.  Please see the LICENSE.md file.
     </p>
 
     <p>
-      I can even contain HTML. <a href="#" tooltip="{{c.htmlTooltip}}">Check me out!</a>
+      I can even contain HTML. <a href="#" tooltip="{{htmlTooltip}}">Check me out!</a>
     </p>
 
     <form role="form">

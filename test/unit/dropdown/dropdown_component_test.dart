@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-tesDropdownComponent() {
+testDropdownComponent() {
   describe("[DropdownComponent]", () {
     TestBed _;
     Scope scope;

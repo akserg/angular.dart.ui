@@ -21,6 +21,7 @@ import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/alert/alert.dart'; 
 import 'package:angular_ui/collapse/collapse.dart';
 import 'package:angular_ui/dropdown/dropdown_toggle.dart';
+//import 'package:angular_ui/tooltip/tooltip.dart';
 //import 'package:angular_ui/accordion/accordion.dart'; 
 
 part 'unit/utils/position_test.dart';
@@ -33,6 +34,7 @@ part 'unit/buttons/radiobutton_component_test.dart';
 part 'unit/alert/alert_component_test.dart';
 part 'unit/collapse/collapse_component_test.dart';
 part 'unit/dropdown/dropdown_component_test.dart';
+//part 'unit/tooltip/tooltip_component_test.dart';
 //part 'unit/accordion/accordion_component_test.dart';
 
 main(){
@@ -47,7 +49,8 @@ main(){
   testRadiobuttonComponent();
   testAlertComponent();
   testCollapseComponent();
-  tesDropdownComponent();
+  testDropdownComponent();
+//  testTooltipComponent();
 //  testAccordionComponent();
 
   guinness.initSpecs();

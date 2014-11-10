@@ -56,7 +56,7 @@ class DemoModule extends Module {
     install(new AngularUIModule());
     //
 //    bind(PopoverDemoCtrl);
-//    bind(TooltipDemoCtrl);
+//    bind(TooltipDemo);
 //    bind(TimepickerDemoCtrl);
 //    bind(DatepickerCtrl);
 //    bind(ModalCtrlTemplate);
