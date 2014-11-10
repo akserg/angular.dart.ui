@@ -24,7 +24,7 @@ part 'buttons/buttons_demo.dart';
 part 'collapse/collapse_demo.dart';
 //part 'dragdrop/dragdrop_demo.dart';
 //part 'datepicker/datepicker_demo.dart';
-//part 'dropdown_toggle/dropdown_toggle_demo.dart';
+part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'modal/modal_demo_embedded_template.dart';
 //part 'modal/modal_demo_embedded_template_static_backdrop.dart';
 //part 'modal/modal_demo_template_element.dart';
@@ -66,7 +66,7 @@ class DemoModule extends Module {
 //    bind(ModalCtrlOtherTemplate);
     bind(AlertDemo);
     bind(CollapseDemo);
-//    bind(DropdownCtrl);
+    bind(DropdownDemo);
 //    bind(PaginationController);
 //    bind(ProgressCtrl);
     bind(ButtonsDemo);

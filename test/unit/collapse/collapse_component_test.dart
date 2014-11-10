@@ -20,10 +20,14 @@ testCollapseComponent() {
       inject((Timeout t) => timeout = t);
     });
 
+    String getHtml() {
+      return '<div collapse="isCollapsed">Some Content</div>';
+    };
+        
     describe("[Collapse with static content]", () {
       
       it('should be hidden on initialization if isCollapsed = true without transition', compileComponent(
-          '<div collapse="isCollapsed">Some Content</div>', 
+          getHtml(), 
           {'isCollapsed':true}, 
           (Scope scope, dom.HtmlElement shadowRoot) {
         var collapse = shadowRoot.querySelector('[collapse]');
@@ -32,7 +36,7 @@ testCollapseComponent() {
       }));
       
       it('should collapse if isCollapsed = true with animation on subsequent use', compileComponent(
-          '<div collapse="isCollapsed">Some Content</div>', 
+          getHtml(), 
           {'isCollapsed':false}, 
           (Scope scope, dom.HtmlElement shadowRoot) {
         var collapse = shadowRoot.querySelector('[collapse]');
@@ -43,7 +47,7 @@ testCollapseComponent() {
       }));
       
       it('should be shown on initialization if isCollapsed = false without transition', compileComponent(
-          '<div collapse="isCollapsed">Some Content</div>', 
+          getHtml(), 
           {'isCollapsed':false}, 
           (Scope scope, dom.HtmlElement shadowRoot) {
         var collapse = shadowRoot.querySelector('[collapse]');
@@ -52,7 +56,7 @@ testCollapseComponent() {
       }));
       
 //      it('should expand if isCollapsed = false with animation on subsequent use', compileComponent(
-//          '<div collapse="isCollapsed">Some Content</div>', 
+//          getHtml(), 
 //          {'isCollapsed':false}, 
 //          (Scope scope, dom.HtmlElement shadowRoot) {
 //        var collapse = shadowRoot.querySelector('[collapse]');
@@ -65,7 +69,7 @@ testCollapseComponent() {
 //      }));
       
       it('should expand if isCollapsed = true with animation on subsequent uses', compileComponent(
-          '<div collapse="isCollapsed">Some Content</div>', 
+          getHtml(), 
           {'isCollapsed':false}, 
           (Scope scope, dom.HtmlElement shadowRoot) {
         var collapse = shadowRoot.querySelector('[collapse]');
