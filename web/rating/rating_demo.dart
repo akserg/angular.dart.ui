@@ -4,12 +4,18 @@
 part of angular.ui.demo;
 
 /**
- * Rating bar controller.
+ * Rating bar component.
  */
-@Controller(selector: '[rating-ctrl]', 
-    publishAs: 'ctrl',
-    exportExpressions: const ["ratingStates", "rate", "max", "isReadonly", "hoveringOver", "overStar", "percent", "x", "y"])
-class RatingCtrl {
+@Component(
+    selector: 'rating-demo',
+    templateUrl: 'rating/rating_demo.html',
+    useShadowDom: false,
+    exportExpressions: const ['customRatingStates']
+)
+class RatingDemo implements ScopeAware {
+  
+  Scope scope;
+  
   int rate = 7;
   int max = 10;
   bool isReadonly = false;
@@ -17,16 +23,14 @@ class RatingCtrl {
   double percent = 100.0;
   int x = 5;
   int y = 2;
-  List<Map<String,String>> ratingStates = [
+  
+  List<Map<String,String>> customRatingStates = [
     {'stateOn': 'glyphicon-ok-sign', 'stateOff': 'glyphicon-ok-circle'},
     {'stateOn': 'glyphicon-star', 'stateOff': 'glyphicon-star-empty'},
     {'stateOn': 'glyphicon-heart', 'stateOff': 'glyphicon-ban-circle'},
     {'stateOn': 'glyphicon-heart'},
     {'stateOff': 'glyphicon-off'}
   ];
-
-  RatingCtrl() {
-  }
 
   void hoveringOver(int value) {
     if(value == null || value == 0.0) {

@@ -16,7 +16,7 @@ testAlertComponent() {
       module((Module _) => _
         ..install(new AlertModule())
       );
-      return loadTemplates(['/alert/alert.html']);
+//      return loadTemplates(['/alert/alert.html']);
     });
 
     String getHtml() {

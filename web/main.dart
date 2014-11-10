@@ -34,7 +34,7 @@ part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'progressbar/progressbar_demo.dart';
 //part 'tabs/tabs_demo.dart';
 //part 'timepicker/timepicker_demo.dart';
-//part 'rating/rating_demo.dart';
+part 'rating/rating_demo.dart';
 //part 'tooltip/tooltip_demo.dart';
 //part 'popover/popover_demo.dart';
 //part 'typeahead/typeahead_demo.dart';
@@ -73,7 +73,7 @@ class DemoModule extends Module {
 //    bind(CarouselDemoController);
 //    bind(TabsCtrl);
 //    bind(AccordionDemoController);
-//    bind(RatingCtrl);
+    bind(RatingDemo);
 //    bind(DragDropShoppingBasketDemoController);
 //    bind(DragDropListDemoController);
 //    bind(DragDropCustomImageDemoController);
