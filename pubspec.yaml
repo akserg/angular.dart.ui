@@ -9,7 +9,7 @@ authors:
 description: Port of Angular-UI to Dart.
 homepage: http://akserg.github.io/angular.dart.ui
 environment:
-  sdk: '>=1.7.2 <2.0.0'
+  sdk: '>=1.6.0 <2.0.0'
 dependencies:
   angular: '1.0.0'
 dev_dependencies:
