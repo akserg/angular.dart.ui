@@ -17,7 +17,7 @@ class PaginationModule extends Module {
     bind(PagerComponent);
     bind(PaginationConfig, toValue:new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
     bind(PaginationComponent);
-    bind(PaginationGenerator);
+    bind(BasicPaginationGenerator);
   }
 }
 
