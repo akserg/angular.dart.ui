@@ -302,7 +302,7 @@ class PageInfo {
   PageInfo(this.number, this.text, this.isActive);
 }
 
-@Injectable()
+
 abstract class PaginationGenerator {
   List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate);
 }

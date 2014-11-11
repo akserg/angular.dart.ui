@@ -48,7 +48,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   Rect position;
   String query;
 
-  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewCache viewCache, this._positionService) : super(viewCache) {
+  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewFactoryCache viewCache, this._positionService) : super(viewCache) {
     this._element = element as dom.InputElement;
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
 
