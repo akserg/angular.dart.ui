@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-testCheckboxComponent(){;
+testCheckboxComponent() {
   describe("[CheckboxComponent]", () {
     TestBed _;
     Scope scope;

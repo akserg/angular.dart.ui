@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-testAlertComponent(){;
+testAlertComponent() {
   describe("[AlertComponent]", () {
     TestBed _;
     Scope scope;
@@ -16,7 +16,7 @@ testAlertComponent(){;
       module((Module _) => _
         ..install(new AlertModule())
       );
-      return loadTemplates(['/alert/alert.html']);
+//      return loadTemplates(['/alert/alert.html']);
     });
 
     String getHtml() {

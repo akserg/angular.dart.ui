@@ -18,7 +18,6 @@ dev_dependencies:
 transformers:
 - angular:
     html_files:
-      - packages/angular_ui/alert/alert.html
       - web/buttons/buttons_demo.html
       - web/alert/alert_demo.html
       - web/dragdrop/dragdrop_demo_tpl.html
@@ -28,3 +27,7 @@ transformers:
       - web/dragdrop/dragdrop_demo_shopping.html
       - web/dragdrop/sortable_demo_simple.html
       - web/dragdrop/sortable_demo_multi.html
+      - web/collapse/collapse_demo.html
+      - web/dropdown_toggle/dropdown_toggle_demo.html
+      - web/rating/rating_demo.html
+      - web/timepicker/timepicker_demo.html

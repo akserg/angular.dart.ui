@@ -19,6 +19,11 @@ import 'package:angular_ui/utils/content_append.dart';
 
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/alert/alert.dart'; 
+import 'package:angular_ui/collapse/collapse.dart';
+import 'package:angular_ui/dropdown/dropdown_toggle.dart';
+import 'package:angular_ui/rating/rating.dart'; 
+import 'package:angular_ui/timepicker/timepicker.dart';
+//import 'package:angular_ui/tooltip/tooltip.dart';
 //import 'package:angular_ui/accordion/accordion.dart'; 
 import 'package:angular_ui/dragdrop/dragdrop.dart';
 
@@ -30,6 +35,11 @@ part 'unit/utils/content_append_test.dart';
 part 'unit/buttons/checkbox_component_test.dart';
 part 'unit/buttons/radiobutton_component_test.dart';
 part 'unit/alert/alert_component_test.dart';
+part 'unit/collapse/collapse_component_test.dart';
+part 'unit/dropdown/dropdown_component_test.dart';
+part 'unit/rating/rating_component_test.dart';
+part 'unit/timepicker/timepicker_component_test.dart';
+//part 'unit/tooltip/tooltip_component_test.dart';
 //part 'unit/accordion/accordion_component_test.dart';
 part 'unit/dragdrop/dragdrop_sortable_test.dart';
 part 'unit/dragdrop/dragdrop_test.dart';
@@ -46,6 +56,11 @@ main(){
   testCheckboxComponent();
   testRadiobuttonComponent();
   testAlertComponent();
+  testCollapseComponent();
+  testDropdownComponent();
+  testRatingComponent();
+  testTimepickerComponent();
+//  testTooltipComponent();
 //  testAccordionComponent();
 
   guinness.initSpecs();

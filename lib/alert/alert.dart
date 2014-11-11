@@ -20,7 +20,13 @@ class AlertModule extends Module {
  */
 @Component(selector: 'alert', 
   useShadowDom: false,
-  templateUrl: 'packages/angular_ui/alert/alert.html')
+//  templateUrl: 'packages/angular_ui/alert/alert.html'
+  template: '''
+<div class='alert' ng-class='alertTypeAsString'>
+  <button type='button' class='close' data-dismiss='alert' ng-show='closeable' ng-click='close()'>&times;</button>
+  <content/>
+</div>'''
+)
 //@Component(selector: '[alert]', 
 //  useShadowDom: false,
 //  templateUrl: 'packages/angular_ui/alert/alert.html')

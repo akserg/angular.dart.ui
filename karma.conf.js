@@ -13,7 +13,7 @@ module.exports = function(config) {
     ],
 
     autoWatch: true,
-    captureTimeout: 20000,
+    captureTimeout: 60000,
     browserNoActivityTimeout: 300000,
     
 

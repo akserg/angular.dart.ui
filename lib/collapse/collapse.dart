@@ -25,8 +25,8 @@ class CollapseModule extends Module {
 /**
  * The collapsible directive indicates a block of html that will expand and collapse.
  */
-@Decorator(selector:'[collapse]')
-class Collapse {
+@Component(selector:'[collapse]', useShadowDom: false)
+class Collapse implements ScopeAware {
 
   @NgOneWay("collapse")
   void set isCollapsed(bool value) {
@@ -44,7 +44,7 @@ class Collapse {
   var initialAnimSkip = true;
   async.Completer currentTransition;
 
-  Collapse(this.element, this.transition, this.scope) {
+  Collapse(this.element, this.transition) {
     _log.fine('CollapseDirective');
   }
 

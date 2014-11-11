@@ -3,10 +3,14 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Decorator(
-    selector: '[timepicker-demo-controller]',
-    exportExpressions: const ["ismeridian"])
-class TimepickerDemoCtrl {
+@Component(
+    selector: 'timepicker-demo', 
+    templateUrl: 'timepicker/timepicker_demo.html',
+    exportExpressions: const ["ismeridian"],
+    useShadowDom: false)
+class TimepickerDemo implements ScopeAware {
+
+  Scope scope;
   
   DateTime mytime = new DateTime.now();
 

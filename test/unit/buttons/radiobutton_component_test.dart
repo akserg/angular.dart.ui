@@ -4,7 +4,7 @@
 
 part of angular_ui_test;
 
-testRadiobuttonComponent(){;
+testRadiobuttonComponent() {
   describe("[RadiobuttonComponent]", () {
     TestBed _;
     Scope scope;

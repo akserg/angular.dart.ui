@@ -3,9 +3,14 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Decorator(
-    selector: '[tooltip-demo-controller]')
-class TooltipDemoCtrl {
+@Component(
+    selector: 'tooltip-demo',
+    templateUrl: "tooltip/tooltip_demo.html",
+    useShadowDom: false)
+class TooltipDemo implements ScopeAware {
+  
+  Scope scope;
+  
   var dynamicTooltip = 'Hello, World!';
   var dynamicTooltipText = 'dynamic';
   var htmlTooltip = 'I\'ve been made <b>bold</b>!';
