@@ -218,7 +218,13 @@ class Modal {
         if (options.size != null) html += " size=\"${options.size}\"";
         html += ">$content</modal-window>";
         //
-        instance._element = compile(html, _injector as Injector, _compiler, scope:scope, directives: _directiveMap);
+        List<dom.Element> rootElements = toNodeList(html);
+
+        instance._element = rootElements.firstWhere((el) {
+            return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
+        });
+        //
+        _compiler(rootElements, _directiveMap)(scope, _injector, rootElements);
         //
         _show(instance, options);
         //

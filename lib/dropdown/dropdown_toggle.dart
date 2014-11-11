@@ -16,10 +16,12 @@ class DropdownToggleModule extends Module {
   }
 }
 
-@Component(selector:'[dropdown-toggle]', useShadowDom: false)
-//@Decorator(
-//    selector: '.dropdown-toggle'
-//)
+@Decorator(
+    selector: '[dropdown-toggle]'
+)
+@Decorator(
+    selector: '.dropdown-toggle'
+)
 class DropdownToggle implements ScopeAware {
   static dom.Element _openElement;
   static var _closeMenu = (dom.MouseEvent evt) => {};
