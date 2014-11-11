@@ -4,18 +4,18 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div rating-ctrl>
+<div>
     <h4>Default</h4>
-    <rating ng-model="ctrl.rate" max="ctrl.max" readonly="ctrl.isReadonly" on-hover="ctrl.hoveringOver(value)" on-leave="ctrl.overStar = null"></rating>
-    <span class="label" ng-class="{'label-warning': ctrl.percent < 30, 'label-info': ctrl.percent >= 30 && ctrl.percent < 70, 'label-success': ctrl.percent >= 70 }" ng-hide="ctrl.overStar == null || ctrl.isReadonly">{{ctrl.percent}}%</span>
+    <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+    <span class="label" ng-class="{'label-warning': percent < 30, 'label-info': percent >= 30 && percent < 70, 'label-success': percent >= 70 }" ng-hide="overStar == null || isReadonly">{{percent}}%</span>
 
-    <pre style="margin:15px 0;">Rate: <b>{{ctrl.rate}}</b> - Readonly is: <i>{{ctrl.isReadonly}}</i> - Hovering over: <b>{{ctrl.overStar != null ? ctrl.overStar : "none"}}</b></pre>
+    <pre style="margin:15px 0;">Rate: <b>{{rate}}</b> - Readonly is: <i>{{isReadonly}}</i> - Hovering over: <b>{{overStar != null ? overStar : "none"}}</b></pre>
 
-    <button class="btn btn-sm btn-danger" ng-click="ctrl.rate = 0" ng-disabled="ctrl.isReadonly">Clear</button>
-    <button class="btn btn-sm btn-default" ng-click="ctrl.isReadonly = !ctrl.isReadonly">Toggle Readonly</button>
+    <button class="btn btn-sm btn-danger" ng-click="rate = 0" ng-disabled="isReadonly">Clear</button>
+    <button class="btn btn-sm btn-default" ng-click="isReadonly = !isReadonly">Toggle Readonly</button>
     <hr />
 
     <h4>Custom icons</h4>
-    <div><rating ng-model="ctrl.x" max="15" state-on="'glyphicon-ok-sign'" state-off="'glyphicon-ok-circle'"></rating> <b>(<i>Rate:{{ctrl.x}}</i>)</b></div>
-    <div><rating ng-model="ctrl.y" rating-states="ctrl.ratingStates"></rating> <b>(<i>Rate:{{ctrl.y}}</i>)</b></div>
+    <div><rating ng-model="x" max="15" state-on="'glyphicon-ok-sign'" state-off="'glyphicon-ok-circle'"></rating> <b>(<i>Rate:{{x}}</i>)</b></div>
+    <div><rating ng-model="y" rating-states="customRatingStates"></rating> <b>(<i>Rate:{{y}}</i>)</b></div>
 </div>

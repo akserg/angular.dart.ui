@@ -137,7 +137,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     super.detach();
   }
 
-  eval(expression, locals) => expression.eval(new ScopeLocals(_scope.context, locals), _formatters);
+  eval(expression, locals) => expression.eval(new ContextLocals(_scope.context, locals), _formatters);
 
   _scheduleSearchWithTimeout(inputValue) {
     _matchesLookupTimer = new Timer(new Duration(milliseconds : _waitInMs), ()=>_getMatchesAsync(inputValue));
@@ -221,9 +221,11 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
       var onCurrentRequest = (inputValue == _ngModel.viewValue);
       if(onCurrentRequest && _hasFocus) {
         if (matches.length > 0) {
-          _scope.apply(() => _updatePopup(inputValue, matches));
+          //_scope.apply(() => _updatePopup(inputValue, matches));
+          _updatePopup(inputValue, matches);
         } else {
-          _scope.apply(() => _resetMatches());
+//          _scope.apply(() => _resetMatches());
+          _resetMatches();
         }
       }
       if(onCurrentRequest)

@@ -5,7 +5,8 @@ part of angular.ui.demo;
 
 @Controller(
     selector: '[accordion-demo-controller]',
-    publishAs: 'accCtrl')
+    publishAs: 'accCtrl',
+    exportExpressions: const ["oneAtATime", "groups", "addItem", "items", "isOpen"])
 class AccordionDemoController {
   
   bool oneAtATime = true;

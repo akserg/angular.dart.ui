@@ -4,10 +4,15 @@
 part of angular.ui.demo;
 
 /**
- * Dropdown controller.
+ * Dropdown demo component.
  */
-@Controller(selector: '[dropdown-ctrl]', publishAs: 'ctrl')
-class DropdownCtrl {
+@Component(
+    selector: 'dropdown-demo', 
+    templateUrl: 'dropdown_toggle/dropdown_toggle_demo.html',
+    useShadowDom: false)
+class DropdownDemo implements ScopeAware {
+  
+  Scope scope;
   
   var items = [
     "The first choice!",

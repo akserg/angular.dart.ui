@@ -84,8 +84,10 @@ class TemplateBasedComponent implements DetachAware {
       map.addAll(locals);
 
       _viewScope = scope.createChild(map);
-      _view = viewFactory(
-          injector.createChild([new Module()..bind(Scope, toValue: _viewScope)]));
+//      _view = viewFactory(
+//          injector.createChild([new Module()..bind(Scope, toValue: _viewScope)]));
+      Injector childInjector = new ModuleInjector([new Module()..bind(Scope, toValue: _viewScope)], injector);
+      _view = viewFactory(scope, childInjector.get(DirectiveInjector));
 
       if(replace) {
 

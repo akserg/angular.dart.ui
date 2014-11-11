@@ -1,4 +1,4 @@
-﻿Angular UI [![Build Status](https://drone.io/github.com/akserg/angular.dart.ui/status.png)](https://drone.io/github.com/akserg/angular.dart.ui/latest)
+﻿Angular UI [![Build Status](https://travis-ci.org/akserg/angular.dart.ui.svg?branch=master)](https://travis-ci.org/akserg/angular.dart.ui)
 ===============
 
 Port of Angular-UI to Dart.

@@ -32,8 +32,14 @@ class ModalWindow implements AttachAware {
   @NgAttr('windowClass')
   String windowClass = '';
 
-  @NgOneWay('animate')
-  bool animate = false;
+  @NgOneWay('preventAnimation')
+  void set visible(bool value) {
+    if (_modal._top != null) {
+      _modal._top._visible = value;
+    }
+  }
+  
+  bool get visible => _modal._top == null ? false : _modal._top._visible;
 
   @NgOneWay('keyboard')
   bool keyboard = true;
@@ -42,7 +48,6 @@ class ModalWindow implements AttachAware {
   @NgOneWay('index')
   void set index(int value) {
     _index = value;
-    print('Index is $value');
   }
   
   int get index => _index;
@@ -65,17 +70,31 @@ class ModalWindow implements AttachAware {
   /** If false, clicking the backdrop closes the dialog. */
   bool _staticBackdrop = false;
 
+  String _sizeClass = '';
+  @NgAttr('size')
+  void set size(String value) {
+    if (value == 'lg' || value == 'sm') {
+      _sizeClass = 'modal-$value';
+    }
+  }
+  
+  String get sizeClass => _sizeClass;
+
   dom.Element _element;
   Modal _modal;
+  Timeout _timeout;
 
-  ModalWindow(this._element, this._modal);
+  ModalWindow(this._element, this._modal, this._timeout);
 
   void attach() {
     if (_element != null) {
-      // trigger CSS transitions
-      animate = true;
-      // focus a freshly-opened modal
-      _element.focus();
+      // wait 50ms such that .in is added after .fade
+      _timeout.call(() {
+        // trigger CSS transitions
+        visible = true;
+        // focus a freshly-opened modal
+        _element.focus();
+      }, delay:50);
     }
   }
 
@@ -100,13 +119,14 @@ class ModalWindow implements AttachAware {
  */
 class ModalOptions {
   String windowClass;
-  bool animate;
+  String size;
+  bool preventAnimation;
   bool keyboard;
   String backdrop;
   String template;
   String templateUrl;
 
-  ModalOptions({this.windowClass:'', this.animate:true,
+  ModalOptions({this.windowClass:'', this.size, this.preventAnimation:false,
     this.keyboard:true, this.backdrop:'true', this.template, this.templateUrl});
 }
 
@@ -132,9 +152,13 @@ class ModalInstance {
   async.Future get result => _resultCompleter.future;
   async.Future get opened => _openCompleter.future;
   
-  bool get _visible => _element.style.display == 'block';
+  dom.Element get _modalElement => _element.querySelector('.modal');
+  
+  bool get _visible => _modalElement == null ? false : _modalElement.classes.contains('in');
   void set _visible(bool value) {
-    _element.style.display = value ? 'block' : 'none';
+    if (_modalElement != null) {
+      _modalElement.classes.toggle('in', value);
+    }
   }
   
   CloseHandler close;
@@ -187,19 +211,14 @@ class Modal {
         }
         // Add ModalWindow wrapper
         String html = "<modal-window";
-        if (options.animate != null) html += " animate=\"${options.animate}\"";
+        if (options.preventAnimation != null) html += " preventAnimation=\"${options.preventAnimation}\"";
         if (options.backdrop != null) html += " backdrop=\"${options.backdrop}\"";
         if (options.keyboard != null) html += " keyboard=\"${options.keyboard}\"";
-        if (options.windowClass != null) html += " windowclass=\"${options.windowClass}\"";
+        if (options.windowClass != null) html += " windowClass=\"${options.windowClass}\"";
+        if (options.size != null) html += " size=\"${options.size}\"";
         html += ">$content</modal-window>";
         //
-        List<dom.Element> rootElements = toNodeList(html);
-  
-        instance._element = rootElements.firstWhere((el) {
-          return el is dom.Element && el.tagName.toLowerCase() == "modal-window";
-        });
-        //
-        _compiler(rootElements, _directiveMap)(scope, _injector, rootElements);
+        instance._element = compile(html, _injector as Injector, _compiler, scope:scope, directives: _directiveMap);
         //
         _show(instance, options);
         //
@@ -225,7 +244,6 @@ class Modal {
   void _show(ModalInstance modalInstance, ModalOptions options) {
     modalInstance._backDropElement = _createBackdrop(modalInstance._element.ownerDocument, options.backdrop);
     
-    modalInstance._visible = true;
     modalInstance._element.attributes["index"] = "${openedWindows.length}";
     
     dom.document.onKeyDown.listen((dom.KeyboardEvent event) {
@@ -246,10 +264,15 @@ class Modal {
 
       _timeout.call((){
         // Add transparancy to backdrop
+        // Start animation
         modalInstance._backDropElement.classes
-          ..remove("fade")
           ..add("in");
-      }, delay:250);
+        _timeout.call((){
+          // Animation is done
+          modalInstance._backDropElement.classes
+            ..remove("fade");
+        }, delay:250);
+      }, delay:1);
 
       modalInstance._backDropElement.onClick.listen((dom.MouseEvent e) {
         // Call only backdrop on top element
@@ -271,18 +294,25 @@ class Modal {
     ModalInstance modalInstance = _top;
     
     if (modalInstance != null) {
-      if (modalInstance._visible) {
+      // I commented out the statement below because somtimes modalInstance doesn't contain 'in' class.
+//      if (modalInstance._visible) {
         modalInstance._visible = false;
         modalInstance._element.attributes.remove("index");
 
         if(modalInstance._backDropElement != null) {
-          modalInstance._backDropElement.classes.remove('in');
-          modalInstance._backDropElement.remove();
+          modalInstance._backDropElement.classes
+            ..add('fade')
+            ..remove('in');
+          _timeout.call(() {
+            modalInstance._backDropElement.remove();
+          }, delay:250);
         }
-      }
+//      }
       openedWindows.remove(modalInstance);
-      modalInstance._element.remove();
-      modalInstance = null;
+      _timeout.call(() {
+        modalInstance._element.remove();
+        modalInstance = null;
+      }, delay:250);
     }
   }
   

@@ -29,17 +29,20 @@ class RatingConfig {
 
 @Component(
     selector: 'rating[ng-model]',
-    publishAs: 'ctrl',
-    templateUrl: 'packages/angular_ui/rating/rating.html',
+    //templateUrl: 'packages/angular_ui/rating/rating.html',
+    template: r'''
+<span ng-mouseleave="reset()" ng-mouseout="reset()">
+  <i ng-repeat="r in range" ng-mouseenter="enter($index + 1)" ng-mouseover="enter($index + 1)" ng-click="rate($index + 1)" class="glyphicon" ng-class="stateClass($index, r)"></i>
+</span>''',
     useShadowDom: false
 )
-@Component(
-    selector: '[rating][ng-model]',
-    publishAs: 'ctrl',
-    templateUrl: 'packages/angular_ui/rating/rating.html',
-    useShadowDom: false
-)
-class RatingComponent {
+//@Component(
+//    selector: '[rating][ng-model]',
+//    publishAs: 'ctrl',
+//    templateUrl: 'packages/angular_ui/rating/rating.html',
+//    useShadowDom: false
+//)
+class RatingComponent implements ScopeAware {
   
   int maxRange = 0;
   String stateOn;
@@ -56,21 +59,23 @@ class RatingComponent {
   @NgCallback('on-leave')
   var onLeave;
   
-  Scope _scope;
   dom.Element _element;
   NodeAttrs _attrs;
   NgModel _ngModel;
   RatingConfig _ratingConfig;
   
-  RatingComponent(this._scope, this._element, this._attrs, this._ngModel, this._ratingConfig) {
-    maxRange = _attrs.containsKey('max') ? _scope.parentScope.eval(_attrs['max']) : _ratingConfig.max;
-    stateOn = _attrs.containsKey('state-on') ? _scope.parentScope.eval(_attrs['state-on']) : _ratingConfig.stateOn;
-    stateOff = _attrs.containsKey('state-off') ? _scope.parentScope.eval(_attrs['state-off']) : _ratingConfig.stateOff;
+  void set scope(Scope scope) {
+    maxRange = _attrs.containsKey('max') ? scope.parentScope.eval(_attrs['max']) : _ratingConfig.max;
+    stateOn = _attrs.containsKey('state-on') ? scope.parentScope.eval(_attrs['state-on']) : _ratingConfig.stateOn;
+    stateOff = _attrs.containsKey('state-off') ? scope.parentScope.eval(_attrs['state-off']) : _ratingConfig.stateOff;
     
+    range = _buildTemplateObjects(_attrs.containsKey('rating-states') ? scope.parentScope.eval(_attrs['rating-states']) : new List(maxRange));
+  }
+  
+  RatingComponent(this._element, this._attrs, this._ngModel, this._ratingConfig) {
     _ngModel.render = (value) {
       val = _ngModel.viewValue;
     };
-    range = _buildTemplateObjects(_attrs.containsKey('rating-states') ? _scope.parentScope.eval(_attrs['rating-states']) : new List(maxRange));
   }
   
   List _buildTemplateObjects(List<Map<String, String>>states) {

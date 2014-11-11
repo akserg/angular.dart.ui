@@ -32,13 +32,44 @@ const List AMPMS = const ['AM','PM'];
 /**
  * Timepicker.
  */
-@Component(selector: 'timepicker[ng-model]', publishAs: 't',
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
-@Component(selector: '[timepicker][ng-model]', publishAs: 't', 
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
-class Timepicker implements ShadowRootAware {
+@Component(
+    selector: 'timepicker[ng-model]',
+//    templateUrl: 'packages/angular_ui/timepicker/timepicker.html',
+    template: '''
+<table>
+  <tbody>
+    <tr class="text-center">
+      <td><a ng-click="incrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>
+      <td>&nbsp;</td>
+      <td><a ng-click="incrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>
+      <td ng-show="showMeridian"></td>
+    </tr>
+    <tr id="times">
+      <td style="width:50px;" class="form-group" ng-class="{'has-error': invalidHours}">
+        <!--input id="hours" type="text" ng-change="updateHours()" class="form-control text-center" ng-mousewheel="incrementHours()" ng-readonly="readonlyInput" maxlength="2"-->
+        <input id="hours" type="text" ng-change="updateHours()" class="form-control text-center" ng-readonly="readonlyInput" maxlength="2">
+      </td>
+      <td>:</td>
+      <td style="width:50px;" class="form-group" ng-class="{'has-error': invalidMinutes}">
+        <!--input id="minutes" type="text" ng-change="updateMinutes()" class="form-control text-center" ng-mousewheel="incrementMinutes()" ng-readonly="readonlyInput" maxlength="2"-->        
+        <input id="minutes" type="text" ng-change="updateMinutes()" class="form-control text-center" ng-readonly="readonlyInput" maxlength="2">
+      </td>
+      <td ng-show="showMeridian"><button type="button" class="btn btn-default text-center" ng-click="toggleMeridian()">{{meridian}}</button></td>
+    </tr>
+    <tr class="text-center">
+      <td><a ng-click="decrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>
+      <td>&nbsp;</td>
+      <td><a ng-click="decrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>
+      <td ng-show="showMeridian"></td>
+    </tr>
+  </tbody>
+</table>''',
+    useShadowDom: false 
+)
+//@Component(selector: '[timepicker][ng-model]', publishAs: 't', 
+//    useShadowDom: false, 
+//    templateUrl: 'packages/angular_ui/timepicker/timepicker.html')
+class Timepicker implements ShadowRootAware, ScopeAware {
   
   DateTime selected;
   List meridians;
@@ -47,46 +78,56 @@ class Timepicker implements ShadowRootAware {
   TimepickerConfig _timepickerConfig;
   NodeAttrs _attrs;
   NgModel _ngModel;
-  Scope _scope;
   
-  Timepicker(this._element, this._timepickerConfig, this._attrs, this._ngModel, this._scope) {
-
+  Scope scope;
+  
+  var hourStep = 0, minuteStep = 0, showMeridian = false, readonlyInput = false, mousewheel = false;
+  
+  var invalidHours, invalidMinutes, updateHours, validHours, hours, updateMinutes, minutes, meridian;
+  
+  incrementHours () => addMinutes( hourStep * 60 );
+  decrementHours () => addMinutes( - hourStep * 60 );
+  incrementMinutes () => addMinutes( minuteStep );
+  decrementMinutes () => addMinutes( - minuteStep );
+  toggleMeridian () => addMinutes(12*60*((selected.hour < 12) ? 1 : -1));
+  
+  Timepicker(this._element, this._timepickerConfig, this._attrs, this._ngModel) {
     selected = new DateTime.now();
-    meridians = _attrs.containsKey('meridians') ? _scope.parentScope.eval(_attrs['meridians']) : _timepickerConfig.meridians != null ? _timepickerConfig.meridians : AMPMS;
   }
   
-  void onShadowRoot(shadowRoot) {
-    var hourStep = _timepickerConfig.hourStep;
+  void onShadowRoot(dom.ShadowRoot shadowRoot) {
+    meridians = _attrs.containsKey('meridians') ? scope.parentScope.eval(_attrs['meridians']) : _timepickerConfig.meridians != null ? _timepickerConfig.meridians : AMPMS;
+    
+    hourStep = _timepickerConfig.hourStep;
     if (_attrs.containsKey('hour-step')) {
-      _scope.parentScope.watch(_attrs['hour-step'], (value, oldValue) {
+      scope.parentScope.watch(_attrs['hour-step'], (value, oldValue) {
         hourStep = toInt(value);
       });
     }
     
-    var minuteStep = _timepickerConfig.minuteStep;
+    minuteStep = _timepickerConfig.minuteStep;
     if (_attrs.containsKey('minute-step')) {
-      _scope.parentScope.watch(_attrs['minute-step'], (value, oldValue) {
+      scope.parentScope.watch(_attrs['minute-step'], (value, oldValue) {
         minuteStep = toInt(value);
       });
     }
     
     // 12H / 24H mode
-    _scope.context['showMeridian'] = _timepickerConfig.showMeridian;
+    showMeridian = _timepickerConfig.showMeridian;
     if (_attrs.containsKey('show-meridian')) {
-      _scope.parentScope.watch(_attrs['show-meridian'], (value, oldValue) {
-        _scope.context['showMeridian'] = !!value;
+      scope.parentScope.watch(_attrs['show-meridian'], (value, oldValue) {
+        showMeridian = !!value;
 
         if (_ngModel.errorStates['time'] != null) {
           // Evaluate from template
           var hours = getHoursFromTemplate(), 
               minutes = getMinutesFromTemplate();
           if (hours != null && minutes != null) {
-            //selected.setHours( hours );
             selected = new DateTime(selected.year, selected.month, selected.day, hours, selected.minute, selected.second, selected.millisecond);
             refresh();
           }
         } else {
-          updateTemplate();
+          _updateTemplate();
         }
       });
     }
@@ -97,7 +138,7 @@ class Timepicker implements ShadowRootAware {
     dom.Element minutesInputEl = inputs[1];
     
     // Respond on mousewheel spin
-    var mousewheel = _attrs.containsKey('mousewheel') ? _scope.eval(_attrs['mousewheel']) : _timepickerConfig.mousewheel;
+    mousewheel = _attrs.containsKey('mousewheel') ? scope.eval(_attrs['mousewheel']) : _timepickerConfig.mousewheel;
     if (mousewheel != null) {
   
       var isScrollingUp = (dom.WheelEvent e) {
@@ -105,73 +146,58 @@ class Timepicker implements ShadowRootAware {
       };
            
       hoursInputEl.onMouseWheel.listen((e) {
-        _scope.apply((isScrollingUp(e)) ? _scope.context['incrementHours']() : _scope.context['decrementHours']());
+        scope.apply((isScrollingUp(e)) ? incrementHours() : decrementHours());
         e.preventDefault();
       });
       
       minutesInputEl.onMouseWheel.listen((e) {
-        _scope.apply((isScrollingUp(e)) ? _scope.context['incrementMinutes']() : _scope.context['decrementMinutes']());
+        scope.apply((isScrollingUp(e)) ? incrementMinutes() : decrementMinutes());
         e.preventDefault();
       });
     }
     
-    _scope.context['readonlyInput'] = _attrs.containsKey('readonly-input') ? _scope.eval(_attrs['readonly-input']) : _timepickerConfig.readonlyInput;
-    if (!_scope.context['readonlyInput']) {
-      var invalidate = (invalidHours, invalidMinutes) {
-        _ngModel.viewValue = null;
-//        _ngModel.setValidity('time', false);
-        if (invalidHours != null) {
-          _scope.context['invalidHours'] = invalidHours;
-        }
-        if (invalidMinutes != null) {
-          _scope.context['invalidMinutes'] = invalidMinutes;
-        }
-      };
-
-      _scope.context['updateHours'] = () {
+    readonlyInput = _attrs.containsKey('readonly-input') ? scope.eval(_attrs['readonly-input']) : _timepickerConfig.readonlyInput;
+    if (!readonlyInput) {
+      updateHours = () {
         var hours = getHoursFromTemplate();
 
         if (hours != null ) {
           selected = new DateTime(selected.year, selected.month, selected.day, hours, selected.minute, selected.second, selected.millisecond);
           refresh('h');
         } else {
-          invalidate(true);
+          _invalidate(hours: true);
         }
       };
 
       hoursInputEl.addEventListener('blur', (e) {
-        if (!_scope.context['validHours'] && _scope.context['hours'] < 10) {
-          _scope.apply(() {
-            _scope.context['hours'] = pad(_scope.context['hours']);
+        if (!validHours && hours < 10) {
+          scope.apply(() {
+            hours = _pad(hours);
           });
         }
       });
 
-      _scope.context['updateMinutes'] = () {
+      updateMinutes = () {
         var minutes = getMinutesFromTemplate();
 
         if (minutes != null) {
           selected = new DateTime(selected.year, selected.month, selected.day, selected.hour, minutes, selected.second, selected.millisecond);
           refresh( 'm' );
         } else {
-          invalidate(null, true);
+          _invalidate(minutes: true);
         }
       };
 
       minutesInputEl.addEventListener('blur', (e) {
-        if (!_scope.context['invalidMinutes'] && _scope.context['minutes'] < 10 ) {
-          _scope.apply(() {
-            _scope.context['minutes'] = pad(_scope.context['minutes']);
+        if (!invalidMinutes && minutes < 10 ) {
+          scope.apply(() {
+            minutes = _pad(minutes);
           });
         }
       });
     } else {
-      if (_scope.context.containsKey('updateHours')) {
-        _scope.context.remove('updateHours');
-      }
-      if (_scope.context.containsKey('updateMinutes')) {
-          _scope.context.remove('updateMinutes');
-      }
+      updateHours = null;
+      updateMinutes = null;
     }
     
     _ngModel.render = (value) {
@@ -181,53 +207,42 @@ class Timepicker implements ShadowRootAware {
 //        $log.error('Timepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
       } else {
         selected = date;
-        makeValid();
-        updateTemplate();
+        _makeValid();
+        _updateTemplate();
       }
     };
-    
-    _scope.context['incrementHours'] = () {
-      addMinutes( hourStep * 60 );
-    };
-    _scope.context['decrementHours'] = () {
-      addMinutes( - hourStep * 60 );
-    };
-    _scope.context['incrementMinutes'] = () {
-      addMinutes( minuteStep );
-    };
-    _scope.context['decrementMinutes'] = () {
-      addMinutes( - minuteStep );
-    };
-    _scope.context['toggleMeridian'] = () {
-      addMinutes(12*60*((selected.hour < 12) ? 1 : -1));
-    };
+  }
+
+  _invalidate({bool hours:false, bool minutes:false}) {
+    _ngModel.viewValue = null;
+//    _ngModel.setValidity('time', false);
   }
   
   // Get _scope.hours in 24H mode if valid
   int getHoursFromTemplate ( ) {
-    var hours = int.parse(_scope.context['hours']);
-    var valid = _scope.context['showMeridian'] ? (hours > 0 && hours < 13) : (hours >= 0 && hours < 24);
+    var hours_ = int.parse(hours);
+    var valid = showMeridian ? (hours_ > 0 && hours_ < 13) : (hours_ >= 0 && hours_ < 24);
     if (!valid) {
       return null;
     }
 
-    if (_scope.context['showMeridian']) {
-      if (hours == 12 ) {
-        hours = 0;
+    if (showMeridian) {
+      if (hours_ == 12 ) {
+        hours_ = 0;
       }
-      if (_scope.context['meridian'] == meridians[1] ) {
-        hours = hours + 12;
+      if (meridian == meridians[1] ) {
+        hours_ = hours_ + 12;
       }
     }
-    return hours;
+    return hours_;
    }
   
   int getMinutesFromTemplate() {
-    var minutes = int.parse(_scope.context['minutes']);
-    return (minutes >= 0 && minutes < 60) ? minutes : null;
+    var minutes_ = int.parse(minutes);
+    return (minutes_ >= 0 && minutes_ < 60) ? minutes_ : null;
   }
   
-  String pad(value) {
+  String _pad(value) {
     if (value != null) {
       String val = value.toString();
       return val.length < 2 ? '0${value}' : val;
@@ -250,36 +265,35 @@ class Timepicker implements ShadowRootAware {
   
   // Call internally when we know that model is valid.
   void refresh([keyboardChange = null]) {
-    makeValid();
+    _makeValid();
     _ngModel.viewValue = _parseDate(selected); 
-    updateTemplate(keyboardChange);
+    _updateTemplate(keyboardChange);
   }
   
-  void makeValid() {
+  void _makeValid() {
 //    _ngModel.setValidity('time', true);
-    _scope.context['invalidHours'] = false;
-    _scope.context['invalidMinutes'] = false;
+    invalidHours = false;
+    invalidMinutes = false;
   }
   
-  void updateTemplate([keyboardChange = null]) {
+  void _updateTemplate([keyboardChange = null]) {
     var hours = selected.hour;
     var minutes = selected.minute;
 
-    if (toBool(_scope.context['showMeridian'])) {
+    if (toBool(showMeridian)) {
       hours = (hours == 0 || hours == 12) ? 12 : hours % 12; // Convert 24 to 12 hour system
     }
-    _scope.context['hours'] =  keyboardChange == 'h' ? hours : pad(hours);
-    _scope.context['minutes'] = keyboardChange == 'm' ? minutes : pad(minutes);
-    _scope.context['meridian'] = selected.hour < 12 ? meridians[0] : meridians[1];
+    hours =  keyboardChange == 'h' ? hours : _pad(hours);
+    minutes = keyboardChange == 'm' ? minutes : _pad(minutes);
+    meridian = selected.hour < 12 ? meridians[0] : meridians[1];
     
-    //
     dom.InputElement hoursEl = ngQuery(_element, "#hours").first;
     if (hoursEl != null) {
-      hoursEl.value = _scope.context['hours'];
+      hoursEl.value = hours;
     }
     dom.InputElement minutesEl = ngQuery(_element, "#minutes").first;
     if (minutesEl != null) {
-      minutesEl.value = _scope.context['minutes'];
+      minutesEl.value = minutes;
     }
   }
   

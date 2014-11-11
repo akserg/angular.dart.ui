@@ -30,7 +30,7 @@ void popoverTests() {
     afterEach(tearDownInjector);
     
     Scope getElementScope(dom.Element el) {
-      Popover popover = (ngProbe(elm).directives as List).firstWhere((e) => e is Popover);
+      Popover popover = ngProbe(elm).directives.firstWhere((e) => e is Popover);
       return popover.scope;
     }
     

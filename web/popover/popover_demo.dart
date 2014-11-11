@@ -5,7 +5,8 @@ part of angular.ui.demo;
 
 @Controller(
     selector: '[popover-demo-controller]',
-    publishAs: 'p')
+    publishAs: 'p',
+    exportExpressions: const ["dynamicPopover","dynamicPopoverTitle"])
 class PopoverDemoCtrl {
   var dynamicPopover = 'Hello, World!';
   var dynamicPopoverTitle = 'Title';

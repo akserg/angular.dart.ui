@@ -78,7 +78,7 @@ class TooltipConfig {
 }
 
 @Decorator(selector:'[tooltip]') 
-@Decorator(selector:'tooltip')
+//@Decorator(selector:'tooltip')
 class Tooltip extends TooltipBase {
   
   var template = '<div><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>';
@@ -113,7 +113,6 @@ class Tooltip extends TooltipBase {
 /**
  * Base class for all tooltipable components.
  */
-
 abstract class TooltipBase {
   
   Map options;
