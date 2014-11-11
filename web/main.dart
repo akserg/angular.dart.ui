@@ -33,7 +33,7 @@ part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'pagination/pagination_demo.dart';
 //part 'progressbar/progressbar_demo.dart';
 //part 'tabs/tabs_demo.dart';
-//part 'timepicker/timepicker_demo.dart';
+part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
 //part 'tooltip/tooltip_demo.dart';
 //part 'popover/popover_demo.dart';
@@ -57,7 +57,7 @@ class DemoModule extends Module {
     //
 //    bind(PopoverDemoCtrl);
 //    bind(TooltipDemo);
-//    bind(TimepickerDemoCtrl);
+    bind(TimepickerDemo);
 //    bind(DatepickerCtrl);
 //    bind(ModalCtrlTemplate);
 //    bind(ModalStaticCtrlTemplate);

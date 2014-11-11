@@ -22,6 +22,7 @@ import 'package:angular_ui/alert/alert.dart';
 import 'package:angular_ui/collapse/collapse.dart';
 import 'package:angular_ui/dropdown/dropdown_toggle.dart';
 import 'package:angular_ui/rating/rating.dart'; 
+import 'package:angular_ui/timepicker/timepicker.dart';
 //import 'package:angular_ui/tooltip/tooltip.dart';
 //import 'package:angular_ui/accordion/accordion.dart'; 
 
@@ -36,6 +37,7 @@ part 'unit/alert/alert_component_test.dart';
 part 'unit/collapse/collapse_component_test.dart';
 part 'unit/dropdown/dropdown_component_test.dart';
 part 'unit/rating/rating_component_test.dart';
+part 'unit/timepicker/timepicker_component_test.dart';
 //part 'unit/tooltip/tooltip_component_test.dart';
 //part 'unit/accordion/accordion_component_test.dart';
 
@@ -53,6 +55,7 @@ main(){
   testCollapseComponent();
   testDropdownComponent();
   testRatingComponent();
+  testTimepickerComponent();
 //  testTooltipComponent();
 //  testAccordionComponent();
 
