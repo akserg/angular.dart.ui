@@ -35,7 +35,7 @@ part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
-//part 'tooltip/tooltip_demo.dart';
+part 'tooltip/tooltip_demo.dart';
 //part 'popover/popover_demo.dart';
 //part 'typeahead/typeahead_demo.dart';
 
@@ -56,7 +56,7 @@ class DemoModule extends Module {
     install(new AngularUIModule());
     //
 //    bind(PopoverDemoCtrl);
-//    bind(TooltipDemo);
+    bind(TooltipDemo);
     bind(TimepickerDemo);
 //    bind(DatepickerCtrl);
 //    bind(ModalCtrlTemplate);

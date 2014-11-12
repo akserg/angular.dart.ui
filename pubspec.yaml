@@ -24,3 +24,4 @@ transformers:
       - web/dropdown_toggle/dropdown_toggle_demo.html
       - web/rating/rating_demo.html
       - web/timepicker/timepicker_demo.html
+      - web/tooltip/tooltip_demo.html
