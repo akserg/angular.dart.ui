@@ -17,7 +17,7 @@ class PaginationModule extends Module {
     bind(PagerComponent);
     bind(PaginationConfig, toValue:new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
     bind(PaginationComponent);
-    bind(PaginationGenerator);
+    bind(BasicPaginationGenerator);
   }
 }
 
@@ -302,7 +302,7 @@ class PageInfo {
   PageInfo(this.number, this.text, this.isActive);
 }
 
-@Injectable()
+
 abstract class PaginationGenerator {
   List<PageInfo> getPages(int currentPage, int totalPages, int maxSize, bool rotate);
   
