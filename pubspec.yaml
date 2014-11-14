@@ -25,3 +25,4 @@ transformers:
       - web/rating/rating_demo.html
       - web/timepicker/timepicker_demo.html
       - web/tooltip/tooltip_demo.html
+      - web/pagination/pagination_demo.html

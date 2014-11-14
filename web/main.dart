@@ -30,7 +30,7 @@ part 'dropdown_toggle/dropdown_toggle_demo.dart';
 //part 'modal/modal_demo_template_element.dart';
 //part 'modal/modal_demo_template_from_other_file.dart';
 //part 'modal/modal_demo_template_from_file.dart';
-//part 'pagination/pagination_demo.dart';
+part 'pagination/pagination_demo.dart';
 //part 'progressbar/progressbar_demo.dart';
 //part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
@@ -67,7 +67,7 @@ class DemoModule extends Module {
     bind(AlertDemo);
     bind(CollapseDemo);
     bind(DropdownDemo);
-//    bind(PaginationController);
+    bind(PaginationDemo);
 //    bind(ProgressCtrl);
     bind(ButtonsDemo);
 //    bind(CarouselDemoController);

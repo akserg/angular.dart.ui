@@ -17,7 +17,7 @@ class PaginationModule extends Module {
     bind(PagerComponent);
     bind(PaginationConfig, toValue:new PaginationConfig(10, false, true, 'First', 'Previous', 'Next', 'Last', true));
     bind(PaginationComponent);
-    bind(BasicPaginationGenerator);
+    bind(PaginationGenerator, toValue: new BasicPaginationGenerator());
   }
 }
 
@@ -33,8 +33,12 @@ class PagerConfig {
 
 @Component(
     selector: 'pager[page][total-items]',
-    templateUrl: 'packages/angular_ui/pagination/pager.html',
-    publishAs: 'ctrl',
+    //templateUrl: 'packages/angular_ui/pagination/pager.html',
+    template: '''
+<ul class="pager">
+  <li ng-class="{disabled: noPrevious, previous : align}"><a ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
+  <li ng-class="{disabled: noNext, next : align}"><a ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
+</ul>''',
     useShadowDom: false,
     map: const {
       'page': '<=>currentPage',
@@ -47,36 +51,42 @@ class PagerConfig {
       'next-text': '@nextText'
     }
 )
-@Component(
-    selector: '[pager][page][total-items]',
-    templateUrl: 'packages/angular_ui/pagination/pager.html',
-    publishAs: 'ctrl',
-    useShadowDom: false,
-    map: const {
-      'page': '<=>currentPage',
-      'total-items' : '=>totalItems',
-      'items-per-page' : '=>itemsPerPage',
-      'num-pages': '&setNumPagesListener',
-      'on-select-page': '&onSelectChangeExtEventHandler',
-      'align': '@align',
-      'previous-text': '@previousText',
-      'next-text': '@nextText'
-    }
-)
-class PagerComponent {
+//@Component(
+//    selector: '[pager][page][total-items]',
+//    //templateUrl: 'packages/angular_ui/pagination/pager.html',
+//    template: '''
+//<ul class="pager">
+//  <li ng-class="{disabled: noPrevious, previous : align}"><a href ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
+//  <li ng-class="{disabled: noNext, next : align}"><a href ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
+//</ul>''',
+//    useShadowDom: false,
+//    map: const {
+//      'page': '<=>currentPage',
+//      'total-items' : '=>totalItems',
+//      'items-per-page' : '=>itemsPerPage',
+//      'num-pages': '&setNumPagesListener',
+//      'on-select-page': '&onSelectChangeExtEventHandler',
+//      'align': '@align',
+//      'previous-text': '@previousText',
+//      'next-text': '@nextText'
+//    }
+//)
+class PagerComponent implements ScopeAware {
   // Paging always starts with 1st page.
   static const int DEFAULT_FIRST_PAGE = 1;
 
-  final Scope scope;
+  Scope scope;
   final PagerConfig pagerConfig;
 
   // Bound attributes
-  BoundExpression onSelectChangeExtEventHandler;
+  //!!! BoundExpression onSelectChangeExtEventHandler;
+  var onSelectChangeExtEventHandler;
 
   // Bound attributes store fields
   int _currentPage;
   int _itemsPerPage;
-  BoundExpression _setNumPagesListener;
+  //!!! BoundExpression _setNumPagesListener;
+  var _setNumPagesListener;
   int _totalItems;
   bool _align;
   String _previousText;
@@ -86,7 +96,7 @@ class PagerComponent {
   int _totalPages;
 
 
-  PagerComponent(this.scope, this.pagerConfig) {
+  PagerComponent(this.pagerConfig) {
     // By default there is one page
     _currentPage = DEFAULT_FIRST_PAGE;
     _totalPages = DEFAULT_FIRST_PAGE;
@@ -152,7 +162,9 @@ class PagerComponent {
     if((newPage >= DEFAULT_FIRST_PAGE) &&(newPage <= _totalPages)) {
       scope.apply(() => currentPage = newPage);
 
-      onSelectChangeExtEventHandler();
+      if (onSelectChangeExtEventHandler != null) {
+        onSelectChangeExtEventHandler();
+      }
     }
   }
 
@@ -198,8 +210,15 @@ class PaginationConfig extends PagerConfig {
 
 @Component(
     selector: 'pagination[page][total-items]',
-    templateUrl: 'packages/angular_ui/pagination/pagination.html',
-    publishAs: 'ctrl',
+    //templateUrl: 'packages/angular_ui/pagination/pagination.html',
+    template: '''
+<ul class="pagination">
+  <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious}"><a ng-click="selectPage(1)">{{firstText}}</a></li>
+  <li ng-if="directionLinks" ng-class="{disabled: noPrevious}"><a ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
+  <li ng-repeat="page in pages" ng-class="{active: page.isActive}"><a ng-click="selectPage(page.number)">{{page.text}}</a></li>
+  <li ng-if="directionLinks" ng-class="{disabled: noNext}"><a ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
+  <li ng-if="boundaryLinks" ng-class="{disabled: noNext}"><a ng-click="selectPage(totalPages)">{{lastText}}</a></li>
+</ul>''',
     useShadowDom: false,
     map: const {
         'page': '<=>currentPage',
@@ -218,28 +237,27 @@ class PaginationConfig extends PagerConfig {
         'last-text': '@lastText'
     }
 )
-@Component(
-    selector: '[pagination][page][total-items]',
-    templateUrl: 'packages/angular_ui/pagination/pagination.html',
-    publishAs: 'ctrl',
-    useShadowDom: false,
-    map: const {
-        'page': '<=>currentPage',
-        'total-items': '=>totalItems',
-        'items-per-page': '=>itemsPerPage',
-        'max-size': '=>maxSize',
-        'rotate': '=>rotate',
-        'num-pages': '&setNumPagesListener',
-        'on-select-page': '&onSelectChangeExtEventHandler',
-        'boundary-links': '=>boundaryLinks',
-        'direction-links': '=>directionLinks',
-        'align': '@align',
-        'previous-text': '@previousText',
-        'next-text': '@nextText',
-        'first-text': '@firstText',
-        'last-text': '@lastText'
-    }
-)
+//@Component(
+//    selector: '[pagination][page][total-items]',
+//    templateUrl: 'packages/angular_ui/pagination/pagination.html',
+//    useShadowDom: false,
+//    map: const {
+//        'page': '<=>currentPage',
+//        'total-items': '=>totalItems',
+//        'items-per-page': '=>itemsPerPage',
+//        'max-size': '=>maxSize',
+//        'rotate': '=>rotate',
+//        'num-pages': '&setNumPagesListener',
+//        'on-select-page': '&onSelectChangeExtEventHandler',
+//        'boundary-links': '=>boundaryLinks',
+//        'direction-links': '=>directionLinks',
+//        'align': '@align',
+//        'previous-text': '@previousText',
+//        'next-text': '@nextText',
+//        'first-text': '@firstText',
+//        'last-text': '@lastText'
+//    }
+//)
 class PaginationComponent extends PagerComponent {
 
   PaginationConfig paginationConfig;
@@ -257,7 +275,7 @@ class PaginationComponent extends PagerComponent {
   bool _rotate;
 
 
-  PaginationComponent(Scope scope, PaginationConfig paginationConfig, this.paginationGenerator): super(scope, paginationConfig) {
+  PaginationComponent(PaginationConfig paginationConfig, this.paginationGenerator): super(paginationConfig) {
     _rotate = true;
     this.paginationConfig = paginationConfig;
 
