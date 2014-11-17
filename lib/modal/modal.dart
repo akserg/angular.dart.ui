@@ -26,7 +26,17 @@ class ModalModule extends Module {
 @Component(
     selector: 'modal-window',
     useShadowDom: false,
-    templateUrl: 'packages/angular_ui/modal/window.html')
+    //templateUrl: 'packages/angular_ui/modal/window.html'
+    template: r'''
+<div tabindex="-1" class="modal {{ windowClass }}"
+    ng-style="{'z-index': '{{1050 + index*10}}', 'display': 'block'}" ng-click="close($event)">
+    <div class="modal-dialog {{ sizeClass }}">
+      <div class="modal-content">
+        <content></content>
+      </div>
+    </div>
+</div>'''
+)
 class ModalWindow implements AttachAware {
 
   @NgAttr('windowClass')

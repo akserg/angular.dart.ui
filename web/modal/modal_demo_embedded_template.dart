@@ -6,10 +6,13 @@ part of angular.ui.demo;
 /**
  * Modal controller with template.
  */
-@Controller(selector: '[modal-ctrl-tmpl]', 
-    publishAs: 'ctrl',
-    exportExpressions: const ["tmp", "ok"])
-class ModalCtrlTemplate {
+@Component(
+  selector: 'modal-demo-embedded-tmpl', 
+  useShadowDom: false,
+  templateUrl: 'modal/modal_demo_embedded_template.html',
+  exportExpressions: const ["tmp", "ok"]
+)
+class ModalDemoEmbeddedTemplate implements ScopeAware {
   List<String> items = ["1111", "2222", "3333", "4444"];
   String selected;
   String tmp;
@@ -25,19 +28,19 @@ class ModalCtrlTemplate {
 </div>
 <div class="modal-body">
   <ul>
-    <li ng-repeat="item in ctrl.items">
-      <a ng-click="ctrl.tmp = item">{{ item }}</a>
+    <li ng-repeat="item in items">
+      <a ng-click="tmp = item">{{ item }}</a>
     </li>
   </ul>
-  Selected: <b>{{ctrl.tmp}}</b>
+  Selected: <b>{{tmp}}</b>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-  <button type="button" class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
+  <button type="button" class="btn btn-primary" ng-click="ok(tmp)">OK</button>
 </div>
 """;
   
-  ModalCtrlTemplate(this.modal, this.scope);
+ModalDemoEmbeddedTemplate(this.modal);
   
   ModalInstance getModalInstance() {
     return modal.open(new ModalOptions(template:template), scope);

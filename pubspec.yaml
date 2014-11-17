@@ -26,3 +26,7 @@ transformers:
       - web/timepicker/timepicker_demo.html
       - web/tooltip/tooltip_demo.html
       - web/pagination/pagination_demo.html
+      - web/modal/modal_demo_embedded_template.html
+      - web/modal/modal_demo_embedded_template_static_backdrop.html
+      - web/modal/modal_demo_template_element.html
+      - web/modal/modal_demo_template_from_other_file.html

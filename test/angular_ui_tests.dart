@@ -25,6 +25,7 @@ import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/pagination/pagination.dart';
+//import 'package:angular_ui/modal/modal.dart';
 //import 'package:angular_ui/accordion/accordion.dart'; 
 
 part 'unit/utils/position_test.dart';
@@ -42,6 +43,7 @@ part 'unit/timepicker/timepicker_component_test.dart';
 part 'unit/tooltip/tooltip_component_test.dart';
 part 'unit/pagination/pager_component_test.dart';
 part 'unit/pagination/pagination_component_test.dart';
+//part 'unit/modal/modal_component_test.dart';
 //part 'unit/accordion/accordion_component_test.dart';
 
 main(){
@@ -62,6 +64,7 @@ main(){
   testTooltipComponent();
   testPagerComponent();
   testPaginationComponent();
+//  testModalComponent();
 //  testAccordionComponent();
 
   guinness.initSpecs();

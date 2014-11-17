@@ -6,10 +6,13 @@ part of angular.ui.demo;
 /**
  * Modal controller with template from template element.
  */
-@Controller(selector: '[modal-ctrl-tag-tmpl]', 
-    publishAs: 'ctrl',
-    exportExpressions: const ["ctrl2", "open"])
-class ModalCtrlTagTemplate {
+@Component(
+  selector: 'modal-demo-tag-tmpl', 
+  useShadowDom: false,
+  templateUrl: 'modal/modal_demo_template_element.html',
+  exportExpressions: const ["open"]
+)
+class ModalDemoTagTemplate implements ScopeAware {
   List<String> items = ["Java", "Dart", "JavaScript", "Ruby"];
   
   String selected;
@@ -20,9 +23,9 @@ class ModalCtrlTagTemplate {
   ModalInstance modalInstance;
   Scope scope;
   
-  ModalCtrlTagTemplate(this.modal, this.scope);
+  ModalDemoTagTemplate(this.modal);
   
-  void open(String templateUrl) {
+  void openUrl(String templateUrl) {
     modalInstance = modal.open(new ModalOptions(templateUrl:templateUrl), scope);
     
     modalInstance.result
