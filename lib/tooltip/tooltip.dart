@@ -318,8 +318,6 @@ abstract class TooltipBase implements ScopeAware {
   void createTooltip() {
     // There can only be one tooltip element per directive shown at once.
     removeTooltip();
-    
-    //tooltip = tooltipLinker(scope, () {});
     tooltip = compile(template, _injector, _compiler);
   }
   

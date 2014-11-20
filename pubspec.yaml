@@ -31,3 +31,4 @@ transformers:
       - web/modal/modal_demo_template_element.html
       - web/modal/modal_demo_template_from_other_file.html
       - web/accordion/accordion_demo.html
+      - web/popover/popover_demo.html

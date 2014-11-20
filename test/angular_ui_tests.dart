@@ -25,7 +25,8 @@ import 'package:angular_ui/rating/rating.dart';
 import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/pagination/pagination.dart';
-import 'package:angular_ui/accordion/accordion.dart'; 
+import 'package:angular_ui/accordion/accordion.dart';
+import 'package:angular_ui/popover/popover.dart';
 
 //import 'package:angular_ui/modal/modal.dart';
 
@@ -46,6 +47,7 @@ part 'unit/pagination/pager_component_test.dart';
 part 'unit/pagination/pagination_component_test.dart';
 part 'unit/accordion/accordion_component_test.dart';
 part 'unit/accordion/accordion_group_component_test.dart';
+part 'unit/popover/popover_component_test.dart';
 
 //part 'unit/modal/modal_component_test.dart';
 
@@ -69,6 +71,7 @@ main(){
   testPaginationComponent();
   testAccordionComponent();
   testAccordionGroupComponent();
+  testPopoverComponent();
 
 //  testModalComponent();
   
