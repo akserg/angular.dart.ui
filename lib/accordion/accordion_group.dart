@@ -25,10 +25,10 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   @NgAttr('heading') 
   var heading;
   
+  Scope scope;
   AccordionComponent accordion;
-  NodeAttrs attrs;
 
-  AccordionGroupComponent(this.attrs, this.accordion) {
+  AccordionGroupComponent(this.accordion) {
     accordion.addGroup(this);
   }
 
@@ -59,9 +59,6 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   void detach() {
     this.accordion.removeGroup(this);
   }
-  
-  @override
-  void set scope(Scope scope) {}
 }
 
 /*

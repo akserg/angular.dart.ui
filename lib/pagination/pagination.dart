@@ -56,8 +56,8 @@ class PagerConfig {
 //    //templateUrl: 'packages/angular_ui/pagination/pager.html',
 //    template: '''
 //<ul class="pager">
-//  <li ng-class="{disabled: noPrevious, previous : align}"><a href ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
-//  <li ng-class="{disabled: noNext, next : align}"><a href ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
+//  <li ng-class="{disabled: noPrevious, previous : align}"><a ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
+//  <li ng-class="{disabled: noNext, next : align}"><a ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
 //</ul>''',
 //    useShadowDom: false,
 //    map: const {
