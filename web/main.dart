@@ -17,7 +17,7 @@ import 'package:angular_ui/angular_ui.dart';
 import 'dart:mirrors';
 //import 'package:angular_ui/dragdrop/dragdrop.dart';
 
-//part 'accordion/accordion_demo.dart';
+part 'accordion/accordion_demo.dart';
 part 'alert/alert_demo.dart';
 part 'buttons/buttons_demo.dart';
 //part 'carousel/carousel_demo.dart';
@@ -72,7 +72,7 @@ class DemoModule extends Module {
     bind(ButtonsDemo);
 //    bind(CarouselDemoController);
 //    bind(TabsCtrl);
-//    bind(AccordionDemoController);
+    bind(AccordionDemo);
     bind(RatingDemo);
 //    bind(DragDropShoppingBasketDemoController);
 //    bind(DragDropListDemoController);

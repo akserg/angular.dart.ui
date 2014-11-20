@@ -14,3 +14,7 @@ All rights reserved.  Please see the LICENSE.md file.
 ng\:form {
   display: block;
 }
+
+.panel-group accordion-group .panel {
+  margin-top: 5px;
+}

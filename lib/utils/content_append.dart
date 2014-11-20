@@ -20,13 +20,15 @@ class ContentAppendComponent {
 
   @NgOneWay('node')
   set append(var node) {
-        if (node!=null) {
-          if (node is String){
-            _element.appendText(node as String);
-          } else if (node is Node) {
-            _element.append(node as Node);
-          }
-        }
+    if (node != null) {
+      if (node is String){
+        print('Append as string $node');
+        _element.appendText(node as String);
+      } else if (node is Node) {
+        print('Append as element $node');
+        _element.append(node as Node);
+      }
+    }
   }
   
   ContentAppendComponent(this._element);
