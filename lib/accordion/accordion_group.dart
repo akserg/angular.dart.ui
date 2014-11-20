@@ -32,7 +32,7 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
     accordion.addGroup(this);
   }
 
-  bool _isOpen;
+  bool _isOpen = false;
   @NgTwoWay('is-open') 
   get isOpen => _isOpen;
   set isOpen(bool newValue) {
