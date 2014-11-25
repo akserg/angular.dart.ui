@@ -4,7 +4,7 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div progress-ctrl>
+<div>
     <h3>Static</h3>
     <div class="row">
         <div class="col-sm-4"><progressbar value="55"></progressbar></div>
@@ -13,16 +13,16 @@ All rights reserved.  Please see the LICENSE.md file.
     </div>
 
     <hr />
-    <h3>Dynamic <button class="btn btn-sm btn-primary" type="button" ng-click="ctrl.random()">Randomize</button></h3>
-    <progressbar max="ctrl.max" value="ctrl.dynamic"><span style="color:black; white-space:nowrap;">{{ctrl.dynamic}} / {{ctrl.max}}</span></progressbar>
+    <h3>Dynamic <button class="btn btn-sm btn-primary" type="button" ng-click="random()">Randomize</button></h3>
+    <progressbar max="max" value="dynamic"><span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
 
     <small><em>No animation</em></small>
-    <progressbar animate="false" value="ctrl.dynamic" type="success"><b>{{ctrl.dynamic}}%</b></progressbar>
+    <progressbar animate="false" value="dynamic" type="success"><b>{{dynamic}}%</b></progressbar>
 
     <small><em>Object (changes type based on value)</em></small>
-    <progressbar class="progress-striped active" value="ctrl.dynamic" type="{{ctrl.type}}">{{ctrl.type}} <i ng-show="ctrl.showWarning">!!! Watch out !!!</i></progressbar>
+    <progressbar class="progress-striped active" value="dynamic" type="{{type}}">{{type}} <i ng-show="showWarning">!!! Watch out !!!</i></progressbar>
 
     <hr />
-    <h3>Stacked <button class="btn btn-sm btn-primary" type="button" ng-click="ctrl.randomStacked()">Randomize</button></h3>
-    <stackedProgress><bar ng-repeat="bar in ctrl.stacked" value="bar.value" type="{{bar.type}}"><span ng-hide="bar.value < 5">{{bar.value}}%</span></bar></stackedProgress>
+    <h3>Stacked <button class="btn btn-sm btn-primary" type="button" ng-click="randomStacked()">Randomize</button></h3>
+    <stackedProgress><bar ng-repeat="bar in stacked" value="bar.value" type="{{bar.type}}"><span ng-hide="bar.value < 5">{{bar.value}}%</span></bar></stackedProgress>
 </div>

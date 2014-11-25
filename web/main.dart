@@ -4,7 +4,7 @@
 library angular.ui.demo;
 
 //import 'dart:html' as dom;
-//import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
@@ -31,7 +31,7 @@ part 'modal/modal_demo_template_element.dart';
 part 'modal/modal_demo_template_element_from_other_file.dart';
 //part 'modal/modal_demo_template_from_file.dart';
 part 'pagination/pagination_demo.dart';
-//part 'progressbar/progressbar_demo.dart';
+part 'progressbar/progressbar_demo.dart';
 //part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
@@ -68,7 +68,7 @@ class DemoModule extends Module {
     bind(CollapseDemo);
     bind(DropdownDemo);
     bind(PaginationDemo);
-//    bind(ProgressCtrl);
+    bind(ProgressDemo);
     bind(ButtonsDemo);
 //    bind(CarouselDemoController);
 //    bind(TabsCtrl);

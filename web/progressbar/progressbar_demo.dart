@@ -6,9 +6,15 @@ part of angular.ui.demo;
 /**
  * Progress bar controller.
  */
-@Controller(selector: '[progress-ctrl]', publishAs: 'ctrl')
-class ProgressCtrl {
+@Component(
+  selector: 'progress-demo', 
+  templateUrl: 'progressbar/progressbar_demo.html',
+  useShadowDom: false
+)
+class ProgressDemo implements ScopeAware {
 
+  Scope scope;
+  
   math.Random _random = new math.Random();
 
   int max = 200;
@@ -48,7 +54,7 @@ class ProgressCtrl {
     }
   }
 
-  ProgressCtrl() {
+  ProgressDemo() {
     randomStacked();
     random();
   }

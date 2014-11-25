@@ -4,6 +4,7 @@
 library angular.ui.progressbar;
 
 import 'dart:html' as dom;
+import 'dart:async' as async;
 import "package:angular/angular.dart";
 import "package:angular/core_dom/module_internal.dart";
 import 'package:angular_ui/utils/utils.dart';
@@ -35,25 +36,29 @@ class ProgressbarConfig {
 
 @Component(
     selector: 'progressbar',
-    templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
-    publishAs: 'ctrl',
+    //templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
+    template: '''
+<div class="progress" ng-class="classes">
+    <div class="progress-bar" ng-class="[type, 'progress-bar-' + type]" role="progressbar">
+        <content></content>
+    </div>
+</div>''',
     useShadowDom: false,
     map: const {
       'value': '=>value',
       'type': '@type'
     })
-@Component(
-    selector: '[progressbar]',
-    templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
-    publishAs: 'ctrl',
-    useShadowDom: false,
-    map: const {
-      'value': '=>value',
-      'type': '@type'
-    })
+//@Component(
+//    selector: '[progressbar]',
+//    templateUrl: 'packages/angular_ui/progressbar/progressbar.html',
+//    publishAs: 'ctrl',
+//    useShadowDom: false,
+//    map: const {
+//      'value': '=>value',
+//      'type': '@type'
+//    })
 class ProgressBar extends _ProgressbarBase {
   ProgressbarConfig _config;
-  NodeAttrs _attrs;
 
   @NgOneWay("max")
   int max;
@@ -69,7 +74,7 @@ class ProgressBar extends _ProgressbarBase {
     super.value = val;
   }
 
-  ProgressBar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element);
+  ProgressBar(this._config, Transition transistion, dom.Element element) : super(transistion, element);
 
   evalMaxOrDefault(Scope scope) {
     max = (max == null) ? _config.max : toInt(scope.parentScope.eval(max.toString()));
@@ -79,8 +84,6 @@ class ProgressBar extends _ProgressbarBase {
     animate = (animate == null) ? _config.animate : toBool(scope.parentScope.eval(animate.toString()));
   }
 
-  NodeAttrs get nodeAttr => _attrs;
-  dom.Element getShadowElement(shadowRoot) => getFirstDiv(shadowRoot).children.first;
   int get computedMax => max;
   bool get isAnimate => animate;
 }
@@ -88,44 +91,53 @@ class ProgressBar extends _ProgressbarBase {
 @Component(
     selector: 'stackedProgress',
     useShadowDom: false,
-    templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
-@Component(
-    selector: '[stackedProgress]',
-    useShadowDom: false,
-    templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
-class Progress implements AttachAware {
-  Scope _scope;
+//    templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html'
+    template: '''
+<div class="progress" ng-class="classes">
+    <content></content>
+</div><br>'''
+)
+//@Component(
+//    selector: '[stackedProgress]',
+//    useShadowDom: false,
+//    templateUrl: 'packages/angular_ui/progressbar/stackedProgress.html')
+class Progress implements AttachAware, ScopeAware {
+  Scope scope;
+  
   dom.Element _element;
-  Progress(this._scope, this._element);
+  String classes;
+  
+  Progress(this._element);
 
   void attach() {
-    _scope.context['classes'] = _element.classes.toString();
+    this.classes = _element.classes.toString();
   }
 }
 
 @Component(
-   selector: 'bar',
-    templateUrl: 'packages/angular_ui/progressbar/bar.html',
-    publishAs: 'ctrl',
-    useShadowDom: false,
-    map: const {
-      'value': '=>value',
-      'type': '@type'
-    })
-@Component(
-    selector: '[bar]',
-    templateUrl: 'packages/angular_ui/progressbar/bar.html',
-    publishAs: 'ctrl',
-    useShadowDom: false,
-    map: const {
-      'value': '=>value',
-      'type': '@type'
-    })
+  selector: 'bar',
+  //templateUrl: 'packages/angular_ui/progressbar/bar.html',
+  template: '''
+<div class="progress-bar" ng-class="[type, 'progress-bar-' + type,  classes]" ng-pseudo="x-bar">
+    <content></content>
+</div>''',
+  useShadowDom: false,
+  map: const {
+    'value': '=>value',
+    'type': '@type'
+  })
+//@Component(
+//    selector: '[bar]',
+//    templateUrl: 'packages/angular_ui/progressbar/bar.html',
+//    publishAs: 'ctrl',
+//    useShadowDom: false,
+//    map: const {
+//      'value': '=>value',
+//      'type': '@type'
+//    })
 class Bar extends _ProgressbarBase {
   ProgressbarConfig _config;
   NodeAttrs _parentAttrs;
-  NodeAttrs _attrs;
-  dom.Element _element;
 
   int _max;
   bool _animate;
@@ -133,78 +145,73 @@ class Bar extends _ProgressbarBase {
   String get type => _type;
   set type(val) { _type = val; }
   String get classes => _classes;
-  set value(int val) {
-    super.value = val;
+
+  Bar(this._config, Transition transistion, dom.Element element) : super(transistion, element);
+
+  evalMaxOrDefault(Scope scope) {
+    if (_element.parent.attributes.containsKey("max")) {
+      _max = scope.parentScope.eval(_element.parent.attributes["max"]);
+    } else {
+      _max = _config.max;
+    }
+  }
+  evalAnimateOrDefault(Scope scope) {
+    if (_element.parent.attributes.containsKey("animate")) {
+      _animate = scope.parentScope.eval(_element.parent.attributes["animate"]);
+    } else {
+      _animate = _config.animate;
+    }
   }
 
-  Bar(this._attrs, this._config, Transition transistion, Scope scope, dom.Element element) : super(transistion, scope, element) {
-    _element = element;
-  }
-
-  evalMaxOrDefault(Scope scope) => _max = (_parentAttrs["max"] == null) ? _config.max : scope.parentScope.eval(_parentAttrs["max"]);
-  evalAnimateOrDefault(Scope scope) => _animate = (_parentAttrs['animate'] == null) ? _config.animate : toBool(scope.parentScope.eval(_parentAttrs['animate']));
-
-  _lazyInitParentAttrs() {
-    if (_parentAttrs == null) _parentAttrs = new NodeAttrs(_element.parent);
-  }
-
-  void attach() {
-    _lazyInitParentAttrs();
-    super.attach();
-  }
-
-  void onShadowRoot(shadowRoot) {
-    _lazyInitParentAttrs();
-    super.onShadowRoot(shadowRoot);
-  }
-
-  NodeAttrs get nodeAttr => _attrs;
-  dom.Element getShadowElement(shadowRoot) => getFirstDiv(shadowRoot);
   int get computedMax => _max;
   bool get isAnimate => _animate;
 }
 
-abstract class _ProgressbarBase implements ShadowRootAware, AttachAware {
-  dom.Element _element;
-  Scope _scope;
-  Transition _transistion;
-  var _shadowRoot;
+abstract class _ProgressbarBase implements AttachAware, ScopeAware {
 
-  int _value;
+  Scope scope;
+  dom.Element _element;
+  Transition _transistion;
+
+  int _value = 0;
   int _oldValue = 0;
 
   String _type;
   String _classes;
 
-  _ProgressbarBase(this._transistion, this._scope, this._element);
+  _ProgressbarBase(this._transistion, this._element);
 
   set value(int currenValue) {
     _value = currenValue;
-    if (_shadowRoot != null) _update(getShadowElement(_shadowRoot));
+    if (computedMax != null) {
+      _update(getProgressBarElement());
+    }
   }
 
   int get computedMax;
   bool get isAnimate;
-  NodeAttrs get nodeAttr;
-  dom.Element getShadowElement(shadowRoot);
+
+  dom.Element getProgressBarElement() => _element.querySelector(".progress-bar");
 
   evalMaxOrDefault(Scope scope);
   evalAnimateOrDefault(Scope scope);
 
   void attach() {
     _classes = _element.classes.toString();
-    if (_shadowRoot != null) _update(getShadowElement(_shadowRoot));
-  }
-
-  void onShadowRoot(shadowRoot) {
-    _shadowRoot = shadowRoot;
-    evalMaxOrDefault(_scope);
-    evalAnimateOrDefault(_scope);
-    if (_value != null) _update(getShadowElement(_shadowRoot));
+    new async.Future.delayed(Duration.ZERO, () {
+      // We need call update on next event-loop iteration when element 
+      // will be really attached.
+      evalMaxOrDefault(scope);
+      evalAnimateOrDefault(scope);
+      _update(getProgressBarElement());
+    });
   }
 
   void _update(dom.Element shadowElement) {
-    if (_value == null) throw new StateError('attribute value is required, add value="{{initialValue}}" to your element: \'${_element.innerHtml}\'!');
+    if (_value == null) {
+      throw new StateError('attribute value is required, add value="{{initialValue}}" to your element: \'${_element.innerHtml}\'!');
+    }
+    
     int percent = _getPercentage(_value);
     if (isAnimate) {
       shadowElement.style.width = _getPercentage(_oldValue).toString() + '%';

@@ -22,10 +22,8 @@ class ContentAppendComponent {
   set append(var node) {
     if (node != null) {
       if (node is String){
-        print('Append as string $node');
         _element.appendText(node as String);
       } else if (node is Node) {
-        print('Append as element $node');
         _element.append(node as Node);
       }
     }

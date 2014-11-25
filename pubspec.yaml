@@ -32,3 +32,4 @@ transformers:
       - web/modal/modal_demo_template_from_other_file.html
       - web/accordion/accordion_demo.html
       - web/popover/popover_demo.html
+      - web/progressbar/progressbar_demo.html
