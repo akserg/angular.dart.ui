@@ -3,7 +3,7 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.demo;
 
-//import 'dart:html' as dom;
+import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
@@ -32,7 +32,7 @@ part 'modal/modal_demo_template_element_from_other_file.dart';
 //part 'modal/modal_demo_template_from_file.dart';
 part 'pagination/pagination_demo.dart';
 part 'progressbar/progressbar_demo.dart';
-//part 'tabs/tabs_demo.dart';
+part 'tabs/tabs_demo.dart';
 part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
 part 'tooltip/tooltip_demo.dart';
@@ -71,7 +71,7 @@ class DemoModule extends Module {
     bind(ProgressDemo);
     bind(ButtonsDemo);
 //    bind(CarouselDemoController);
-//    bind(TabsCtrl);
+    bind(TabsDemo);
     bind(AccordionDemo);
     bind(RatingDemo);
 //    bind(DragDropShoppingBasketDemoController);

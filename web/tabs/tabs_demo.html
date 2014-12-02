@@ -4,28 +4,32 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div tabs-demo-controller>
+<divs>
   <p>Select a tab by setting active binding to true:</p>
   <p>
-    <button class="btn btn-default btn-sm" ng-click="tabsCtrl.tabs[0].active = true">Select second tab</button>
-    <button class="btn btn-default btn-sm" ng-click="tabsCtrl.tabs[1].active = true; tabsCtrl.tabs[1].disabled = false">Select third tab</button>
+    <button class="btn btn-default btn-sm" ng-click="tabs[0].active = true">Select second tab</button>
+    <button class="btn btn-default btn-sm" ng-click="tabs[1].active = true; tabs[1].disabled = false">Select third tab</button>
   </p>
   <p>
-    <button class="btn btn-default btn-sm" ng-click="tabsCtrl.tabs[1].disabled = ! tabsCtrl.tabs[1].disabled">Enable / Disable third tab</button>
+    <button class="btn btn-default btn-sm" ng-click="tabs[1].disabled = ! tabs[1].disabled">Enable / Disable third tab</button>
   </p>
   <hr />
 
   <tabset>
     <tab heading="Static title">Static content</tab>
-    <tab ng-repeat="tab in tabsCtrl.tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
+    <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
       {{tab.content}}
     </tab>
-    <tab select="tabsCtrl.alertMe()">
-      <tab-heading>
-        <i class="glyphicon glyphicon-bell"></i> Alert!
-      </tab-heading>
+<!--     <tab select="alertMe()"> -->
+<!--       <tab-heading> -->
+<!--         <i class="glyphicon glyphicon-bell"></i> Alert! -->
+<!--       </tab-heading> -->
+<!--       I've got an HTML heading, and a select callback. Pretty cool! -->
+<!--     </tab> -->
+    <tab select="alertMe()" heading="Alert!">
       I've got an HTML heading, and a select callback. Pretty cool!
     </tab>
+
   </tabset>
 
   <hr />

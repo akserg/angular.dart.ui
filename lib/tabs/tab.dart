@@ -5,14 +5,18 @@ part of angular.ui.tabs;
 
 @Component(
     selector: 'tab',
-    visibility: Directive.CHILDREN_VISIBILITY,
-    templateUrl: 'packages/angular_ui/tabs/tab.html',
-    publishAs: 'tabCtrl',
+//    templateUrl: 'packages/angular_ui/tabs/tab.html',
+    template: '''
+<div ng-if="active" class="tab-pane" ng-class="{'active': active}">
+  <content></content>
+</div>''',
     useShadowDom: false
 )
-class TabComponent implements DetachAware {
+class TabComponent implements DetachAware, ScopeAware {
   
-  final TabsetComponent tabsetCtrl; 
+  Scope scope;
+  
+  final TabsetComponent tabset; 
   final Element element;
   
   //Called in contentHeadingTransclude once it inserts the tab's content into the dom
@@ -30,34 +34,32 @@ class TabComponent implements DetachAware {
   @NgTwoWay('disabled')
   bool disabled = false;
   
-  TabComponent(this.element, this.tabsetCtrl, Scope scope) {
+  TabComponent(this.element, this.tabset) {
     _log.fine('TabComponent');
-    this.tabsetCtrl.addTab(this);
+    this.tabset.addTab(this);
   }
 
-  @NgTwoWay('active') get active => _active;
+  @NgTwoWay('active') 
+  get active => _active;
   set active(var newValue) {
-    if (newValue!=null && newValue==true) {
-      tabsetCtrl.select(this);
+    _active = newValue;
+    if (newValue != null && newValue == true) {
+      tabset.select(this);
     }
   }
   
   set select(bool newValue) {
-    if (newValue) {
-      if(onSelectCallback!=null) {
-        onSelectCallback();
-      }
-    } else {
-      if(_active && onDeselectCallback!=null) {
-        onDeselectCallback();
-      }
+    if (newValue && !_active && onSelectCallback != null) {
+      onSelectCallback();
+    } else if(!newValue && _active && onDeselectCallback!=null) {
+      onDeselectCallback();
     }
     _active = newValue;
   }
 
   @override
   void detach() {
-    this.tabsetCtrl.removeTab(this);
+    this.tabset.removeTab(this);
   }
 }
 
