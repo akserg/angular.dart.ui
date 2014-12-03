@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <!--
-Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
+Copyright (C) 2013 - 2014 Angular Dart UI author Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
 <div ng-class="{
-    'active': s.leaving || (s.active && !s.entering),
-    'prev': (s.next || s.active) && s.direction=='prev',
-    'next': (s.next || s.active) && s.direction=='next',
-    'right': s.direction=='prev',
-    'left': s.direction=='next'
+    'active': leaving || (active && !entering),
+    'prev': (next || active) && direction=='prev',
+    'next': (next || active) && direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
   }" class="item text-center"><content></content>
 </div>

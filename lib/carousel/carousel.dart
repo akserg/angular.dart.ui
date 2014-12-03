@@ -31,17 +31,26 @@ class CarouselModule extends Module {
  */
 @Component(
     selector: 'carousel',
-    publishAs: 'c',
     useShadowDom: false,
-    visibility: Directive.CHILDREN_VISIBILITY, 
-    templateUrl: 'packages/angular_ui/carousel/carousel.html')
-@Component(
-    selector: '[carousel]',
-    publishAs: 'c',
-    useShadowDom: false,
-    visibility: Directive.CHILDREN_VISIBILITY, 
-    templateUrl: 'packages/angular_ui/carousel/carousel.html')
-class Carousel implements DetachAware {
+    visibility: Directive.CHILDREN_VISIBILITY,
+    template: '''
+<div ng-mouseenter='pause()' ng-mouseleave='play()' class='carousel'>
+  <ol class='carousel-indicators' ng-show='slides.length > 1'>
+    <li ng-repeat='item in slides' ng-class='{active: isActive(item)}' ng-click='select(item)'></li>
+  </ol>
+  <div class='carousel-inner'><content></content></div>
+  <a class='left carousel-control' ng-click='prev()' ng-show='slides.length > 1'><span class='icon-prev'></span></a>
+  <a class='right carousel-control' ng-click='next()' ng-show='slides.length > 1'><span class='icon-next'></span></a>
+</div>'''
+    //templateUrl: 'packages/angular_ui/carousel/carousel.html'
+)
+//@Component(
+//    selector: '[carousel]',
+//    publishAs: 'c',
+//    useShadowDom: false,
+//    visibility: Directive.CHILDREN_VISIBILITY, 
+//    templateUrl: 'packages/angular_ui/carousel/carousel.html')
+class Carousel implements DetachAware, ScopeAware {
 
   @NgOneWay('no-transition') 
   bool noTransition = false;
@@ -67,9 +76,9 @@ class Carousel implements DetachAware {
   Transition _transition;
   async.Completer _currentTransition;
   Timeout _timeout;
-  Scope _scope;
+  Scope scope;
 
-  Carousel(this._transition, this._timeout, this._scope) {
+  Carousel(this._transition, this._timeout) {
     _log.fine('CarouselComponent');
   }
 
@@ -269,13 +278,24 @@ class Carousel implements DetachAware {
     selector: 'slide',
     publishAs: 's',
     useShadowDom: false,
-    templateUrl: 'packages/angular_ui/carousel/slide.html')
-@Component(
-    selector: '[slide]',
-    publishAs: 's',
-    useShadowDom: false,
-    templateUrl: 'packages/angular_ui/carousel/slide.html')
-class Slide implements ShadowRootAware, DetachAware {
+    template: '''
+<div ng-class="{
+    'active': leaving || (active && !entering),
+    'prev': (next || active) && direction=='prev',
+    'next': (next || active) && direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center"><content></content>
+</div>'''
+    //templateUrl: 'packages/angular_ui/carousel/slide.html'
+)
+//@Component(
+//    selector: '[slide]',
+//    publishAs: 's',
+//    useShadowDom: false,
+//    templateUrl: 'packages/angular_ui/carousel/slide.html')
+class Slide implements ShadowRootAware, DetachAware, ScopeAware {
+  Scope scope;
   bool _active = false;
   @NgTwoWay('active')
   set active(bool value) {
@@ -319,6 +339,7 @@ class Slide implements ShadowRootAware, DetachAware {
 
   @override
   void onShadowRoot(shadowRoot) {
-    _carouselCtrl.addSlide(this, shadowRoot.querySelector('div'));
+    //_carouselCtrl.addSlide(this, shadowRoot.querySelector('div'));
+    _carouselCtrl.addSlide(this, element.querySelector('div'));
   }
 }

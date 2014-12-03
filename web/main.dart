@@ -8,7 +8,7 @@ import 'dart:math' as math;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
 import 'package:angular_ui/angular_ui.dart';
-//import 'package:angular_ui/utils/utils.dart';
+import 'package:angular_ui/utils/utils.dart';
 
 @MirrorsUsed(targets: const[
   'angular.ui',
@@ -20,7 +20,7 @@ import 'dart:mirrors';
 part 'accordion/accordion_demo.dart';
 part 'alert/alert_demo.dart';
 part 'buttons/buttons_demo.dart';
-//part 'carousel/carousel_demo.dart';
+part 'carousel/carousel_demo.dart';
 part 'collapse/collapse_demo.dart';
 //part 'dragdrop/dragdrop_demo.dart';
 //part 'datepicker/datepicker_demo.dart';
@@ -70,7 +70,7 @@ class DemoModule extends Module {
     bind(PaginationDemo);
     bind(ProgressDemo);
     bind(ButtonsDemo);
-//    bind(CarouselDemoController);
+    bind(CarouselDemo);
     bind(TabsDemo);
     bind(AccordionDemo);
     bind(RatingDemo);

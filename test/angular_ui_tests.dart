@@ -29,6 +29,7 @@ import 'package:angular_ui/accordion/accordion.dart';
 import 'package:angular_ui/popover/popover.dart';
 import 'package:angular_ui/progressbar/progressbar.dart';
 import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/carousel/carousel.dart';
 
 //import 'package:angular_ui/modal/modal.dart';
 
@@ -52,6 +53,7 @@ part 'unit/accordion/accordion_group_component_test.dart';
 part 'unit/popover/popover_component_test.dart';
 part 'unit/progressbar/progressbar_component_test.dart';
 part 'unit/tabs/tabs_component_test.dart';
+part 'unit/carousel/carousel_component_test.dart';
 
 //part 'unit/modal/modal_component_test.dart';
 
@@ -78,6 +80,7 @@ main(){
   testPopoverComponent();
   testProgressbarComponent();
   testTabsComponent();
+  testCarouselComponent();
   
 //  testModalComponent();
   

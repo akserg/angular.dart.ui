@@ -16,7 +16,7 @@ testDropdownComponent() {
       module((Module _) => _
         ..install(new DropdownToggleModule())
       );
-      return loadTemplates(['/alert/alert.html']);
+      //return loadTemplates(['/alert/alert.html']);
     });
 
     String getHtml() {

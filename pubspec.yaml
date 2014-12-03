@@ -34,3 +34,4 @@ transformers:
       - web/popover/popover_demo.html
       - web/progressbar/progressbar_demo.html
       - web/tabs/tabs_demo.html
+      - web/carousel/carousel_demo.html
