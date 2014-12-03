@@ -23,7 +23,7 @@ part 'buttons/buttons_demo.dart';
 part 'carousel/carousel_demo.dart';
 part 'collapse/collapse_demo.dart';
 //part 'dragdrop/dragdrop_demo.dart';
-//part 'datepicker/datepicker_demo.dart';
+part 'datepicker/datepicker_demo.dart';
 part 'dropdown_toggle/dropdown_toggle_demo.dart';
 part 'modal/modal_demo_embedded_template.dart';
 part 'modal/modal_demo_embedded_template_static_backdrop.dart';
@@ -58,7 +58,7 @@ class DemoModule extends Module {
     bind(PopoverDemo);
     bind(TooltipDemo);
     bind(TimepickerDemo);
-//    bind(DatepickerCtrl);
+    bind(DatepickerDemo);
     bind(ModalDemoEmbeddedTemplate);
     bind(ModalDemoEmbeddedTemplateWithStaticBackdrop);
     bind(ModalDemoTagTemplate);

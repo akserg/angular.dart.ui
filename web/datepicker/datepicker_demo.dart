@@ -6,8 +6,12 @@ part of angular.ui.demo;
 /**
  * Datepicker controller.
  */
-@Controller(selector: '[date-picker-ctrl]', publishAs: 'ctrl')
-class DatepickerCtrl {
+@Component(
+    selector: 'datepicker-demo',
+    templateUrl: 'datepicker/datepicker_demo.html',
+    useShadowDom: false
+)
+class DatepickerDemo {
   
   var dt;
   bool showWeeks = true;
@@ -20,9 +24,9 @@ class DatepickerCtrl {
   List formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
   String format;
   
-  Date filter;
+//  Date filter;
   
-  DatepickerCtrl(this.filter ) {
+  DatepickerDemo() { //this.filter ) {
     toggleMin();
     format = formats[0];
   }
@@ -54,7 +58,7 @@ class DatepickerCtrl {
     opened = true;
   }
   
-  String translate(DateTime date) {
-    return filter.call(date, format);
-  }
+//  String translate(DateTime date) {
+//    return filter.call(date, format);
+//  }
 }

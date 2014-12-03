@@ -35,3 +35,4 @@ transformers:
       - web/progressbar/progressbar_demo.html
       - web/tabs/tabs_demo.html
       - web/carousel/carousel_demo.html
+      - web/datepicker/datepicker_demo.html
