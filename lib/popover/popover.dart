@@ -22,7 +22,7 @@ class PopoverModule extends Module {
 }
 
 @Decorator(selector:'[popover]') 
-@Decorator(selector:'popover')
+//@Component(selector:'popover', useShadowDom: false)
 class Popover extends TooltipBase {
   
   var template = '<div><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"></div></div></div>';
@@ -30,8 +30,8 @@ class Popover extends TooltipBase {
   dom.Element _popoverTitle;
   dom.DivElement _popoverContent;
   
-  Popover(Scope scope, dom.Element element, NodeAttrs attrs, Timeout timeout, TooltipConfig config, Interpolate interpolate, Position position, Injector injector, Compiler compiler) : 
-    super("popover", 'popover', 'click', scope, element, attrs, timeout, config, interpolate, position, injector, compiler);
+  Popover(dom.Element element, NodeAttrs attrs, Timeout timeout, TooltipConfig config, Interpolate interpolate, Position position, Injector injector, Compiler compiler) : 
+    super("popover", 'popover', 'click', element, attrs, timeout, config, interpolate, position, injector, compiler);
   
   @override
   void createTooltip() {
@@ -45,24 +45,24 @@ class Popover extends TooltipBase {
     tooltip.classes.clear();
     tooltip.classes.add('popover');
     //
-    var _placement = scope.context['tt_placement'];
+    var _placement = tt_placement;
     if (_placement != null && _placement.length > 0) {
       tooltip.classes.add(_placement);
     }
     //
-    var _in = toBool(eval(scope, scope.context['tt_isOpen']));
+    var _in = toBool(eval(scope, tt_isOpen));
     if (_in) {
       tooltip.classes.add('in');
     }
     //
-    var _fade = toBool(eval(scope, scope.context['tt_animation']));
+    var _fade = toBool(eval(scope, tt_animation));
     if (_fade) {
       tooltip.classes.add('fade');
     }
     //
     String txt;
     if (_popoverTitle != null) {
-      txt = scope.context['tt_title'];
+      txt = tt_title;
       if (txt != null && txt.trim().length > 0) {
         _popoverTitle.setInnerHtml(txt);
         _popoverTitle.classes.remove('ng-hide');
@@ -73,7 +73,7 @@ class Popover extends TooltipBase {
       _popoverTitle.classes.add('ng-hide');
     }
     if (_popoverContent != null) {
-      txt = scope.context['tt_content'];
+      txt = tt_content;
       _popoverContent.setInnerHtml(txt == null ? '' : txt);
     }
   }

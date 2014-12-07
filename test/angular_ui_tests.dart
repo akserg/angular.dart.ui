@@ -23,9 +23,17 @@ import 'package:angular_ui/collapse/collapse.dart';
 import 'package:angular_ui/dropdown/dropdown_toggle.dart';
 import 'package:angular_ui/rating/rating.dart'; 
 import 'package:angular_ui/timepicker/timepicker.dart';
-//import 'package:angular_ui/tooltip/tooltip.dart';
-//import 'package:angular_ui/accordion/accordion.dart'; 
+import 'package:angular_ui/tooltip/tooltip.dart';
+import 'package:angular_ui/pagination/pagination.dart';
+import 'package:angular_ui/accordion/accordion.dart';
+import 'package:angular_ui/popover/popover.dart';
+import 'package:angular_ui/progressbar/progressbar.dart';
+import 'package:angular_ui/tabs/tabset.dart';
+import 'package:angular_ui/carousel/carousel.dart';
+import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
+
+//import 'package:angular_ui/modal/modal.dart';
 
 part 'unit/utils/position_test.dart';
 part 'unit/utils/timeout_test.dart';
@@ -39,11 +47,20 @@ part 'unit/collapse/collapse_component_test.dart';
 part 'unit/dropdown/dropdown_component_test.dart';
 part 'unit/rating/rating_component_test.dart';
 part 'unit/timepicker/timepicker_component_test.dart';
-//part 'unit/tooltip/tooltip_component_test.dart';
-//part 'unit/accordion/accordion_component_test.dart';
+part 'unit/tooltip/tooltip_component_test.dart';
+part 'unit/pagination/pager_component_test.dart';
+part 'unit/pagination/pagination_component_test.dart';
+part 'unit/accordion/accordion_component_test.dart';
+part 'unit/accordion/accordion_group_component_test.dart';
+part 'unit/popover/popover_component_test.dart';
+part 'unit/progressbar/progressbar_component_test.dart';
+part 'unit/tabs/tabs_component_test.dart';
+part 'unit/carousel/carousel_component_test.dart';
+part 'unit/datepicker/datepicker_component_test.dart';
 part 'unit/dragdrop/dragdrop_sortable_test.dart';
 part 'unit/dragdrop/dragdrop_test.dart';
 
+//part 'unit/modal/modal_component_test.dart';
 
 main(){
   guinnessEnableHtmlMatchers();
@@ -60,9 +77,19 @@ main(){
   testDropdownComponent();
   testRatingComponent();
   testTimepickerComponent();
-//  testTooltipComponent();
-//  testAccordionComponent();
-
+  testTooltipComponent();
+  testPagerComponent();
+  testPaginationComponent();
+  testAccordionComponent();
+  testAccordionGroupComponent();
+  testPopoverComponent();
+  testProgressbarComponent();
+  testTabsComponent();
+  testCarouselComponent();
+  testDatepickerComponent();
+  
+//  testModalComponent();
+  
   guinness.initSpecs();
 }
 

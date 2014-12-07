@@ -23,7 +23,7 @@ class DatepickerPopupConfig {
 
 @Decorator(selector: 'datepicker-popup[ng-model]')
 @Decorator(selector: '[datepicker-popup][ng-model]')
-class DatepickerPopup  {
+class DatepickerPopup implements ScopeAware {
 
   String _dateFormat;
   bool _closeOnDateSelection = false;
@@ -47,7 +47,10 @@ class DatepickerPopup  {
   Position _position;
   
   DatepickerPopup(Scope _originalScope, this._element, this._dateFilter, this._attrs, this._ngModel, this._position,
-      this._parser, this._compiler, this._directiveMap, this._injector, this._datepickerConfig, this._datepickerPopupConfig) {
+      this._parser, this._compiler, this._directiveMap, this._injector, this._datepickerConfig, this._datepickerPopupConfig);
+  
+  void set scope(Scope originalScope) {
+    this._originalScope = originalScope;
     // create a child scope so we are not polluting original one
     _scope = _originalScope.createChild(new PrototypeMap(_originalScope.context)); 
     
@@ -249,21 +252,35 @@ class DatepickerPopup  {
   }
 }
 
-@Component(selector: 'datepicker-popup-wrap', publishAs: 'd',
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/datepicker/popup.html')
-@Component(selector: '[datepicker-popup-wrap]', publishAs: 'd', 
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/datepicker/popup.html')
-class DatepickerPopupWrap {
+@Component(
+    selector: 'datepicker-popup-wrap',
+    useShadowDom: false,
+    template: '''
+<ul class="dropdown-menu" ng-style="{'display':d.display, 'top':top, 'left':left}">
+  <li><content></content></li>
+  <li ng-show="showButtonBar" style="padding:10px 9px 2px">
+    <span class="btn-group">
+      <button type="button" class="btn btn-sm btn-info" ng-click="today()">{{currentText}}</button>
+      <button type="button" class="btn btn-sm btn-default" ng-click="showWeeks = ! showWeeks" ng-class="{active: showWeeks}">{{toggleWeeksText}}</button>
+      <button type="button" class="btn btn-sm btn-danger" ng-click="clear()">{{clearText}}</button>
+    </span>
+    <button type="button" class="btn btn-sm btn-success pull-right" ng-click="isOpen = false">{{closeText}}</button>
+  </li>
+</ul>'''
+    //templateUrl: 'packages/angular_ui/datepicker/popup.html'
+)
+//@Component(selector: '[datepicker-popup-wrap]', publishAs: 'd', 
+//    useShadowDom: false, 
+//    templateUrl: 'packages/angular_ui/datepicker/popup.html')
+class DatepickerPopupWrap implements ScopeAware {
 
-  Scope _scope;
+  Scope scope;
   
   String get display {
-    return _scope.context['isOpen'] != null && _scope.context['isOpen'] ? 'block' : 'none';
+    return scope.context['isOpen'] != null && scope.context['isOpen'] ? 'block' : 'none';
   }
   
-  DatepickerPopupWrap(dom.Element element, this._scope) {
+  DatepickerPopupWrap(dom.Element element) {
     element.onClick.listen((dom.Event event) {
       event.preventDefault();
       event.stopPropagation();

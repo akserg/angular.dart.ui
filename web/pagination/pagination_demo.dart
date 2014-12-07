@@ -6,17 +6,25 @@ part of angular.ui.demo;
 /**
  * Pagination controller with template.
  */
-@Controller(selector: '[pagination-ctrl]', publishAs: 'ctrl')
-class PaginationController {
+@Component(
+  selector: 'pagination-demo',
+  templateUrl: 'pagination/pagination_demo.html',
+  useShadowDom: false
+)
+class PaginationDemo implements ScopeAware {
 
+  Scope scope;
+  
   int totalItems;
   int currentPage;
   int maxSize;
 
   int bigTotalItems;
   int bigCurrentPage;
+  
+  var smallnumPages, numPages;
 
-  PaginationController() {
+  PaginationDemo() {
     totalItems = 64;
     currentPage = 4;
     maxSize = 5;

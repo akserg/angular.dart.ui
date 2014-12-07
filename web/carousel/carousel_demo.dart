@@ -3,11 +3,14 @@
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.demo;
 
-@Controller(
-    selector: '[ng-controller=carousel-demo-ctrl]',
-    publishAs: 'ctrl')
-class CarouselDemoController {
+@Component(
+    selector: 'carousel-demo',
+    templateUrl: 'carousel/carousel_demo.html',
+    useShadowDom: false)
+class CarouselDemo implements ScopeAware {
 
+  Scope scope;
+  
   int _myInterval = 2;
   int get myInterval {
     return _myInterval;
@@ -22,7 +25,7 @@ class CarouselDemoController {
   
   List<Map<String,dynamic>> slides = [];
 
-  CarouselDemoController() {
+  CarouselDemo() {
 
     for (int i = 0; i < 4; i++) {
       addSlide();
@@ -32,7 +35,7 @@ class CarouselDemoController {
   void addSlide() {
     int newWidth = 600 + slides.length;
     slides.add({
-      'image': 'http://placekitten.com/${newWidth}/300',
+      'image': 'http://placekitten.com/g/${newWidth}/300',
       'text': ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
         ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
     });

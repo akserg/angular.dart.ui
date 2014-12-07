@@ -4,13 +4,13 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div date-picker-ctrl>
-    <pre>Selected date is: <em>{{ctrl.dt | date:'fullDate' }}</em></pre>
+<div>
+    <pre>Selected date is: <em>{{dt | date:'fullDate' }}</em></pre>
 
     <div class="row">
         <div class="col-md-4">
             <p class="input-group">
-              <input type="text" class="form-control" ng-model="ctrl.dt">
+              <input type="text" class="form-control" ng-model="dt">
             </p>
         </div>
     </div>
@@ -18,14 +18,14 @@ All rights reserved.  Please see the LICENSE.md file.
     <h4>Inline</h4>
     <div style="display:inline-block;">
       <div class="well well-sm">
-          <datepicker ng-model="ctrl.dt" min="ctrl.minDate" show-weeks="ctrl.showWeeks"></datepicker>
+          <datepicker ng-model="dt" min="minDate" show-weeks="showWeeks"></datepicker>
       </div>
     </div>
 
     <hr>
-    <button class="btn btn-sm btn-info" ng-click="ctrl.today()">Today</button>
-    <button class="btn btn-sm btn-default" ng-click="ctrl.dt = '2009-09-30'">2009-09-30</button>
-    <button class="btn btn-sm btn-success" ng-click="ctrl.toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
-    <button class="btn btn-sm btn-danger" ng-click="ctrl.clear()">Clear</button>
-    <button class="btn btn-sm btn-default" ng-click="ctrl.toggleMin()" tooltip="After today restriction">Min date</button>
+    <button class="btn btn-sm btn-info" ng-click="today()">Today</button>
+    <button class="btn btn-sm btn-default" ng-click="dt = '2009-09-30'">2009-09-30</button>
+    <button class="btn btn-sm btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
+    <button class="btn btn-sm btn-danger" ng-click="clear()">Clear</button>
+    <button class="btn btn-sm btn-default" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
 </div>

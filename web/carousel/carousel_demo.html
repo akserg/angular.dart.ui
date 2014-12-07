@@ -4,10 +4,10 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div ng-controller="carousel-demo-ctrl">
+<div>
   <div style="height: 305px">
-    <carousel interval="ctrl.myInterval * 1000">
-      <slide ng-repeat="item in ctrl.slides" active="item['active']">
+    <carousel interval="myInterval * 1000">
+      <slide ng-repeat="item in slides" active="item['active']">
         <img ng-src="{{item['image']}}" style="margin:auto;">
         <div class="carousel-caption">
           <h4>Slide {{$index}}</h4>
@@ -18,11 +18,11 @@ All rights reserved.  Please see the LICENSE.md file.
   </div>
   <div class="row">
     <div class="col-md-3">
-      <a class="btn btn-info" ng-click="ctrl.addSlide()">Add Slide</a>
+<!--       <a class="btn btn-info" ng-click="addSlide()">Add Slide</a> -->
     </div>
     <div class="col-md-5">
       Interval, in milliseconds:
-      <input type="number" class="form-control" ng-model="ctrl.myInterval" ng-value="ctrl.myInterval | stringify">
+      <input type="number" class="form-control" ng-model="myInterval" ng-value="myInterval | stringify">
       Enter a negative number to stop the interval.
     </div>
   </div>

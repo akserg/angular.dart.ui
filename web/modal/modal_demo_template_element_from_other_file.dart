@@ -6,8 +6,13 @@ part of angular.ui.demo;
 /**
  * Modal controller with template from file for other.
  */
-@Controller(selector: '[modal-ctrl-other-tmpl]', publishAs: 'ctrl2')
-class ModalCtrlOtherTemplate {
+@Component(
+  selector: 'modal-demo-other-tmpl', 
+  useShadowDom: false,
+  templateUrl: 'modal/modal_demo_template_element_from_other_file.html',
+  exportExpressions: const ["open"]
+)
+class ModalDemoOtherTemplate implements ScopeAware {
   List<String> items = ["Hydrogen", "Lithium", "Oxygen", "Chromium"];
   
   String selected;
@@ -15,18 +20,26 @@ class ModalCtrlOtherTemplate {
   
   Modal modal;
   ModalInstance modalInstance;
-  Scope scope;
+  Scope _scope;
   NgModel ngModel;
   
-  ModalCtrlOtherTemplate(this.modal, this.scope, this.ngModel) {
+  ModalDemoOtherTemplate(this.modal, this.ngModel) {
+    print("!!! modal $modal");
+    print("!!! ngModel $ngModel");
+  }
+  
+  get scope => _scope;
+  set scope(Scope value) {
+    // Find ngModel in parent scope
+    print("!!! Parent ngModel ${value.parentScope.context['ngModel']}");
     // Update local variables from outside
-    ngModel.render = (value) {
-      selected = value;
-    };
-    // Update model from inside
-    scope.watch('ctrl2.selected', (newValue, _) {
-      ngModel.viewValue = newValue;
-    });
+//    ngModel.render = (value) {
+//      selected2 = value;
+//    };
+//    // Update model from inside
+//    _scope.watch('selected', (newValue, _) {
+//      ngModel.viewValue = newValue;
+//    });
   }
   
   void open(String templateUrl) {

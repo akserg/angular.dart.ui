@@ -3,9 +3,9 @@
 // All rights reserved.  Please see the LICENSE.md file.
 library angular.ui.accordion;
 
-import 'dart:html' as html;
-import 'package:angular/angular.dart';
-//import 'package:angular_ui/app/injectable_service.dart';
+import 'dart:html' as dom;
+import "package:angular/angular.dart";
+import "package:angular/core_dom/module_internal.dart";
 import 'package:angular/utils.dart' as utils;
 import 'package:logging/logging.dart' show Logger;
 
@@ -18,6 +18,7 @@ class AccordionModule extends Module {
     bind(AccordionComponent);
     bind(AccordionHeadingComponent);
     bind(AccordionGroupComponent);
+    bind(AccordionTransclude);
     bind(AccordionConfig, toValue:new AccordionConfig());
   }
 }
@@ -29,22 +30,21 @@ class AccordionConfig {
 
 @Component(
     selector: 'accordion',
-    publishAs: 'ctrl',
-    visibility: Directive.CHILDREN_VISIBILITY,
-    templateUrl: 'packages/angular_ui/accordion/accordion.html',
+    //templateUrl: 'packages/angular_ui/accordion/accordion.html',
+    template: '<div class="panel-group"><content></content></div>',
     useShadowDom: false
 )
-@Component(
-    selector: '[accordion]',
-    publishAs: 'ctrl',
-    visibility: Directive.CHILDREN_VISIBILITY,
-    templateUrl: 'packages/angular_ui/accordion/accordion.html',
-    useShadowDom: false
-)
-class AccordionComponent {
-  @NgTwoWay('close-others') bool isCloseOthers;
+//@Component(
+//    selector: '[accordion]',
+//    templateUrl: 'packages/angular_ui/accordion/accordion.html',
+//    useShadowDom: false
+//)
+class AccordionComponent implements ScopeAware {
+  
+  @NgTwoWay('close-others') 
+  bool isCloseOthers;
 
-  final Scope scope;
+  Scope scope;
   final AccordionConfig _config;
 
   /*
@@ -52,18 +52,15 @@ class AccordionComponent {
    */
   List<AccordionGroupComponent> groups = [];
 
-  AccordionComponent(this.scope, this._config)
-  {
-    _log.fine('AccordionComponent');
-  }
+  AccordionComponent(this._config);
 
   /*
    * Ensure that all the groups in this accordion are closed, unless close-others explicitly says not to
    */
   void closeOthers(AccordionGroupComponent openGroup) {
     isCloseOthers = isCloseOthers != null ? isCloseOthers : _config.closeOthers;
-    if(isCloseOthers) {
-      groups.forEach((e) {
+    if (isCloseOthers) {
+      groups.forEach((AccordionGroupComponent e) {
         if(e != openGroup) {
           e.isOpen = false;
         }

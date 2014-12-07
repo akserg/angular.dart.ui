@@ -126,7 +126,7 @@ class TemplateBasedComponent implements DetachAware {
     'query': '=>!query',
     'template-url': '=>!templateUrl'
   })
-class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
+class TypeaheadMatch extends TemplateBasedComponent implements AttachAware, ScopeAware {
   static const String DEFAULT_MATCHED_ITEM_TEMPLATE = 'packages/angular_ui/typeahead/typeahead-match.html';
 
   final Injector _injector;
@@ -139,7 +139,7 @@ class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
   String query;
   String _templateUrl = DEFAULT_MATCHED_ITEM_TEMPLATE;
 
-  TypeaheadMatch(this._element, this._injector, this._scope, ViewFactoryCache viewCache) : super(viewCache);
+  TypeaheadMatch(this._element, this._injector, ViewFactoryCache viewCache) : super(viewCache);
 
   set templateUrl(String value) => _templateUrl = (value == null || value.isEmpty)? DEFAULT_MATCHED_ITEM_TEMPLATE: value;
 
@@ -147,6 +147,10 @@ class TypeaheadMatch extends TemplateBasedComponent implements AttachAware {
     loadView(_element, _injector, _scope, _templateUrl, {'match': match, 'index': index, 'query': query}, true);
   }
 
+  @override
+  set scope( Scope scope ) {
+      _scope = scope;
+  }
 
 
 }

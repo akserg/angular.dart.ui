@@ -6,10 +6,12 @@ part of angular.ui.demo;
 /**
  * Modal controller with template and static backdrop.
  */
-@Controller(selector: '[modal-static-ctrl-tmpl]', 
-    publishAs: 'ctrl',
+@Component(
+    selector: 'modal-demo-embedded-tmpl-static-backdrop', 
+    useShadowDom: false,
+    templateUrl: 'modal/modal_demo_embedded_template_static_backdrop.html',
     exportExpressions: const ["tmp", "ok"])
-class ModalStaticCtrlTemplate {
+class ModalDemoEmbeddedTemplateWithStaticBackdrop implements ScopeAware {
   List<String> items = ["First", "Second", "Third", "Fourth"];
   String selected;
   String tmp;
@@ -25,19 +27,19 @@ class ModalStaticCtrlTemplate {
 </div>
 <div class="modal-body">
   <ul>
-    <li ng-repeat="item in ctrl.items">
-      <a ng-click="ctrl.tmp = item">{{ item }}</a>
+    <li ng-repeat="item in items">
+      <a ng-click="tmp = item">{{ item }}</a>
     </li>
   </ul>
-  Selected: <b>{{ctrl.tmp}}</b>
+  Selected: <b>{{tmp}}</b>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-  <button type="button" class="btn btn-primary" ng-click="ctrl.ok(ctrl.tmp)">OK</button>
+  <button type="button" class="btn btn-primary" ng-click="ok(tmp)">OK</button>
 </div>
 """;
   
-  ModalStaticCtrlTemplate(this.modal, this.scope);
+ModalDemoEmbeddedTemplateWithStaticBackdrop(this.modal);
   
   ModalInstance getModalInstance() {
     return modal.open(new ModalOptions(template:template, backdrop: 'static'), scope);

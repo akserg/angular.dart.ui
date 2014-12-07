@@ -4,17 +4,17 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div popover-demo-controller>
+<div>
     <h4>Dynamic</h4>
     <div class="form-group">
       <label>Popup Text:</label>
-      <input type="text" ng-model="p.dynamicPopover" class="form-control">
+      <input type="text" ng-model="dynamicPopover" class="form-control">
     </div>
     <div class="form-group">
       <label>Popup Title:</label>
-      <input type="text" ng-model="p.dynamicPopoverTitle" class="form-control">
+      <input type="text" ng-model="dynamicPopoverTitle" class="form-control">
     </div>
-    <button popover="{{p.dynamicPopover}}" popover-title="{{p.dynamicPopoverTitle}}" class="btn btn-default">Dynamic Popover</button>
+    <button popover="{{dynamicPopover}}" popover-title="{{dynamicPopoverTitle}}" class="btn btn-default">Dynamic Popover</button>
     
     <hr />
     <h4>Positional</h4>

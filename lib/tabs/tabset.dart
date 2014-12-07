@@ -24,24 +24,34 @@ class TabsModule extends Module {
 
 @Component(
     selector: 'tabset',
-    visibility: Directive.CHILDREN_VISIBILITY,
-    templateUrl: 'packages/angular_ui/tabs/tabset.html',
-    publishAs: 'tabsetCtrl',
+//    templateUrl: 'packages/angular_ui/tabs/tabset.html',
+    template: '''
+<div class="tabbable">
+  <ul class="nav nav-{{type}}" ng-class="{'nav-stacked': vertical, 'nav-justified': justified}">
+    <li ng-repeat="tab in tabs" ng-class="{active: tab.active, disabled: tab.disabled}">
+      <a ng-click="select(tab)"><content-append node="tab.heading"></content-append></a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <content></content>
+  </div>
+</div>''',
     useShadowDom: false
 )
-class TabsetComponent {
+class TabsetComponent implements ScopeAware {
+  
+  Scope scope;
   
   @NgOneWay('justified')
   bool justified = false;
+  
   @NgOneWay('vertical')
   bool vertical = false;
+  
   @NgOneWay('type')
   String type = "tabs";
-  List<TabComponent> tabs = [];
   
-  TabsetComponent() {
-    _log.fine('TabsetComponent');
-  }
+  List<TabComponent> tabs = [];
   
   void select(TabComponent tab) {
     if (!tab.disabled) {

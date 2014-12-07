@@ -96,13 +96,29 @@ class Mode {
 /**
  * Datepicker.
  */
-@Component(selector: 'datepicker[ng-model]', publishAs: 'd',
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
-@Component(selector: '[datepicker][ng-model]', publishAs: 'd', 
-    useShadowDom: false, 
-    templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
-class Datepicker implements ShadowRootAware {
+@Component(
+    selector: 'datepicker[ng-model]',
+    useShadowDom: false,
+    template: '''
+<table>
+  <thead>
+    <tr>
+      <th><button type="button" class="btn btn-default btn-sm pull-left" ng-click="move(-1)"><i class="glyphicon glyphicon-chevron-left"></i></button></th>
+      <th id="title"><button type="button" class="btn btn-default btn-sm btn-block" ng-click="toggleMode()"></button></th>
+      <th><button type="button" class="btn btn-default btn-sm pull-right" ng-click="move(1)"><i class="glyphicon glyphicon-chevron-right"></i></button></th>
+    </tr>
+    <tr id="labels" class="h6">
+    </tr>
+  </thead>
+  <tbody id="rows">
+  </tbody>
+</table>'''
+    //templateUrl: 'packages/angular_ui/datepicker/datepicker.html'
+)
+//@Component(selector: '[datepicker][ng-model]', publishAs: 'd', 
+//    useShadowDom: false, 
+//    templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
+class Datepicker implements ShadowRootAware, ScopeAware {
 
   int mode = 0;
   DateTime selected = new DateTime.now();
@@ -209,7 +225,10 @@ class Datepicker implements ShadowRootAware {
   List rows;
   List labels;
   
-  Datepicker(this._element, this._datepickerConfig, this._attrs, this._ngModel, this._scope, this._dateFilter) {
+  Datepicker(this._element, this._datepickerConfig, this._attrs, this._ngModel, this._dateFilter);
+  
+  void set scope(Scope scope) {
+    this._scope = scope;
     init();
 
     showWeeks = _datepickerConfig.showWeeks;

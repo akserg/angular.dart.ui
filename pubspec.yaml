@@ -9,7 +9,7 @@ authors:
 description: Port of Angular-UI to Dart.
 homepage: http://akserg.github.io/angular.dart.ui
 environment:
-  sdk: '>=1.7.2 <2.0.0'
+  sdk: '>=1.6.0 <2.0.0'
 dependencies:
   angular: '1.0.0'
 dev_dependencies:
@@ -31,3 +31,15 @@ transformers:
       - web/dropdown_toggle/dropdown_toggle_demo.html
       - web/rating/rating_demo.html
       - web/timepicker/timepicker_demo.html
+      - web/tooltip/tooltip_demo.html
+      - web/pagination/pagination_demo.html
+      - web/modal/modal_demo_embedded_template.html
+      - web/modal/modal_demo_embedded_template_static_backdrop.html
+      - web/modal/modal_demo_template_element.html
+      - web/modal/modal_demo_template_from_other_file.html
+      - web/accordion/accordion_demo.html
+      - web/popover/popover_demo.html
+      - web/progressbar/progressbar_demo.html
+      - web/tabs/tabs_demo.html
+      - web/carousel/carousel_demo.html
+      - web/datepicker/datepicker_demo.html

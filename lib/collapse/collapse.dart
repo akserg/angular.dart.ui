@@ -44,9 +44,7 @@ class Collapse implements ScopeAware {
   var initialAnimSkip = true;
   async.Completer currentTransition;
 
-  Collapse(this.element, this.transition) {
-    _log.fine('CollapseDirective');
-  }
+  Collapse(this.element, this.transition);
 
   async.Future doTransition(change) {
     async.Completer newTransition = transition(element, change);

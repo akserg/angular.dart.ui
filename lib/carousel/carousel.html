@@ -4,11 +4,11 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<div ng-mouseenter='c.pause()' ng-mouseleave='c.play()' class='carousel'>
-  <ol class='carousel-indicators' ng-show='c.slides.length > 1'>
-    <li ng-repeat='item in c.slides' ng-class='{active: c.isActive(item)}' ng-click='c.select(item)'></li>
+<div ng-mouseenter='pause()' ng-mouseleave='play()' class='carousel'>
+  <ol class='carousel-indicators' ng-show='slides.length > 1'>
+    <li ng-repeat='item in slides' ng-class='{active: isActive(item)}' ng-click='select(item)'></li>
   </ol>
   <div class='carousel-inner'><content></content></div>
-  <a class='left carousel-control' ng-click='c.prev()' ng-show='c.slides.length > 1'><span class='icon-prev'></span></a>
-  <a class='right carousel-control' ng-click='c.next()' ng-show='c.slides.length > 1'><span class='icon-next'></span></a>
+  <a class='left carousel-control' ng-click='prev()' ng-show='slides.length > 1'><span class='icon-prev'></span></a>
+  <a class='right carousel-control' ng-click='next()' ng-show='slides.length > 1'><span class='icon-next'></span></a>
 </div>

@@ -5,8 +5,6 @@ https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
 <ul class="pager">
-    <li ng-class="{disabled: ctrl.noPrevious, previous : ctrl.align}"><a href ng-click="ctrl.selectPage(ctrl.currentPage - 1)">{{ctrl.previousText}}</a>
-    </li>
-    <li ng-class="{disabled: ctrl.noNext, next : ctrl.align}"><a href ng-click="ctrl.selectPage(ctrl.currentPage + 1)">{{ctrl.nextText}}</a>
-    </li>
+  <li ng-class="{disabled: noPrevious, previous : align}"><a ng-click="selectPage(currentPage - 1)">{{previousText}}</a></li>
+  <li ng-class="{disabled: noNext, next : align}"><a ng-click="selectPage(currentPage + 1)">{{nextText}}</a></li>
 </ul>
