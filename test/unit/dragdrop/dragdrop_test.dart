@@ -107,8 +107,8 @@ void dragdropTests() {
       })));
  
       it('Drop events should add/remove the expected classes to the target element', async(inject(() {
-        Function dragSuccessCallback = jasmine.createSpy('drag callback');
-        Function dropSuccessCallback = jasmine.createSpy('drop callback');
+        Function dragSuccessCallback = guinness.createSpy('drag callback');
+        Function dropSuccessCallback = guinness.createSpy('drop callback');
         
         dom.Element elem = createElement(dropSuccessCallback:dropSuccessCallback, dragSuccessCallback:dragSuccessCallback);
         dom.Element dropElem = ngQuery(elem, '#dropId')[0];
@@ -143,8 +143,8 @@ void dragdropTests() {
       })));
       
       it('Drop event should activate the onDropSuccess and onDragSuccess callbacks', async(inject(() {
-        Function dragSuccessCallback = jasmine.createSpy('drag callback');
-        Function dropSuccessCallback = jasmine.createSpy('drop callback');
+        Function dragSuccessCallback = guinness.createSpy('drag callback');
+        Function dropSuccessCallback = guinness.createSpy('drop callback');
             
         dom.Element mainElement = createElement(dropSuccessCallback:dropSuccessCallback, dragSuccessCallback:dragSuccessCallback);
         dom.Element dragElem = ngQuery(mainElement, '#dragId')[0];
@@ -219,12 +219,12 @@ void dragdropTests() {
           
           dom.Element createElement() {
             
-            scope.context['dragOneSuccessCallback'] = jasmine.createSpy('drag one callback');
-            scope.context['dragTwoSuccessCallback'] = jasmine.createSpy('drag two callback');
-            scope.context['dragOneTwoSuccessCallback'] = jasmine.createSpy('drag one-two callback');
-            scope.context['dropOneSuccessCallback'] = jasmine.createSpy('drop one callback');
-            scope.context['dropTwoSuccessCallback'] = jasmine.createSpy('drop two callback');
-            scope.context['dropOneTwoSuccessCallback'] = jasmine.createSpy('drop one-two callback');
+            scope.context['dragOneSuccessCallback'] = guinness.createSpy('drag one callback');
+            scope.context['dragTwoSuccessCallback'] = guinness.createSpy('drag two callback');
+            scope.context['dragOneTwoSuccessCallback'] = guinness.createSpy('drag one-two callback');
+            scope.context['dropOneSuccessCallback'] = guinness.createSpy('drop one callback');
+            scope.context['dropTwoSuccessCallback'] = guinness.createSpy('drop two callback');
+            scope.context['dropOneTwoSuccessCallback'] = guinness.createSpy('drop one-two callback');
             String html =
             '''<div>
               <div id='dragIdOne'
