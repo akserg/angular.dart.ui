@@ -1,6 +1,8 @@
 part of angular.ui.typeahead;
 
-@Decorator(selector : 'input[typeahead][ng-model]', map: const {
+@Decorator(
+  selector : 'input[typeahead][ng-model]', 
+  map: const {
     'typeahead': '@expression',
     'typeahead-template-url': '@templateUrl',
     'typeahead-min-length': '@minLength',
@@ -10,12 +12,13 @@ part of angular.ui.typeahead;
     'typeahead-loading': '<=>isLoading',
     'typeahead-on-select': '&onSelectCallback',
     'typeahead-editable': '@isEditable'
-})
-class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
+  }
+)
+class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware, ScopeAware {
 
   final TypeaheadParser _typeaheadParser;
   final NgModel _ngModel;
-  final Scope _scope;
+  Scope _scope;
   dom.InputElement _element;
 
   final FormatterMap _formatters;
@@ -43,22 +46,25 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   Timer _matchesLookupTimer;
 
   // Popup specific params;
-  List<TypeaheadMatchItem> matches = [];
+  List matches = [];
   int _active = -1;
   Rect position;
   String query;
 
-  TypeaheadDecorator(this._ngModel, this._injector, this._scope, dom.Element element, this._typeaheadParser, this._formatters, ViewFactoryCache viewCache, this._positionService) : super(viewCache) {
+  TypeaheadDecorator(this._ngModel, this._injector, dom.Element element, this._typeaheadParser, this._formatters, ViewFactoryCache viewCache, this._positionService) : 
+      super(viewCache) {
     this._element = element as dom.InputElement;
     keyMappings = {dom.KeyCode.ENTER : _onKeyPressEnter, dom.KeyCode.TAB : _onKeyPressEnter, dom.KeyCode.DOWN : _onKeyPressDown, dom.KeyCode.UP : _onKeyPressUp, dom.KeyCode.ESC : _onKeyPressEsc};
 
     _isInputFormatterEnabled = _element.getAttribute('typeahead-input-formatter') != null;
 
-    popupId = 'typeahead-${_scope.id}-${new Random().nextInt(10000)}';
-
-    _element.attributes.addAll({'aria-autocomplete': 'list', 'aria-expanded': 'false', 'aria-owns': popupId});
-
     active = -1;
+  }
+  
+  void set scope(Scope scope) {
+    _scope = scope;
+    popupId = 'typeahead-${_scope.id}-${new Random().nextInt(10000)}';
+    _element.attributes.addAll({'aria-autocomplete': 'list', 'aria-expanded': 'false', 'aria-owns': popupId});
   }
 
   set expression(value) {
@@ -100,7 +106,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
 
   void select(int index) {
 
-    var item = matches[index].model;
+    var item = matches[index]['model'];
     var locals = {_typeaheadParserResult.itemName : item};
     var model = eval(_typeaheadParserResult.modelMapper, locals);
     _scope.apply((){
@@ -224,7 +230,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
           //_scope.apply(() => _updatePopup(inputValue, matches));
           _updatePopup(inputValue, matches);
         } else {
-//          _scope.apply(() => _resetMatches());
+          //_scope.apply(() => _resetMatches());
           _resetMatches();
         }
       }
@@ -239,7 +245,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
   void _updatePopup(String inputValue, Iterable values) {
 
     if(_view == null) {
-      loadView(_appendToBody? dom.document.body :_element.parent, _injector, _scope, 'packages/angular_ui/typeahead/typeahead.html', {'ctrl' : this});
+      loadView(_appendToBody? dom.document.body :_element.parent, _injector, _scope, 'packages/angular_ui/typeahead/typeahead.html', this);
     }
 
     active = 0;
@@ -248,7 +254,7 @@ class TypeaheadDecorator extends TemplateBasedComponent implements AttachAware {
     matches.clear();
     for(var index = 0; index < values.length; ++index) {
       var item = values.elementAt(index);
-      matches.add(new TypeaheadMatchItem(_getMatchItemId(index), eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), item));
+      matches.add({'id':_getMatchItemId(index), 'label':eval(_typeaheadParserResult.viewMapper, {_typeaheadParserResult.itemName: item}), 'model':item});
     }
 
     //position pop-up with matches - we need to re-calculate its position each time we are opening a window

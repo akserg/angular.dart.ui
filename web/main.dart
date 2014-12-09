@@ -39,7 +39,7 @@ part 'timepicker/timepicker_demo.dart';
 part 'rating/rating_demo.dart';
 part 'tooltip/tooltip_demo.dart';
 part 'popover/popover_demo.dart';
-//part 'typeahead/typeahead_demo.dart';
+part 'typeahead/typeahead_demo.dart';
 
 /**
  * Entry point into app.
@@ -91,6 +91,6 @@ class DemoModule extends Module {
     bind(DragDropMultiDropZonesDemoController);
     bind(SortableController);
     bind(SortableMultiController);
-//    bind(TypeaheadDemoController);
+    bind(TypeaheadDemo);
   }
 }

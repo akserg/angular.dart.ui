@@ -6,24 +6,22 @@
         <span ng-bind-html="match.label | highlight:query"></span>
     </a>
 </script>
-<div class='container-fluid' typeahead_demo_controller>
+<div class='container-fluid'>
     <h4>Static arrays of states (USA only)</h4>
-    <pre>Model: {{demoCtrl.selected | json}}</pre>
-    <input type="text" ng-model="demoCtrl.selected" typeahead="state for state in demoCtrl.states | filter:$viewValue | limitTo:8"
+    <pre>Model: {{selected | json}}</pre>
+    <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8"
            class="form-control">
 
     <h4>Custom templates for results of states (USA only)</h4>
-    <pre>Model: {{demoCtrl.customSelected | json}}</pre>
-    <input type="text" ng-model="demoCtrl.customSelected" placeholder="Custom template"
-           typeahead="state as state.name for state in demoCtrl.statesWithFlags | filter:{name:$viewValue}"
+    <pre>Model: {{customSelected | json}}</pre>
+    <input type="text" ng-model="customSelected" placeholder="Custom template"
+           typeahead="state as state.name for state in statesWithFlags | filter:{name:$viewValue}"
            typeahead-template-url="customTemplate.html" class="form-control">
            
     <h4>Asynchronous results of states and countries from Google Maps</h4>
-    <pre>Model: {{demoCtrl.asyncSelected | json}}</pre>
-    <input type="text" ng-model="demoCtrl.asyncSelected" placeholder="Locations loaded via $http"
-           typeahead="address for address in demoCtrl.getLocation($viewValue)" typeahead-loading="loadingLocations"
+    <pre>Model: {{asyncSelected | json}}</pre>
+    <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http"
+           typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations"
            class="form-control">
-    <i ng-show="demoCtrl.loadingLocations" class="glyphicon glyphicon-refresh"></i>
-
-    
+    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 </div>
