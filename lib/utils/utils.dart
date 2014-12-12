@@ -86,7 +86,6 @@ DateTime parseDate(model, [intl.DateFormat format = null]) {
         date = model as DateTime;
       }
     } on Exception catch(e) {
-      print(e);
     }
   }
   return date;

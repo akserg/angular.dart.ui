@@ -13,12 +13,10 @@ class DragDropShoppingBasketDemoController {
   List<Product> shoppingBasket = [];
   
   DragDropShoppingBasketDemoController() {
-    print("Starting DragDropShoppingBasketDemoController");
     availableProducts.add(new Product("Blue Shoes", 3, 35));
     availableProducts.add(new Product("Good Jacket", 1, 90));
     availableProducts.add(new Product("Red Shirt", 5, 12));
     availableProducts.add(new Product("Blue Jeans", 4, 60));
-    print("Available products: " + availableProducts.toString());
   }
   
   void orderedProduct(Product orderedProduct) {

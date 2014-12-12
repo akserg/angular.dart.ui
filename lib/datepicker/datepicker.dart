@@ -402,7 +402,6 @@ class Datepicker implements ShadowRootAware, ScopeAware {
           try {
             dt = DateTime.parse(_ngModel.modelValue);
           } on FormatException catch(ex) {
-            print(ex);
             dt = new DateTime(0);
           }
         } else if (_ngModel.modelValue is int) {

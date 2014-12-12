@@ -379,6 +379,9 @@ class Modal {
       element = new dom.DivElement()
         ..style.zIndex = '${1040 + openedWindows.length*10}'
         ..classes.add(_backdropClass);
+      // Temporary workaround https://github.com/akserg/angular.dart.ui/issues/139
+      // regards https://github.com/angular-ui/bootstrap/issues/2970
+      element.style.height = '${dom.document.body.scrollHeight}px';
       parentDocument.body.append(element);
     }
     return element;
