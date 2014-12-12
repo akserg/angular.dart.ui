@@ -1,4 +1,4 @@
-#Version 0.5.5, (2014/12/12)
+#Version 0.6.0, (2014/12/12)
 - Migration on Angualr Dart 1.0, support Bootstrap 3.3.1 and bug fixes.
 
 #Version 0.5.5, (2014/06/25)
