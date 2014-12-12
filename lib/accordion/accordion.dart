@@ -5,7 +5,6 @@ library angular.ui.accordion;
 
 import 'dart:html' as dom;
 import "package:angular/angular.dart";
-import "package:angular/core_dom/module_internal.dart";
 import 'package:angular/utils.dart' as utils;
 import 'package:logging/logging.dart' show Logger;
 

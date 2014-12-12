@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:html' as dom;
 
 import 'package:angular/angular.dart';
+import 'package:angular/core/module_internal.dart';
 import 'package:angular/mock/module.dart';
 import 'package:angular/mock/test_injection.dart';
 
@@ -32,8 +33,8 @@ import 'package:angular_ui/tabs/tabset.dart';
 import 'package:angular_ui/carousel/carousel.dart';
 import 'package:angular_ui/datepicker/datepicker.dart';
 import 'package:angular_ui/dragdrop/dragdrop.dart';
-
-//import 'package:angular_ui/modal/modal.dart';
+import 'package:angular_ui/typeahead/module.dart';
+import 'package:angular_ui/modal/modal.dart';
 
 part 'unit/utils/position_test.dart';
 part 'unit/utils/timeout_test.dart';
@@ -59,36 +60,42 @@ part 'unit/carousel/carousel_component_test.dart';
 part 'unit/datepicker/datepicker_component_test.dart';
 part 'unit/dragdrop/dragdrop_sortable_test.dart';
 part 'unit/dragdrop/dragdrop_test.dart';
-
-//part 'unit/modal/modal_component_test.dart';
+part 'unit/typeahead/typeahead_parser_tests.dart';
+part 'unit/typeahead/typeahead_highlight_tests.dart';
+part 'unit/typeahead/typeahead_popup_tests.dart';
+part 'unit/typeahead/typeahead_tests.dart';
+part 'unit/modal/modal_component_test.dart';
 
 main(){
   guinnessEnableHtmlMatchers();
 
-//  testPosition();
-//  testTimeout();
-//  testTransition();
-//  testContentAppendComponent();
-//  
-//  testCheckboxComponent();
-//  testRadiobuttonComponent();
-//  testAlertComponent();
-//  testCollapseComponent();
-//  testDropdownComponent();
-//  testRatingComponent();
-//  testTimepickerComponent();
-//  testTooltipComponent();
-//  testPagerComponent();
-//  testPaginationComponent();
-//  testAccordionComponent();
-//  testAccordionGroupComponent();
-//  testPopoverComponent();
-//  testProgressbarComponent();
-//  testTabsComponent();
-//  testCarouselComponent();
-//  testDatepickerComponent();
+  testPosition();
+  testTimeout();
+  testTransition();
+  testContentAppendComponent();
   
-//  testModalComponent();
+  testCheckboxComponent();
+  testRadiobuttonComponent();
+  testAlertComponent();
+  testCollapseComponent();
+  testDropdownComponent();
+  testRatingComponent();
+  testTimepickerComponent();
+  testTooltipComponent();
+  testPagerComponent();
+  testPaginationComponent();
+  testAccordionComponent();
+  testAccordionGroupComponent();
+  testPopoverComponent();
+  testProgressbarComponent();
+  testTabsComponent();
+  testCarouselComponent();
+  testDatepickerComponent();
+  typeaheadParserTests();
+  typeaheadHighlightFilterTests();
+  typeaheadPopupTests();
+  typeaheadComponentTests();
+  testModalComponent();
   
   guinness.initSpecs();
 }

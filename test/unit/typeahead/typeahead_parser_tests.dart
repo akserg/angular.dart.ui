@@ -1,7 +1,9 @@
-part of angular.ui.typeahead.tests;
+part of angular_ui_test;
 
-void typeaheadParserTests(){
+void typeaheadParserTests() {
 
+  describe("[TypeaheadParserComponent]", () {
+  
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
 
@@ -9,15 +11,14 @@ void typeaheadParserTests(){
     Scope rootScope;
     FormatterMap formatters;
 
-    beforeEach(module((Module module){
-      module.install(new TypeaheadModule());
-
-      return (Injector injector) {
-        typeaheadParser = injector.get(TypeaheadParser);
-        rootScope = injector.get(Scope);
-        formatters = injector.get(FormatterMap);
-      };
-    }));
+    beforeEach(() {
+      module((Module _) => _
+        ..install(new TypeaheadModule())
+      );
+      inject((TypeaheadParser t) => typeaheadParser = t);
+      inject((Scope s) => rootScope = s);
+      inject((FormatterMap f) => formatters = f);
+    });
 
     dynamic evaluateExpression(expression, locals) {
       return expression.eval(new ContextLocals(rootScope.context, locals), formatters);
@@ -84,4 +85,5 @@ void typeaheadParserTests(){
       expect(evaluateExpression(result.viewMapper, locals)).toEqual('Alabama');
       expect(evaluateExpression(result.modelMapper, locals)).toEqual('Alabama');
     })));
+  });
 }

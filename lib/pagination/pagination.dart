@@ -6,7 +6,6 @@ library angular.ui.pagination;
 import 'dart:math' as Math;
 
 import 'package:angular/angular.dart';
-import "package:angular/core/parser/syntax.dart";
 
 import "package:angular_ui/utils/utils.dart";
 

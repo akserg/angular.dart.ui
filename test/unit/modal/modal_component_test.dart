@@ -22,7 +22,7 @@ testModalComponent() {
         timeout = t;
         rootScope = scope;
       });
-//      return loadTemplates(['/modal/window.html']);
+      //return loadTemplates(['/modal/window.html']);
     });
     
     /**
@@ -97,13 +97,10 @@ testModalComponent() {
     it('should open and dismiss a modal with a minimal set of options', () {
       ModalInstance inst = modal.open(new ModalOptions(template:"<div>Content</div>"), rootScope);
       
-      microLeap();
-      digest();
-      
       expect(inst).toBeDefined();
-      inst.opened.then((value) {
-        print("opened $value");
-        expect(toHaveModalOpen()).toEqual(1);
+//      inst.opened.then((value) {
+//        print("opened $value");
+//        expect(toHaveModalOpen()).toEqual(1);
 //        expect(toHaveModalOpenWithContent(content:'Content', selector:'div')).toBeTruthy();
 //        expect(toHaveBackdrop()).toBeTruthy();
 //        //
@@ -113,8 +110,8 @@ testModalComponent() {
 //        expect(toHaveBackdrop()).toBeFalsy();
 //        //
 ////        houskeepking();
-      });
-//      expect(inst.opened)., completes);
+//      });
+//      expect(inst.opened), completes);
     });
   });
 }

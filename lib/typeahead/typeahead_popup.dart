@@ -6,7 +6,7 @@ part of angular.ui.typeahead;
   template: r'''
 <ul class="dropdown-menu" ng-if="isOpen" ng-style="{top: position.top+'px', left: position.left+'px'}" style="display: block" role="listbox" aria-hidden="{{!isOpen}}">
     <li id="{{match.id}}" ng-repeat="match in matches" ng-class="{active: isActive($index)}" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option">
-        <div typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+        <typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></typeahead-match>
     </li>
 </ul>''',
   useShadowDom: false,
@@ -19,6 +19,7 @@ part of angular.ui.typeahead;
     'query': '=>query'
   }
 )
+// <div typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
 //@Component(selector: '[typeahead-popup]',
 //  templateUrl: 'packages/angular_ui/typeahead/typeahead-popup.html',
 //  publishAs: 'ctrl',
