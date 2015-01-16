@@ -11,7 +11,8 @@ homepage: http://akserg.github.io/angular.dart.ui
 environment:
   sdk: '>=1.6.0 <2.0.0'
 dependencies:
-  angular: '>=1.0.0 <2.0.0'
+  browser: any
+  angular: '>=1.1.0 <2.0.0'
 dev_dependencies:
   dartmocks: '>= 0.5.0'
   guinness: '>= 0.1.3'
