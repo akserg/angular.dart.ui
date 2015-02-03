@@ -40,13 +40,16 @@ class TimeItem {
  * synchronously flush the queue of deferred functions.
  */
 @Injectable()
-class Timeout {
+class Timeout implements ScopeAware {
   Map<async.Completer, TimeItem> deferreds = new Map<async.Completer, TimeItem>();
 
   Scope scope;
   ExceptionHandler exceptionHandler;
+  Scope rootScope;
 
-  Timeout(this.scope, this.exceptionHandler);
+  Timeout(Injector injector, this.exceptionHandler) {
+  	this.rootScope = injector.get(RootScope);
+  }
 
   /**
    * The [fn] is a function, whose execution should be delayed.
@@ -63,7 +66,6 @@ class Timeout {
     deferred.future.catchError((e, s) {
       //_log.fine('call error $e, $s'); // enabled for hard to find error source
       });
-    bool skipApply = !invokeApply;
     var timeoutId;
 
     timeoutId = new async.Timer(new Duration(milliseconds: delay), () {
@@ -81,8 +83,8 @@ class Timeout {
         deferreds.remove(deferred);
       }
       //
-      if (!skipApply) {
-        scope.apply();
+      if (invokeApply) {
+        rootScope.apply();
       }
     });
 

@@ -7,7 +7,6 @@ part of angular_ui_test;
 testTimeout() {
   describe("[Timeout]", () {
     TestBed _;
-    Scope scope;
         
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
@@ -33,7 +32,6 @@ testTimeout() {
   
   describe("[Timeout Exception Handler]", () {
     TestBed _;
-    Scope scope;
         
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
@@ -59,7 +57,6 @@ testTimeout() {
   
   describe("[Timeout cancel]", () {
     TestBed _;
-    Scope scope;
         
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
