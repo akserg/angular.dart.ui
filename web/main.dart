@@ -11,6 +11,8 @@ import 'package:angular_ui/angular_ui.dart';
 import 'package:angular_ui/utils/utils.dart';
 import 'package:logging/logging.dart';
 
+import 'package:angular_material/material.dart';
+
 @MirrorsUsed(targets: const[
   'angular.ui',
   'angular.ui.demo'
@@ -55,6 +57,8 @@ main() {
   new Logger("angular.ui")..level = Level.FINER;
 
   applicationFactory()
+    .addModule(new AngularUIModule())
+    .addModule(new MaterialModule())
     .addModule(new DemoModule())
     .run();
 }
@@ -64,8 +68,6 @@ main() {
  */
 class DemoModule extends Module {
   DemoModule() {
-    install(new AngularUIModule());
-    //
     bind(PopoverDemo);
     bind(TooltipDemo);
     bind(TimepickerDemo);
