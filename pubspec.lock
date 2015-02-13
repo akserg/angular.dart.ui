@@ -10,8 +10,10 @@ packages:
     source: hosted
     version: "1.1.0"
   angular_material:
-    description: angular_material
-    source: hosted
+    description:
+      path: "E:/git/angular.dart.material"
+      relative: false
+    source: path
     version: "0.1.0"
   args:
     description: args
