@@ -3,6 +3,10 @@
 
 Port of Angular-UI to Dart.
 
+Look at [Demo](http://akserg.github.io/angular.dart.ui.demo/index.html) page for [Angular-UI](https://github.com/akserg/angular.dart.ui) project.
+
+You may be interesting in check out [Material Design Theme at this link](http://akserg.github.io/angular.dart.material.demo).
+
 ##Bootstrap directives and components
 
 - Checkbox and RadioButton
