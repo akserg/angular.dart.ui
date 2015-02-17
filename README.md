@@ -1,4 +1,4 @@
-﻿Angular UI [![Build Status](https://travis-ci.org/akserg/angular.dart.ui.svg?branch=master)](https://travis-ci.org/akserg/angular.dart.ui) [![Stories in Ready](https://badge.waffle.io/akserg/angular.dart.ui.svg?label=ready)](http://waffle.io/akserg/angular.dart.ui?milestone=0.6)
+﻿Angular UI [![Build Status](https://travis-ci.org/akserg/angular.dart.ui.svg?branch=master)](https://travis-ci.org/akserg/angular.dart.ui) [![Coverage Status](https://coveralls.io/repos/akserg/angular.dart.ui/badge.svg)](https://coveralls.io/r/akserg/angular.dart.ui) [![Stories in Ready](https://badge.waffle.io/akserg/angular.dart.ui.svg?label=ready)](http://waffle.io/akserg/angular.dart.ui?milestone=0.6) 
 ===============
 
 Port of Angular-UI to Dart.
