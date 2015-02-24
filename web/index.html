@@ -4,7 +4,7 @@ Copyright (C) 2013 - 2014 Angular Dart UI authors. Please see AUTHORS.md.
 https://github.com/akserg/angular.dart.ui
 All rights reserved.  Please see the LICENSE.md file.
 -->
-<html ng-app>
+<html>
   <head>
     <meta charset="utf-8">
     <title>Angular dart ui</title>
@@ -13,91 +13,16 @@ All rights reserved.  Please see the LICENSE.md file.
     <link rel="stylesheet" href="packages/angular_ui/carousel/slide.css">
     <link rel="stylesheet" href="main.css">
   </head>
-  <body ng-cloak>
-    <h1>Angular Dart UI</h1>
-    <hr>
-
-    <h3>Typeahead</h3>
-    <typeahead-demo></typeahead-demo>
-    <hr>
+  <body>
+    <hello-app></hello-app>
     
-    <h3>Popover</h3>
-    <popover-demo></popover-demo>
+    <script type="application/dart" src="main.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+    <h1>Angular Dart UI for Angular2</h1>
     <hr>
-    
-    <h3>Toltip</h3>
-    <tooltip-demo></tooltip-demo>
-    <hr>
-    
-    <h3>Timepicker</h3>
-    <timepicker-demo></timepicker-demo>
-    <hr>
-    
-    <h3>Drag And Drop</h3>
-    <div ng-include="dragdrop/dragdrop_demo.html"></div>
-    <hr>
-    
-    <h3>Drag And Drop - Sortable</h3>
-    <div ng-include="dragdrop/sortable_demo.html"></div>
-    <hr>
-
-    <h3>Datepicker (partially implemented)</h3>
-    <datepicker-demo></datepicker-demo>
-    <hr>
-    
-    <h3>Modal Window</h3>
-    <modal-demo-embedded-tmpl></modal-demo-embedded-tmpl>
-    <modal-demo-embedded-tmpl-static-backdrop></modal-demo-embedded-tmpl-static-backdrop>
-<!--     <modal-demo-tag-tmpl></modal-demo-tag-tmpl> -->
-<!--     <div class="panel panel-default"> -->
-<!--       <div class="panel-heading">Modal from template file</div> -->
-<!--       <div class="panel-body"> -->
-<!--         <div modal-ctrl-file-tmpl> -->
-<!--           <button class="btn btn-default" ng-click="ctrl1.open('modal/modal_demo_template_from_file.html')">Open me!</button> -->
-<!--           <div ng-show="ctrl1.selected != null">Selected: {{ ctrl1.selected }}</div> -->
-<!--         </div> -->
-<!--       </div> -->
-<!--     </div> -->
-    <hr>
-
-    <h3>Rating</h3>
-    <rating-demo></rating-demo>
-    <hr>
-    
-    <h3>Accordion</h3>
-    <accordion-demo></accordion-demo>
-    <hr>
-    
-    <h3>Alert</h3>
-    <alert-demo></alert-demo>
-    <hr>
-    
-    <h3>Collapse</h3>
-    <collapse-demo></collapse-demo>
-    <hr>
-    
-    <h3>Dropdown Toggle</h3>
-    <dropdown-demo></dropdown-demo>
-    <hr>
-    
-    <h3>Pagination</h3>
-    <pagination-demo></pagination-demo>
-    <hr>
-    
-    <h3>Progressbar</h3>
-    <progress-demo></progress-demo>
-    <hr>
-    
-    <h3>Buttons</h3>
-    <buttons-demo></buttons-demo>
-    <hr>
-    
-    <h3>Tabs</h3>
-    <tabs-demo></tabs-demo>
-    <hr>
-    
-    <h3>Carousel</h3>
-    <carousel-demo></carousel-demo>
+    <hello-app></hello-app>
         
     <script type="application/dart" src="main.dart"></script>
     <script src="packages/browser/dart.js"></script>

@@ -2,11 +2,11 @@
 // https://github.com/akserg/angular.dart.ui
 // All rights reserved.  Please see the LICENSE.md file.
 part of angular.ui.tabs;
-
-@Decorator(selector: 'tab-heading')
-class TabHeading {
-  TabHeading(Element elem, TabComponent tab) {
-    elem.remove();
-    tab.heading = elem;
-  }
-}
+//
+//@Decorator(selector: 'tab-heading')
+//class TabHeading {
+//  TabHeading(Element elem, TabComponent tab) {
+//    elem.remove();
+//    tab.heading = elem;
+//  }
+//}
