@@ -97,8 +97,23 @@ main(){
 //  typeaheadComponentTests();
 //  testModalComponent();
 //  
+  testFake();
+
   guinness.initSpecs();
 }
+
+testFake() {
+  describe("[Fake Test]", () {
+    beforeEach(setUpInjector);
+    afterEach(tearDownInjector);
+
+    it('must be success', () {
+      expect(true).toBeNotNull();
+    }));
+  });
+}
+
+
 //
 //loadTemplates(List<String> templates){
 //  updateCache(template, response) => inject((TemplateCache cache) => cache.put(template, response));
