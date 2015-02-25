@@ -49,7 +49,7 @@ class Collapse implements ScopeAware {
   async.Future doTransition(change) {
     async.Completer newTransition = transition(element, change);
     
-    var newTransitionDone = (value) {
+    var newTransitionDone = () {
       // Make sure it's this transition, otherwise, leave it alone.
       if (currentTransition == newTransition) {
         currentTransition = null;
@@ -62,8 +62,7 @@ class Collapse implements ScopeAware {
     
     currentTransition = newTransition;
     
-    newTransition.future.catchError(newTransitionDone);
-    newTransition.future.then(newTransitionDone);
+    newTransition.future.whenComplete(newTransitionDone);
     
     return newTransition.future;
   }

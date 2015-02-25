@@ -8,6 +8,7 @@ import "package:angular/angular.dart";
 import 'package:angular/utils.dart' as utils;
 import 'package:logging/logging.dart' show Logger;
 import 'package:angular_ui/utils/dbl_click_preventer.dart';
+import 'package:angular_ui/utils/timeout.dart';
 
 part 'accordion_group.dart';
 

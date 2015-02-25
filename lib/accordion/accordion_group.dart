@@ -13,7 +13,7 @@ part of angular.ui.accordion;
       <a class="accordion-toggle" ng-click="toggleOpen()" accordion-transclude="heading"><span ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
     </h4>
   </div>
-  <div class="panel-collapse" collapse="!isOpen">
+  <div class="panel-collapse" collapse="collapse">
     <div class="panel-body"><content></content></div>
   </div>
 </div>
@@ -26,22 +26,31 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   var heading;
   
   Scope scope;
-  AccordionComponent accordion;
-  DblClickPreventer dblClickPreventer;
+  final AccordionComponent accordion;
+  final DblClickPreventer dblClickPreventer;
+  final Timeout timeout;
 
-  AccordionGroupComponent(this.accordion, this.dblClickPreventer) {
+  AccordionGroupComponent(this.accordion, this.dblClickPreventer, this.timeout) {
     accordion.addGroup(this);
+    //
+    timeout(() {
+      scope.watch('isOpen', (value, old){
+        collapse = !value;
+      });
+    }, delay:500);
   }
-
+  
   bool _isOpen = false;
   @NgTwoWay('is-open') 
-  get isOpen => _isOpen;
-  set isOpen(bool newValue) {
-    _isOpen = utils.toBool(newValue);
+  set isOpen(value) {
+    _isOpen = utils.toBool(value);
     if (_isOpen) {
       accordion.closeOthers(this);
     }
   }
+  get isOpen => _isOpen;
+  
+  bool collapse = false;
   
   bool _isDisabled = false;
   @NgTwoWay('is-disabled') 
