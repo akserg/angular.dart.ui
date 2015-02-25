@@ -4,6 +4,7 @@
 
 - Accordion: double click on title causes inconstent state or bad rendering
 - Accordion Collapse
+- Accordion doesn't expand after creation if is-open equals true
 
 #Version 0.6.0, (2014/12/12)
 
