@@ -7,6 +7,7 @@ import 'dart:html' as dom;
 import "package:angular/angular.dart";
 import 'package:angular/utils.dart' as utils;
 import 'package:logging/logging.dart' show Logger;
+import 'package:angular_ui/utils/dbl_click_preventer.dart';
 
 part 'accordion_group.dart';
 
@@ -14,6 +15,7 @@ final _log = new Logger('angular.ui.accordion');
 
 class AccordionModule extends Module {
   AccordionModule() {
+    install(new DblClickPreventerModule());
     bind(AccordionComponent);
     bind(AccordionHeadingComponent);
     bind(AccordionGroupComponent);

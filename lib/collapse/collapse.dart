@@ -29,7 +29,7 @@ class CollapseModule extends Module {
 class Collapse implements ScopeAware {
 
   @NgOneWay("collapse")
-  void set isCollapsed(bool value) {
+  void set isCollapsed(value) {
     if (toBool(value)) {
       collapse();
     } else {
@@ -48,19 +48,23 @@ class Collapse implements ScopeAware {
 
   async.Future doTransition(change) {
     async.Completer newTransition = transition(element, change);
-
-    var newTransitionDone = () {
+    
+    var newTransitionDone = (value) {
       // Make sure it's this transition, otherwise, leave it alone.
       if (currentTransition == newTransition) {
         currentTransition = null;
       }
     };
-
+    
     if (currentTransition != null && !currentTransition.isCompleted) {
       currentTransition.completeError('Canceled');
     }
+    
     currentTransition = newTransition;
-    newTransition.future.then((value)=> newTransitionDone(), onError:(e) => newTransitionDone());
+    
+    newTransition.future.catchError(newTransitionDone);
+    newTransition.future.then(newTransitionDone);
+    
     return newTransition.future;
   }
 
@@ -73,10 +77,7 @@ class Collapse implements ScopeAware {
         ..remove('collapse')
         ..add('collapsing');
 
-      doTransition({ 'height': '${element.scrollHeight}px' }).then((value) => expandDone(), onError: (e) {
-        _log.fine('Error on expand: ${e}');
-        expandDone();
-      });
+      doTransition({ 'height': '${element.scrollHeight}px' }).whenComplete(expandDone);
     }
   }
 
@@ -97,22 +98,14 @@ class Collapse implements ScopeAware {
       // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
       element.style.height = '${element.scrollHeight}px';
       //trigger reflow so a browser realizes that height was updated from auto to a specific value
-      var x;
-      if(element.children.length > 0) {
-        x = element.children[0].offsetWidth;
-      } else {
-        x = element.offsetWidth;
-      }
+      var x = element.offsetWidth;
 
       element.classes
         ..remove('collapse')
         ..remove('in')
         ..add('collapsing');
 
-      doTransition({ 'height': '0' }).then((value) => collapseDone(), onError: (e) {
-        _log.fine('Error on expand: ${e}');
-        collapseDone();
-      });
+      doTransition({ 'height': '0' }).whenComplete(collapseDone);
     }
   }
 

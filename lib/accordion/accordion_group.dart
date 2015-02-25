@@ -27,8 +27,9 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   
   Scope scope;
   AccordionComponent accordion;
+  DblClickPreventer dblClickPreventer;
 
-  AccordionGroupComponent(this.accordion) {
+  AccordionGroupComponent(this.accordion, this.dblClickPreventer) {
     accordion.addGroup(this);
   }
 
@@ -50,9 +51,11 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   }
   
   toggleOpen() {
-    if ( !isDisabled ) {
-      isOpen = !isOpen;
-    }  
+    dblClickPreventer(() {
+      if ( !isDisabled ) {
+        isOpen = !isOpen;
+      }
+    });
   }
   
   @override

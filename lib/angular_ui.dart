@@ -25,6 +25,7 @@ import 'package:angular_ui/timepicker/timepicker.dart';
 import 'package:angular_ui/tooltip/tooltip.dart';
 import 'package:angular_ui/popover/popover.dart';
 import 'package:angular_ui/typeahead/module.dart';
+import 'package:angular_ui/utils/dbl_click_preventer.dart';
 
 export 'package:angular_ui/modal/modal.dart';
 
@@ -53,6 +54,7 @@ class AngularUIModule extends Module {
     install(new PopoverModule());
     install(new TypeaheadModule());
     install(new ContentAppendModule());
+    install(new DblClickPreventerModule());
   }
 }
 
