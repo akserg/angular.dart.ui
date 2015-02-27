@@ -1,4 +1,4 @@
-#Version 0.6.6, (2015/02/27)
+#Version 0.6.7, (2015/02/27)
 
 ##Bug Fixes
 
@@ -6,6 +6,7 @@
 - Accordion Collapse
 - Accordion doesn't expand after creation if is-open equals true
 - Accordion: fast clicks on title causes inconstent state or bad rendering
+- Combine slide and angular css files
 
 #Version 0.6.0, (2014/12/12)
 

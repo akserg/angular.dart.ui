@@ -31,7 +31,7 @@ testDatepickerComponent() {
     
     String getTitle(dom.Element element) {
       List ths = element.querySelectorAll('th');
-      List<dom.ButtonElement> btns = ths[1].querySelectorAll('button');
+      List<dom.ButtonElement> btns = ths[1].querySelectorAll('button') as List<dom.ButtonElement>;
       return btns.first.text;
     }
     
@@ -45,7 +45,7 @@ testDatepickerComponent() {
     
     void clickPreviousButton(dom.Element element, [int times = 1]) {
       List els = element.querySelectorAll('th');
-      List<dom.ButtonElement> btns = els[0].querySelectorAll('button');
+      List<dom.ButtonElement> btns = els[0].querySelectorAll('button') as List<dom.ButtonElement>;
       for (var i = 0; i < times; i++) {
         _.triggerEvent(btns.first, 'click');
       }
@@ -53,14 +53,14 @@ testDatepickerComponent() {
     
     void clickNextButton(dom.Element element, [int times = 1]) {
       List els = element.querySelectorAll('th');
-      List<dom.ButtonElement> btns = els[2].querySelectorAll('button');
+      List<dom.ButtonElement> btns = els[2].querySelectorAll('button') as List<dom.ButtonElement>;
       for (var i = 0; i < times; i++) {
         _.triggerEvent(btns.first, 'click');
       }
     }
     
     dom.TableRowElement getLabelsRow(dom.Element element) {
-      List<dom.TableRowElement> rows = element.querySelectorAll('thead > tr');
+      List<dom.TableRowElement> rows = element.querySelectorAll('thead > tr') as List<dom.TableRowElement>;
       return rows[1];
     }
     

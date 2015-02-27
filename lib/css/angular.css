@@ -18,3 +18,47 @@ ng\:form {
 .panel-group accordion-group .panel {
   margin-top: 5px;
 }
+
+.item {
+  position: relative;
+  display: none;
+  -webkit-transition: .6s ease-in-out left;
+          transition: .6s ease-in-out left;
+}
+img,
+a > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  line-height: 1;
+}
+.active,
+.next,
+.prev {
+  display: block;
+}
+.active {
+  left: 0;
+}
+.next,
+.prev {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.next {
+  left: 100%;
+}
+.prev {
+  left: -100%;
+}
+.next.left,
+.prev.right {
+  left: 0;
+}
+.active.left {
+  left: -100%;
+}
+.active.right {
+  left: 100%;
+}

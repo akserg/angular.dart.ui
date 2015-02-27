@@ -362,7 +362,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
       titleEl.colSpan = rows[0].length - 2 + (showWeekNumbers ? 1 : 0);
     }
     //
-    List<dom.TableCellElement> showWeekNumbersEls = _element.querySelectorAll("#labels > td");
+    List<dom.TableCellElement> showWeekNumbersEls = _element.querySelectorAll("#labels > td") as List<dom.TableCellElement>;
     if (showWeekNumbersEls != null && showWeekNumbersEls.length > 0) {
       dom.TableCellElement showWeekNumbersEl = showWeekNumbersEls.first;
       if (showWeekNumbers) {
