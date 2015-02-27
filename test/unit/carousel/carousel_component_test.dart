@@ -20,7 +20,7 @@ testCarouselComponent() {
       );
       inject((Timeout t) => timeout = t);
       //return loadTemplates(['/carousel/carousel.html', '/carousel/slide.html', '/carousel/carousel.css']);
-      return loadTemplates(['/carousel/slide.css']);
+      //return loadTemplates(['/carousel/slide.css']);
     });
     
     describe('basics', () {
