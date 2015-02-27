@@ -5,15 +5,24 @@
 part of angular_ui_test;
 
 testAccordionComponent() {
+  
+  DblClickPreventer dblClickPreventer;
+  Timeout timeout;
+  
   describe("[Accordion Component]", () {
         
     beforeEach(setUpInjector);
     afterEach(tearDownInjector);
+    afterEach((){
+      timeout.flush();
+    });
 
     beforeEach(() {
       module((Module _) => _
         ..install(new AccordionModule())
       );
+      inject((DblClickPreventer d) => dblClickPreventer = d);
+      inject((Timeout t) => timeout = t);
       //return loadTemplates(['/accordion/accordion.html', 'accordion/accordion_group.html']);
     });
     
@@ -24,11 +33,11 @@ testAccordionComponent() {
       
       void createElements(AccordionConfig config) {
         ctrl = new AccordionComponent(config);
-        group1 = new AccordionGroupComponent(ctrl)
+        group1 = new AccordionGroupComponent(ctrl, dblClickPreventer, timeout)
         ..isOpen = true;
-        group2 = new AccordionGroupComponent(ctrl)
+        group2 = new AccordionGroupComponent(ctrl, dblClickPreventer, timeout)
         ..isOpen = true;
-        group3 = new AccordionGroupComponent(ctrl)
+        group3 = new AccordionGroupComponent(ctrl, dblClickPreventer, timeout)
         ..isOpen = true;
       };
       

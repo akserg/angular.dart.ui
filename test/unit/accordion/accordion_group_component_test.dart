@@ -5,6 +5,9 @@
 part of angular_ui_test;
 
 testAccordionGroupComponent() {
+  
+  Timeout timeout;
+  
   describe("[Accordion Group Component]", () {
         
     beforeEach(setUpInjector);
@@ -14,6 +17,7 @@ testAccordionGroupComponent() {
       module((Module _) => _
         ..install(new AccordionModule())
       );
+      inject((Timeout t) => timeout = t);
       //return loadTemplates(['/accordion/accordion.html', 'accordion/accordion_group.html']);
     });
     
@@ -46,6 +50,8 @@ testAccordionGroupComponent() {
         expect(findGroupBody(groups, 0).text.trim()).toEqual('Content 1');
         expect(groups[1].attributes['heading']).toEqual('title 2');
         expect(findGroupBody(groups, 1).text.trim()).toEqual('Content 2');
+        
+        timeout.flush();
       }));
       
       it('should change selected element on click', compileComponent(
@@ -55,6 +61,7 @@ testAccordionGroupComponent() {
         var groups = shadowRoot.querySelectorAll('accordion-group');
         
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         AccordionGroupComponent group0 = ngProbe(groups[0]).directives.firstWhere((d) => d is AccordionGroupComponent);
         AccordionGroupComponent group1 = ngProbe(groups[1]).directives.firstWhere((d) => d is AccordionGroupComponent);
@@ -62,10 +69,12 @@ testAccordionGroupComponent() {
         expect(group1.isOpen).toBe(false);
 
         findGroupLink(groups, 1).click();
+        timeout.flush();
         digest();
-        
         expect(group0.isOpen).toBe(false);
         expect(group1.isOpen).toBe(true);
+
+        timeout.flush();
       }));
       
       it('should toggle element on click', compileComponent(
@@ -77,11 +86,16 @@ testAccordionGroupComponent() {
         AccordionGroupComponent group1 = ngProbe(groups[1]).directives.firstWhere((d) => d is AccordionGroupComponent);
         
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(group0.isOpen).toBe(true);
+        
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(group0.isOpen).toBe(false);
+
+        timeout.flush();
       }));
     });
     
@@ -108,6 +122,8 @@ testAccordionGroupComponent() {
         var groups = shadowRoot.querySelectorAll('accordion-group');
         
         expect(groups.length).toEqual(0);
+
+        timeout.flush();
       }));
       
       it('should have a panel for each model item', compileComponent(
@@ -127,6 +143,8 @@ testAccordionGroupComponent() {
         expect(groups[0].text.trim()).toEqual('Content 1');
         expect(groups[1].attributes['heading']).toEqual('title 2');
         expect(groups[1].text.trim()).toEqual('Content 2');
+
+        timeout.flush();
       }));
       
 //      it('should react properly on removing items from the model', compileComponent(
@@ -169,6 +187,8 @@ testAccordionGroupComponent() {
             
         expect(group0.isOpen).toBe(false);
         expect(group1.isOpen).toBe(true);
+
+        timeout.flush();
       }));
       
       it('should toggle variable on element click', compileComponent(
@@ -180,12 +200,16 @@ testAccordionGroupComponent() {
         AccordionGroupComponent group1 = ngProbe(groups[1]).directives.firstWhere((d) => d is AccordionGroupComponent);
             
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(scope.context['open']['first']).toBe(true);
 
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(scope.context['open']['second']).toBe(false);
+
+        timeout.flush();
       }));
     });
     
@@ -216,8 +240,10 @@ testAccordionGroupComponent() {
         var groups = shadowRoot.querySelectorAll('accordion-group');
         
         expect(groups[0].querySelector('.panel-collapse').clientHeight).not.toBe(0);
-//        expect(groups[1].querySelector('.panel-collapse').clientHeight).toBe(18);
+        expect(groups[1].querySelector('.panel-collapse').clientHeight).toBe(18);
         shadowRoot.remove();
+
+        timeout.flush();
       }));
     });
     
@@ -250,6 +276,8 @@ testAccordionGroupComponent() {
 
         expect(group0.isOpen).toBe(false);
         expect(group1.isOpen).toBe(true);
+
+        timeout.flush();
       }));
 
       it('should toggle element on click', compileComponent(
@@ -263,14 +291,18 @@ testAccordionGroupComponent() {
         AccordionGroupComponent group1 = ngProbe(groups[1]).directives.firstWhere((d) => d is AccordionGroupComponent);
 
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(group0.isOpen).toBe(true);
         expect(scope.context['groups'][0]['open']).toBe(true);
 
         findGroupLink(groups, 0).click();
+        timeout.flush();
         digest();
         expect(group0.isOpen).toBe(false);
         expect(scope.context['groups'][0]['open']).toBe(false);
+
+        timeout.flush();
       }));
     });
     
@@ -295,6 +327,8 @@ testAccordionGroupComponent() {
         AccordionGroupComponent groupBody = ngProbe(group).directives.firstWhere((d) => d is AccordionGroupComponent);
         
         expect(groupBody.isOpen).toBeFalsy();
+
+        timeout.flush();
       }));
 
       it('should not toggle if disabled', compileComponent(
@@ -305,8 +339,11 @@ testAccordionGroupComponent() {
         AccordionGroupComponent groupBody = ngProbe(group).directives.firstWhere((d) => d is AccordionGroupComponent);
         
         group.querySelector('.accordion-toggle').click();
+        timeout.flush();
         digest();
         expect(groupBody.isOpen).toBeFalsy();
+
+        timeout.flush();
       }));
 
       it('should toggle after enabling', compileComponent(
@@ -321,8 +358,11 @@ testAccordionGroupComponent() {
         expect(groupBody.isOpen).toBeFalsy();
 
         group.querySelector('.accordion-toggle').click();
+        timeout.flush();
         digest();
         expect(groupBody.isOpen).toBeTruthy();
+
+        timeout.flush();
       }));
     });
     
@@ -346,6 +386,8 @@ testAccordionGroupComponent() {
         microLeap();
         var group = shadowRoot.querySelector('accordion-group');
         expect(group.querySelector('.accordion-toggle').text).toEqual('123');
+
+        timeout.flush();
       }));
     });
   });

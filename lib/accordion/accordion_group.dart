@@ -25,13 +25,15 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   @NgAttr('heading') 
   var heading;
   
-  Scope scope;
   final AccordionComponent accordion;
   final DblClickPreventer dblClickPreventer;
   final Timeout timeout;
 
   AccordionGroupComponent(this.accordion, this.dblClickPreventer, this.timeout) {
     accordion.addGroup(this);
+  }
+  
+  void set scope(Scope scope) {
     //
     timeout(() {
       scope.watch('isOpen', (value, old){

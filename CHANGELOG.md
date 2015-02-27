@@ -1,10 +1,11 @@
-#Version 0.6.5, (2015/02/25)
+#Version 0.6.6, (2015/02/27)
 
 ##Bug Fixes
 
 - Accordion: double click on title causes inconstent state or bad rendering
 - Accordion Collapse
 - Accordion doesn't expand after creation if is-open equals true
+- Accordion: fast clicks on title causes inconstent state or bad rendering
 
 #Version 0.6.0, (2014/12/12)
 

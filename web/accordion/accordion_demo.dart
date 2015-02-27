@@ -6,7 +6,7 @@ part of angular.ui.demo;
 @Component(
     selector: 'accordion-demo',
     templateUrl: 'accordion/accordion_demo.html',
-    exportExpressions: const ["oneAtATime", "groups", "addItem", "items", "isOpen"],
+    exportExpressions: const ["oneAtATime", "groups", "items", "isOpen"],
     useShadowDom: false)
 class AccordionDemo implements ScopeAware {
   
@@ -25,10 +25,4 @@ class AccordionDemo implements ScopeAware {
     }
   ];
   List items = ['Item 1', 'Item 2', 'Item 3'];
-
-  void addItem() {
-    int newItemNo = items.length + 1;
-    items.add('Item ' + newItemNo.toString());
-  }
-  
 }

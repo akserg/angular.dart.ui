@@ -17,6 +17,7 @@ import 'package:angular_ui/utils/position.dart';
 import 'package:angular_ui/utils/timeout.dart';
 import 'package:angular_ui/utils/transition.dart';
 import 'package:angular_ui/utils/content_append.dart';
+import 'package:angular_ui/utils/dbl_click_preventer.dart';
 
 import 'package:angular_ui/buttons/buttons.dart';
 import 'package:angular_ui/alert/alert.dart'; 

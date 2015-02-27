@@ -101,8 +101,8 @@ class Transition {
       // Add our custom cancel function to the promise that is returned
       // We can call this if we are about to run a new transition, which we know will prevent this transition from ending,
       // i.e. it will therefore never raise a transitionEnd event for that transition
-      deferred.future.catchError((error) {
-        if (endEventName != null) {
+      deferred.future.then((value) {
+        if (value == 'Canceled' && endEventName != null) {
           element.removeEventListener(endEventName, transitionEndHandler);
         }
       });

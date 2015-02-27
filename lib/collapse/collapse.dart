@@ -57,7 +57,7 @@ class Collapse implements ScopeAware {
     };
     
     if (currentTransition != null && !currentTransition.isCompleted) {
-      currentTransition.completeError('Canceled');
+      currentTransition.complete('Canceled');
     }
     
     currentTransition = newTransition;
