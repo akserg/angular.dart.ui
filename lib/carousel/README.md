@@ -10,7 +10,7 @@ Add the following css file to your index.html
 Use the `<carousel>` element in your html
 ```html
 <div style="height: 305px">
-  <carousel interval="5000">
+  <carousel interval="2500">
     <slide ng-repeat="item in slides" active="item['active']">
       <img ng-src="{{item['image']}}" style="margin:auto;">
       <div class="carousel-caption">
