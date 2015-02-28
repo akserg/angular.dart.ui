@@ -7,6 +7,41 @@ Look at [Demo](http://akserg.github.io/angular.dart.ui.demo/index.html) page for
 
 You may be interesting in check out [Material Design Theme](http://akserg.github.io/angular.dart.material.demo) for this project.
 
+## Quick-Start
+Include the following code to your index.html
+```html
+<!-- Latest compiled and minified bootsrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<!-- Optional bootstrap theme CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<!-- angular ui CSS -->
+<link rel="stylesheet" href="packages/angular_ui/css/angular.css">
+<!-- your own CSS file -->
+<link rel="stylesheet" href="style.css">
+```
+
+Add the follwing css ccode to your style.css
+```css
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+```
+
+Add the angular-ui module in your main.dart
+```dart
+import 'package:angular/angular.dart';
+import 'package:angular/application_factory.dart';
+import 'package:angular_ui/angular_ui.dart';
+
+void main() {
+  applicationFactory()
+    .addModule(new AngularUIModule()) // The angular-ui module
+    .addModule(new MainModule()) // Your own module
+    .run();
+}
+```
+
+Use the angular-ui components as descrpied below or in the [demo](http://akserg.github.io/angular.dart.ui.demo/index.html).
+
+
 ##Bootstrap directives and components
 
 - Checkbox and RadioButton
@@ -20,7 +55,7 @@ You may be interesting in check out [Material Design Theme](http://akserg.github
 - Datepicker (partially implemented)
 - Tabs
 - Drag and Drop support
-- Carousel
+- [Carousel](https://github.com/Roba1993/angular.dart.ui/tree/master/lib/carousel)
 - Timepicker
 - Pagination
 - Tooltip
