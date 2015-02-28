@@ -2,11 +2,6 @@
 Use a `<carousel>` element with `<slide>` elements inside it.  It will automatically cycle through the slides at a given rate, and a current-index variable will be kept in sync with the currently visible slide.
 
 ## Demo
-Add the following css file to your index.html
-```html
-<link rel="stylesheet" href="packages/angular_ui/carousel/slide.css">
-```
-
 Use the `<carousel>` element in your html
 ```html
 <div style="height: 305px">
