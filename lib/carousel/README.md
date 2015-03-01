@@ -45,7 +45,7 @@ class CarouselDemo {
 }
 ```
 
-Add full address to `your_html.html` into the list of angular trasformers in `pubspec.yaml` file:
+Add full URL address to `your_html.html` into the list of angular trasformers in `pubspec.yaml` file:
 
 ```
 transformers:

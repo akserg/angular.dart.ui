@@ -50,7 +50,7 @@ Use the angular-ui components as descrpied below or in the [demo](http://akserg.
 - Datepicker (partially implemented)
 - Tabs
 - Drag and Drop support
-- [Carousel](https://github.com/Roba1993/angular.dart.ui/tree/master/lib/carousel)
+- [Carousel](https://github.com/akserg/angular.dart.ui/tree/master/lib/carousel)
 - Timepicker
 - Pagination
 - Tooltip
