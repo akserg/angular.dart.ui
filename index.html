@@ -48,6 +48,39 @@
 <p>You may be interesting in check out <a href="http://akserg.github.io/angular.dart.material.demo">Material Design Theme</a> for this project.</p>
 
 <h2>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick-Start</h2>
+
+<p>Include the following code to your <code>index.html</code></p>
+
+<div class="highlight highlight-html"><pre><span class="pl-c">&lt;!-- Latest compiled and minified bootsrap CSS --&gt;</span>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css<span class="pl-pds">"</span></span>&gt;
+<span class="pl-c">&lt;!-- Optional bootstrap theme CSS --&gt;</span>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css<span class="pl-pds">"</span></span>&gt;
+<span class="pl-c">&lt;!-- angular ui CSS --&gt;</span>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>packages/angular_ui/css/angular.css<span class="pl-pds">"</span></span>&gt;
+<span class="pl-c">&lt;!-- your own CSS file --&gt;</span>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>style.css<span class="pl-pds">"</span></span>&gt;</pre></div>
+
+<p>Add the follwing css ccode to your <code>style.css</code></p>
+
+<div class="highlight highlight-css"><pre><span class="pl-e">.nav</span>, <span class="pl-e">.pagination</span>, <span class="pl-e">.carousel</span>, <span class="pl-e">.panel-title</span> <span class="pl-ent">a</span> { <span class="pl-mp"><span class="pl-s3">cursor</span></span>: <span class="pl-sc">pointer</span>; }</pre></div>
+
+<p>Add the angular-ui module in your <code>main.dart</code></p>
+
+<div class="highlight highlight-dart"><pre><span class="pl-k">import</span> <span class="pl-s1">'package:angular/angular.dart'</span>;
+<span class="pl-k">import</span> <span class="pl-s1">'package:angular/application_factory.dart'</span>;
+<span class="pl-k">import</span> <span class="pl-s1">'package:angular_ui/angular_ui.dart'</span>;
+
+<span class="pl-st">void</span> main() {
+  applicationFactory()
+    .addModule(<span class="pl-k">new</span> AngularUIModule()) <span class="pl-c">// The angular-ui module</span>
+    .addModule(<span class="pl-k">new</span> MainModule()) <span class="pl-c">// Your own module</span>
+    .run();
+}</pre></div>
+
+<p>Use the angular-ui components as descrpied below or in the <a href="http://akserg.github.io/angular.dart.ui.demo/index.html">demo</a>.</p>
+
+<h2>
 <a id="bootstrap-directives-and-components" class="anchor" href="#bootstrap-directives-and-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bootstrap directives and components</h2>
 
 <ul>
@@ -62,7 +95,7 @@
 <li>Datepicker (partially implemented)</li>
 <li>Tabs</li>
 <li>Drag and Drop support</li>
-<li>Carousel</li>
+<li><a href="https://github.com/Roba1993/angular.dart.ui/tree/master/lib/carousel">Carousel</a></li>
 <li>Timepicker</li>
 <li>Pagination</li>
 <li>Tooltip</li>
@@ -76,13 +109,16 @@
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
 
 <ul>
-<li>Sergey Akopkokhyants (<a href="https://github.com/akserg">https://github.com/akserg</a>)</li>
-<li>Tõnis Pool (<a href="https://github.com/poolik">https://github.com/poolik</a>).</li>
-<li>Günter Zöchbauer (<a href="https://github.com/zoechi">https://github.com/zoechi</a>)</li>
-<li>Francesco Cina (<a href="https://github.com/ufoscout">https://github.com/ufoscout</a>)</li>
-<li>AngularDart project (<a href="https://github.com/angular/angular.dart">https://github.com/angular/angular.dart</a>)</li>
-<li>Neeraj Mittal (<a href="https://github.com/neermitt">https://github.com/neermitt</a>)</li>
+<li><a href="https://github.com/akserg">Sergey Akopkokhyants</a></li>
+<li>
+<a href="https://github.com/poolik">Tõnis Pool</a>.</li>
+<li><a href="https://github.com/zoechi">Günter Zöchbauer</a></li>
+<li><a href="https://github.com/ufoscout">Francesco Cina</a></li>
+<li><a href="https://github.com/angular/angular.dart">AngularDart project</a></li>
+<li><a href="https://github.com/neermitt">Neeraj Mittal</a></li>
 </ul>
+
+<p>Big thanks to <a href="https://github.com/Roba1993">Robert Schütte</a> for his improvements of documentation.</p>
       </section>
 
     </div>
