@@ -1,3 +1,8 @@
+#Version 0.6.8, (2015/03/01)
+
+- Updated Copyright info.
+- Improved documantation for Carousel component and general README file
+
 #Version 0.6.7, (2015/02/27)
 
 ##Bug Fixes

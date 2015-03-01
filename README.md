@@ -8,7 +8,7 @@ Look at [Demo](http://akserg.github.io/angular.dart.ui.demo/index.html) page for
 You may be interesting in check out [Material Design Theme](http://akserg.github.io/angular.dart.material.demo) for this project.
 
 ## Quick-Start
-Include the following code to your index.html
+Include the following code to your `index.html`
 ```html
 <!-- Latest compiled and minified bootsrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -20,12 +20,12 @@ Include the following code to your index.html
 <link rel="stylesheet" href="style.css">
 ```
 
-Add the follwing css ccode to your style.css
+Add the follwing css ccode to your `style.css`
 ```css
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 ```
 
-Add the angular-ui module in your main.dart
+Add the angular-ui module in your `main.dart`
 ```dart
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
@@ -65,9 +65,12 @@ Use the angular-ui components as descrpied below or in the [demo](http://akserg.
 *Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.*
 
 ##Credits
-- Sergey Akopkokhyants (https://github.com/akserg)
-- Tõnis Pool (https://github.com/poolik).
-- Günter Zöchbauer (https://github.com/zoechi)
-- Francesco Cina (https://github.com/ufoscout)
-- AngularDart project (https://github.com/angular/angular.dart)
-- Neeraj Mittal (https://github.com/neermitt)
+
+- [Sergey Akopkokhyants](https://github.com/akserg)
+- [Tõnis Pool](https://github.com/poolik).
+- [Günter Zöchbauer](https://github.com/zoechi)
+- [Francesco Cina](https://github.com/ufoscout)
+- [AngularDart project](https://github.com/angular/angular.dart)
+- [Neeraj Mittal](https://github.com/neermitt)
+
+Big thanks to [Robert Schütte](https://github.com/Roba1993) for his improvements of documentation.
