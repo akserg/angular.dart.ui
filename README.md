@@ -72,5 +72,4 @@ Use the angular-ui components as descrpied below or in the [demo](http://akserg.
 - [Francesco Cina](https://github.com/ufoscout)
 - [AngularDart project](https://github.com/angular/angular.dart)
 - [Neeraj Mittal](https://github.com/neermitt)
-
-Big thanks to [Robert Schütte](https://github.com/Roba1993) for his improvements of documentation.
+- [Robert Schütte](https://github.com/Roba1993)
