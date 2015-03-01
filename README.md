@@ -20,11 +20,6 @@ Include the following code to your `index.html`
 <link rel="stylesheet" href="style.css">
 ```
 
-Add the follwing css ccode to your `style.css`
-```css
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
-```
-
 Add the angular-ui module in your `main.dart`
 ```dart
 import 'package:angular/angular.dart';
