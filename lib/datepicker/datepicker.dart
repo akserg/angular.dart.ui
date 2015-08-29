@@ -115,8 +115,8 @@ class Mode {
 </table>'''
     //templateUrl: 'packages/angular_ui/datepicker/datepicker.html'
 )
-//@Component(selector: '[datepicker][ng-model]', publishAs: 'd', 
-//    useShadowDom: false, 
+//@Component(selector: '[datepicker][ng-model]', publishAs: 'd',
+//    useShadowDom: false,
 //    templateUrl: 'packages/angular_ui/datepicker/datepicker.html')
 class Datepicker implements ShadowRootAware, ScopeAware {
 
@@ -135,61 +135,61 @@ class Datepicker implements ShadowRootAware, ScopeAware {
   Mode get currentMode {
     return modes[mode];
   }
-  
+
   var format;
   List<Mode> modes;
-  
+
   @NgOneWay('day-format')
   void set dayFormat(String value) {
     format.day = value != null ? value : _datepickerConfig.dayFormat;
   }
-  
+
   @NgOneWay('month-format')
   void set monthFormat(String value) {
     format.month = value != null ? value : _datepickerConfig.monthFormat;
   }
-  
+
   @NgOneWay('year-format')
   void set yearFormat(String value) {
     format.year = value != null ? value : _datepickerConfig.yearFormat;
   }
-   
+
   @NgOneWay('day-header-format')
   void set dayHeaderFormat(String value) {
     format.dayHeader = value != null ? value : _datepickerConfig.dayHeaderFormat;
   }
-  
+
   @NgOneWay('day-title-format')
   void set dayTitleFormat(String value) {
     format.dayTitle = value != null ? value : _datepickerConfig.dayTitleFormat;
   }
-   
+
   @NgOneWay('month-title-format')
   void set monthTitleFormat(String value) {
     format.monthTitle = value != null ? value : _datepickerConfig.monthTitleFormat;
   }
-  
+
   int _startingDay;
   @NgOneWay('starting-day')
   void set startingDay(int value) {
     _startingDay = value != null ? value : _datepickerConfig.startingDay;
   }
   int get startingDay => _startingDay;
-  
+
   int _yearRange;
   @NgOneWay('year-range')
   void set yearRange(int value) {
     _yearRange = value != null ? value : _datepickerConfig.yearRange;
   }
   int get yearRange => _yearRange;
-  
+
   var _dateDisabled = null;
   @NgCallback('date-disabled')
   void set dateDisabled(value) {
     _dateDisabled = null;
   }
   get dateDisabled => _dateDisabled;
-  
+
   bool _showWeeks = false;
   @NgOneWay('show-weeks')
   set showWeeks(bool value) {
@@ -221,18 +221,18 @@ class Datepicker implements ShadowRootAware, ScopeAware {
   NgModel _ngModel;
   Scope _scope;
   Date _dateFilter;
-  
+
   List rows;
   List labels;
-  
+
   Datepicker(this._element, this._datepickerConfig, this._attrs, this._ngModel, this._dateFilter);
-  
+
   void set scope(Scope scope) {
     this._scope = scope;
     init();
 
     showWeeks = _datepickerConfig.showWeeks;
-    
+
     _ngModel.render = (value) {
       refill(true);
     };
@@ -245,12 +245,12 @@ class Datepicker implements ShadowRootAware, ScopeAware {
   void onShadowRoot(shadowRoot) {
     refill(true);
   }
-  
+
   Datepicker.forTests(this._element, this._datepickerConfig, this._attrs, this._scope, this._dateFilter) {
     init();
   }
-  
-  
+
+
   void updateShowWeekNumbers() {
     showWeekNumbers = mode == 0 && showWeeks;
     showWeekNumbersEls();
@@ -264,7 +264,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
     } else if (updateSelected) {
       selected = date;
     }
-    
+
     var currentMode = modes[mode];
     VisibleDates data = currentMode.getVisibleDates(selected, date);
     data.objects.forEach((DateVO obj) {
@@ -274,9 +274,9 @@ class Datepicker implements ShadowRootAware, ScopeAware {
     rows = split(data.objects, currentMode.split);
     labels = data.labels;
     String title = data.title;
-    
+
     // DOM render
-    
+
     dom.TableCellElement titleEl = _element.querySelector("#title");
     if (titleEl != null) {
       if (rows.length > 0) {
@@ -284,11 +284,11 @@ class Datepicker implements ShadowRootAware, ScopeAware {
       }
       (titleEl.firstChild as dom.ButtonElement).setInnerHtml('<strong>$title</strong>');
     }
-    
+
     dom.TableRowElement labelsEl = _element.querySelector("#labels");
     if (labelsEl != null) {
       labelsEl.children.clear();
-      
+
       dom.TableCellElement showWeekNumbersEl = new dom.TableCellElement();
       showWeekNumbersEl.classes.add("text-center");
       if (showWeekNumbers) {
@@ -298,7 +298,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
       }
       showWeekNumbersEl.text = '#';
       labelsEl.append(showWeekNumbersEl);
-      
+
       labels.forEach((String label) {
         dom.TableCellElement labelEl = new dom.TableCellElement();
         labelEl.classes.add("text-center");
@@ -306,15 +306,15 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         labelsEl.append(labelEl);
       });
     }
-    
+
     dom.TableSectionElement rowsEl = _element.querySelector("#rows");
     if (rowsEl != null) {
       rowsEl.children.clear();
-      
+
       rows.forEach((List row){
         dom.TableRowElement rowEl = new dom.TableRowElement();
         rowsEl.append(rowEl);
-        
+
         dom.TableCellElement rowWeekNumbersEl = new dom.TableCellElement();
         rowWeekNumbersEl.classes.add("text-center");
         if (showWeekNumbers) {
@@ -324,16 +324,18 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         }
         rowWeekNumbersEl.setInnerHtml('<em>${getWeekNumber(row)}</em>');
         rowEl.append(rowWeekNumbersEl);
-  
+
         row.forEach((DateVO dt) {
           dom.TableCellElement dtEl = new dom.TableCellElement();
           dtEl.classes.add("text-center");
           rowEl.append(dtEl);
-          
+
           dom.ButtonElement btnEl = new dom.ButtonElement()
           ..type = 'button'
           ..style.width = '100%'
-          ..classes.add('btn btn-default btn-sm')
+          ..classes.add('btn')
+          ..classes.add('btn-default')
+          ..classes.add('btn-sm')
           ..onClick.listen((dom.MouseEvent evt){
             select(dt.date);
           });
@@ -344,7 +346,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
             btnEl.disabled = true;
           }
           dtEl.append(btnEl);
-          
+
           dom.SpanElement labelSpan = new dom.SpanElement()
           ..text = dt.label;
           if (dt.secondary) {
@@ -355,7 +357,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
       });
     }
   }
-  
+
   void showWeekNumbersEls() {
     dom.TableCellElement titleEl = _element.querySelector("#title");
     if (titleEl != null && rows != null && rows.length > 0) {
@@ -462,12 +464,12 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         new Mode()
         ..name = 'day'
         ..getVisibleDates = (DateTime date, DateTime selected) {
-          var year = date.year, 
-              month = date.month, 
+          var year = date.year,
+              month = date.month,
               firstDayOfMonth = new DateTime(year, month, 1);
           var difference = startingDay - firstDayOfMonth.weekday,
               numDisplayedFromPreviousMonth = (difference > 0) ? 7 - difference : -difference,
-              firstDate = new DateTime.fromMillisecondsSinceEpoch(firstDayOfMonth.millisecondsSinceEpoch), 
+              firstDate = new DateTime.fromMillisecondsSinceEpoch(firstDayOfMonth.millisecondsSinceEpoch),
               numDates = 0;
 
           if (numDisplayedFromPreviousMonth > 0) {
@@ -477,12 +479,12 @@ class Datepicker implements ShadowRootAware, ScopeAware {
           numDates += getDaysInMonth(year, month + 1); // Current
           numDates += (7 - numDates % 7) % 7; // Next
 
-          var days = getDates(firstDate, numDates), 
+          var days = getDates(firstDate, numDates),
               labels = new List(); // !!! 7
           for (var i = 0; i < numDates; i++) {
             DateTime dt = days[i];
             days[i] = makeDate(dt, format.day, selected != null &&
-                selected.day == dt.day && selected.month == dt.month && 
+                selected.day == dt.day && selected.month == dt.month &&
                 selected.year == dt.year, dt.month != month);
           }
           for (var j = 0; j < 7; j++) {
@@ -500,15 +502,15 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         ..split = 7
         ..step = {
           'months': 1
-        }, 
+        },
         new Mode()
         ..name = 'month'
         ..getVisibleDates = (DateTime date, DateTime selected) {
-          var months = new List(), 
+          var months = new List(),
               year = date.year;
           for (var i = 1; i <= 12; i++) {
             var dt = new DateTime(year, i, 1);
-            months.add(makeDate(dt, format.month, 
+            months.add(makeDate(dt, format.month,
                 (selected != null && selected.month == i && selected.year == year)));
           }
           return new VisibleDates()
@@ -522,16 +524,16 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         ..split = 3
         ..step = {
           'years': 1
-        }, 
+        },
         new Mode()
         ..name = 'year'
         ..getVisibleDates = (DateTime date, DateTime selected) {
-          var years = new List(), 
-              year = date.year, 
+          var years = new List(),
+              year = date.year,
               startYear =  ((year - 1) ~/ yearRange) * yearRange + 1;
           for (var i = 0; i < yearRange; i++) {
             var dt = new DateTime(startYear + i, 1, 1);
-            years.add(makeDate(dt, format.year, 
+            years.add(makeDate(dt, format.year,
                 (selected != null && selected.year == dt.year)));
           }
           return new VisibleDates()
@@ -580,7 +582,7 @@ class Datepicker implements ShadowRootAware, ScopeAware {
         (maxDate != null && currentMode.compare(date, this.maxDate) > 0) ||
         (dateDisabled != null && dateDisabled({'date':date, 'mode':currentMode.name})));
   }
-  
+
 //  bool isDisabled(DateTime date, [int mode = 0]) {
 //    var currentMode = modes[mode];
 //    if (minDate != null) {
