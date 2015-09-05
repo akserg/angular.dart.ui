@@ -55,6 +55,17 @@ class TabComponent implements DetachAware, ScopeAware {
       onDeselectCallback();
     }
     _active = newValue;
+    _refreshTabHeading();
+  }
+
+  // Work around for dynamic tab heading issue.  It seems to have something to do with the digest cycle
+  // on tab and the ng-if adding the element back to dom.
+  void _refreshTabHeading() {
+    if(this._active && this.heading is Node) {
+      var clone = this.heading.clone(true);
+      (this.heading as Node).nodes.clear();
+      this.heading = clone;
+    }
   }
 
   @override
