@@ -6,3 +6,5 @@
 * [Francesco Cina](https://github.com/ufoscout)
 * [Neeraj Mittal](https://github.com/neermitt)
 * [Robert Schütte](https://github.com/Roba1993)
+* [Jonathan Hughes](https://github.com/jonathanhughes)
+* [Martynas Kazlauskas](martynas@firmfirm.co)
