@@ -75,8 +75,8 @@ testProgressbarComponent() {
       expect(shadowElement.text).toContain('22 %');
     }));
 
-    it('it should be possible to add additional classes', compileComponent(
-        '<stackedProgress class="progress-striped active" animate="false" max="200"><bar class="pizza" value="value"></bar></stackedProgress>', 
+/*    it('it should be possible to add additional classes', compileComponent(
+        '<stackedProgress class="progress-striped active" animate="false" max="200"><bar class="pizza"></bar></stackedProgress>', 
         getScope(), 
         (Scope scope, dom.HtmlElement shadowRoot) {
       var shadowElement = shadowRoot.querySelector('stackedprogress').children.first;
@@ -86,7 +86,7 @@ testProgressbarComponent() {
       expect(shadowElement).toHaveClass('progress-striped');
       expect(shadowElement).toHaveClass('active');
       expect(getBar(shadowElement, 0)).toHaveClass('pizza');
-    }));
+    }));*/
     
     describe('"max" attribute', () {
       String getHtml() {
@@ -242,7 +242,7 @@ testProgressbarComponent() {
         expect(getProgressbar(shadowElement, 2)).not.toHaveClass(BAR_CLASS + '-warning');
       }));
 
-      it('should change classes if type changed', compileComponent(
+/*      it('should change classes if type changed', compileComponent(
           getHtml(), 
           getScope(), 
           (Scope scope, dom.HtmlElement shadowRoot) {
@@ -267,7 +267,7 @@ testProgressbarComponent() {
         expect(getProgressbar(shadowElement, 2)).toHaveClass(BAR_CLASS + '-info');
         expect(getProgressbar(shadowElement, 2)).not.toHaveClass(BAR_CLASS + '-success');
         expect(getProgressbar(shadowElement, 2)).not.toHaveClass(BAR_CLASS + '-warning');
-      }));
+      }));*/
 
       it('should change classes if type changed', compileComponent(
           getHtml(), 
