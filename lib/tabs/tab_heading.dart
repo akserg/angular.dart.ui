@@ -6,7 +6,8 @@ part of angular.ui.tabs;
 @Decorator(selector: 'tab-heading')
 class TabHeading {
   TabHeading(Element elem, TabComponent tab) {
-    elem.remove();
-    tab.heading = elem;
+    var clone = elem.clone(true);
+    elem.nodes.clear();
+    tab.heading = clone;
   }
 }
