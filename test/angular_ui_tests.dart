@@ -104,12 +104,14 @@ main(){
 
 testFake() {
   describe("[Fake Test]", () {
-    beforeEach(setUpInjector);
-    afterEach(tearDownInjector);
+
+    // TODO: setUpInjector and tearDownInjector don't exist
+    // beforeEach(setUpInjector);
+    // afterEach(tearDownInjector);
 
     it('must be success', () {
       expect(true).toBeNotNull();
-    }));
+    });
   });
 }
 

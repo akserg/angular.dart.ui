@@ -4,16 +4,9 @@
 library angular.ui.demo;
 
 import 'dart:html' as dom;
-//import 'package:angular2/di.dart' show bind;
-import 'package:angular2/core.dart' show Component, Template;
-import 'package:angular2/src/core/application.dart' show bootstrap;
-//import 'package:angular2/src/core/annotations/template_config.dart';
+
 import 'package:logging/logging.dart';
-
-// for demos. remove for production, which should use a transformer.
-import 'package:angular2/src/reflection/reflection.dart' show reflector;
-import 'package:angular2/src/reflection/reflection_capabilities.dart' show ReflectionCapabilities;
-
+import 'package:angular2/angular2.dart';
 
 //import 'package:angular_ui/buttons/buttons.dart'; // show buttonBindings;
 
@@ -46,7 +39,6 @@ final _log = new Logger('angular.ui.demo');
  * Entry point into app.
  */
 main() {
-
   hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.OFF;
   Logger.root.onRecord.listen((LogRecord r) {
@@ -56,41 +48,33 @@ main() {
   new Logger("angular.ui")..level = Level.FINER;
 
   _log.fine('bootstrap');
-  
-  reflector.reflectionCapabilities = new ReflectionCapabilities();
+
   bootstrap(DemoApp);
 }
 
-@Component(
-  selector: 'demo-app'
-)
-@Template(
-  inline:r'''
-<h3>Hello {{name}}!</h3>
-Name: <input type="text" on-change="nameChanged($event)">
-<div class="checkbox">
-    <label>
-        <input type="checkbox" [checked]="checked" (change)="checkedChanged($event)"> Checkbox
-    </label>
-</div>
-'''
-)
+@Component(selector: 'demo-app')
+@View(
+    template: r'''
+    <h3>Hello {{name}}!</h3>
+    Name: <input type="text" (input)="nameChanged($event)">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" [checked]="checked" (change)="checkedChanged($event)"> Checkbox
+        </label>
+    </div>
+    ''')
 class DemoApp {
   DemoApp() {
     _log.fine('DemoApp');
   }
-  
+
   String name = "whoever";
   void nameChanged(event) {
     name = event.target.value;
   }
-  
-  var checked = false;
+
+  bool checked = false;
   void checkedChanged(event) {
     checked = event.target.checked;
   }
-  
-  var singleModel = false;
 }
-
-
