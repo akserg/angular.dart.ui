@@ -1,3 +1,15 @@
+#Version 0.6.10-11 (2015/10/08)
+
+##Bug Fixes
+
+- Bug fix for Carousel transition cancelled
+
+#Version 0.6.9, (2015/09/24)
+
+##Bug Fixes
+
+- Work around to tab heading issue.
+
 #Version 0.6.8, (2015/03/01)
 
 - Updated Copyright info.

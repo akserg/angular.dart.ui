@@ -83,19 +83,23 @@ class Carousel implements DetachAware, ScopeAware {
   }
 
   void next() {
-    var newIndex = (_currentIndex + 1) % slides.length;
-    //Prevent this user-triggered transition from occurring if there is already one in progress
-    if (_currentTransition == null) {
-      select(slides[newIndex], direction:'next');
-    }
+    if (slides.length > 0) {
+      var newIndex = (_currentIndex + 1) % slides.length;
+      //Prevent this user-triggered transition from occurring if there is already one in progress
+      if (_currentTransition == null) {
+        select(slides[newIndex], direction:'next');
+      }
+    } 
   }
 
   void prev() {
-    var newIndex = _currentIndex - 1 < 0 ? slides.length - 1 : _currentIndex - 1;
+    if (slides.length > 0) {
+      var newIndex = _currentIndex - 1 < 0 ? slides.length - 1 : _currentIndex - 1;
 
-    //Prevent this user-triggered transition from occurring if there is already one in progress
-    if (_currentTransition == null) {
-      select(slides[newIndex], direction:'prev');
+      //Prevent this user-triggered transition from occurring if there is already one in progress
+      if (_currentTransition == null) {
+        select(slides[newIndex], direction:'prev');
+      }
     }
   }
 
@@ -137,15 +141,18 @@ class Carousel implements DetachAware, ScopeAware {
   }
 
   void _goNext(String direction, int nextIndex) {
-    Slide nextSlide = slides[nextIndex];
     // Scope has been destroyed, stop here.
     if (_destroyed) {
       return;
     }
+    if (nextIndex >= slides.length) {
+    	// Something goes wrong - stop transition.
+    	return;
+    }
+    Slide nextSlide = slides[nextIndex];
     // If we have a slide to transition from and we have a transition type and we're allowed, go
     if (_currentSlide != null && direction != null && direction.isNotEmpty && !noTransition && nextSlide.element != null) {
       // We shouldn't do class manip in here, but it's the same weird thing bootstrap does. need to fix sometime
-      //nextSlide.element.classes.add(direction);
       nextSlide.element.classes.add(direction);
 
       var reflow = nextSlide.element.children[0].offsetWidth; //force reflow
