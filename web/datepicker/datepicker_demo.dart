@@ -15,7 +15,7 @@ class DatepickerDemo {
   
   var dt;
   bool showWeeks = true;
-  DateTime minDate;
+  DateTime minDate, maxDate = new DateTime(2020, 5, 22);
   bool opened = false;
   Map dateOptions = {
    'year-format': '\'yy\'',
@@ -23,6 +23,9 @@ class DatepickerDemo {
   };
   List formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
   String format;
+  Map status = {
+    'opened': false
+  };
   
 //  Date filter;
   
