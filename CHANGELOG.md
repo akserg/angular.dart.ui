@@ -1,3 +1,11 @@
+#Version 0.6.12 (2015/12/04)
+
+##Bug Fixes
+
+- Bug fix for Unit tests fail with issue: The null object does not have a method '[]'
+- Bug fix Added null check when backdrop is double clicked.
+
+
 #Version 0.6.10-11 (2015/10/08)
 
 ##Bug Fixes
