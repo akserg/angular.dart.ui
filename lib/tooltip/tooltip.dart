@@ -404,7 +404,7 @@ abstract class TooltipBase implements ScopeAware {
   }
 
   void unregisterTriggers() {
-  	if (_element) {
+  	if (_element != null) {
       _element.removeEventListener(triggers['show'], showTooltipBind);
       _element.removeEventListener(triggers['hide'], hideTooltipBind);
     }
