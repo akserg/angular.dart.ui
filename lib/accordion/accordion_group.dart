@@ -8,9 +8,9 @@ part of angular.ui.accordion;
 //    templateUrl: 'packages/angular_ui/accordion/accordion_group.html',
     template: r'''
 <div class="panel panel-default">
-  <div class="panel-heading">
+  <div class="panel-heading" ng-click="toggleOpen()">
     <h4 class="panel-title">
-      <a class="accordion-toggle" ng-click="toggleOpen()" accordion-transclude="heading"><span ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
+      <a href tabIndex="0" class="accordion-toggle" accordion-transclude="heading"><span ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
     </h4>
   </div>
   <div class="panel-collapse" collapse="collapse">
@@ -39,7 +39,7 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
       scope.watch('isOpen', (value, old){
         collapse = !value;
       });
-    }, delay:500);
+    }, delay:50);
   }
   
   bool _isOpen = false;
@@ -52,7 +52,7 @@ class AccordionGroupComponent implements DetachAware, ScopeAware {
   }
   get isOpen => _isOpen;
   
-  bool collapse = false;
+  bool collapse = true;
   
   bool _isDisabled = false;
   @NgTwoWay('is-disabled') 
@@ -103,12 +103,14 @@ class AccordionTransclude implements ScopeAware {
     scope.watch("heading", (value, previousValue) {
       if (value != null && value is dom.Element && value.tagName == 'ACCORDION-HEADING') {
         // We adding text belogns to 'accordion-heading' element to span element
-        dom.SpanElement span = elem.firstChild as dom.SpanElement;
-        span.children.clear();
-        span.appendHtml(value.innerHtml.trim());
-        // Other elements like icons must move separatelly into the element itself 
-        while (value.children.length > 0) {
-          elem.append(value.children[0]);
+        dom.SpanElement span = elem.querySelector('span') as dom.SpanElement;
+        if (span != null) {
+          span.children.clear();
+          span.appendHtml(value.innerHtml.trim());
+          // Other elements like icons must move separatelly into the element itself 
+          while (value.children.length > 0) {
+            elem.append(value.children[0]);
+          }
         }
       }
     });
