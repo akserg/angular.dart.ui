@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Angular UI by akserg</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
     <!--[if lt IE 9]>
@@ -39,7 +39,7 @@
         </div>
 
         <h1>
-<a id="angular-ui----" class="anchor" href="#angular-ui----" aria-hidden="true"><span class="octicon octicon-link"></span></a>Angular UI <a href="https://travis-ci.org/akserg/angular.dart.ui"><img src="https://travis-ci.org/akserg/angular.dart.ui.svg?branch=master" alt="Build Status"></a> <a href="http://waffle.io/akserg/angular.dart.ui?milestone=0.6"><img src="https://badge.waffle.io/akserg/angular.dart.ui.svg?label=ready" alt="Stories in Ready"></a> <a href="https://coveralls.io/r/akserg/angular.dart.ui"><img src="https://coveralls.io/repos/akserg/angular.dart.ui/badge.svg" alt="Coverage Status"></a> </h1>
+<a id="angular-ui----" class="anchor" href="#angular-ui----" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Angular UI <a href="https://travis-ci.org/akserg/angular.dart.ui"><img src="https://travis-ci.org/akserg/angular.dart.ui.svg?branch=master" alt="Build Status"></a> <a href="http://waffle.io/akserg/angular.dart.ui?milestone=0.6"><img src="https://badge.waffle.io/akserg/angular.dart.ui.svg?label=ready" alt="Stories in Ready"></a> <a href="https://coveralls.io/r/akserg/angular.dart.ui"><img src="https://coveralls.io/repos/akserg/angular.dart.ui/badge.svg" alt="Coverage Status"></a> </h1>
 
 <p>Port of Angular-UI to Dart.</p>
 
@@ -48,26 +48,26 @@
 <p>You may be interesting in check out <a href="http://akserg.github.io/angular.dart.material.demo">Material Design Theme</a> for this project.</p>
 
 <h2>
-<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick-Start</h2>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick-Start</h2>
 
 <p>Include the following code to your <code>index.html</code></p>
 
-<div class="highlight highlight-html"><pre><span class="pl-c">&lt;!-- Latest compiled and minified bootsrap CSS --&gt;</span>
-&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css<span class="pl-pds">"</span></span>&gt;
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-c">&lt;!-- Latest compiled and minified bootsrap CSS --&gt;</span>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css<span class="pl-pds">"</span></span>&gt;
 <span class="pl-c">&lt;!-- Optional bootstrap theme CSS --&gt;</span>
-&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css<span class="pl-pds">"</span></span>&gt;
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css<span class="pl-pds">"</span></span>&gt;
 <span class="pl-c">&lt;!-- angular ui CSS --&gt;</span>
-&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>packages/angular_ui/css/angular.css<span class="pl-pds">"</span></span>&gt;
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>packages/angular_ui/css/angular.css<span class="pl-pds">"</span></span>&gt;
 <span class="pl-c">&lt;!-- your own CSS file --&gt;</span>
-&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s1"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>style.css<span class="pl-pds">"</span></span>&gt;</pre></div>
+&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>style.css<span class="pl-pds">"</span></span>&gt;</pre></div>
 
 <p>Add the angular-ui module in your <code>main.dart</code></p>
 
-<div class="highlight highlight-dart"><pre><span class="pl-k">import</span> <span class="pl-s1">'package:angular/angular.dart'</span>;
-<span class="pl-k">import</span> <span class="pl-s1">'package:angular/application_factory.dart'</span>;
-<span class="pl-k">import</span> <span class="pl-s1">'package:angular_ui/angular_ui.dart'</span>;
+<div class="highlight highlight-source-dart"><pre><span class="pl-k">import</span> <span class="pl-s">'package:angular/angular.dart'</span>;
+<span class="pl-k">import</span> <span class="pl-s">'package:angular/application_factory.dart'</span>;
+<span class="pl-k">import</span> <span class="pl-s">'package:angular_ui/angular_ui.dart'</span>;
 
-<span class="pl-st">void</span> main() {
+<span class="pl-k">void</span> main() {
   applicationFactory()
     .addModule(<span class="pl-k">new</span> AngularUIModule()) <span class="pl-c">// The angular-ui module</span>
     .addModule(<span class="pl-k">new</span> MainModule()) <span class="pl-c">// Your own module</span>
@@ -77,7 +77,7 @@
 <p>Use the angular-ui components as descrpied below or in the <a href="http://akserg.github.io/angular.dart.ui.demo/index.html">demo</a>.</p>
 
 <h2>
-<a id="bootstrap-directives-and-components" class="anchor" href="#bootstrap-directives-and-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bootstrap directives and components</h2>
+<a id="bootstrap-directives-and-components" class="anchor" href="#bootstrap-directives-and-components" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bootstrap directives and components</h2>
 
 <ul>
 <li>Checkbox and RadioButton</li>
@@ -91,7 +91,7 @@
 <li>Datepicker (partially implemented)</li>
 <li>Tabs</li>
 <li>Drag and Drop support</li>
-<li><a href="https://github.com/akserg/angular.dart.ui/tree/master/lib/carousel">Carousel</a></li>
+<li>Carousel</li>
 <li>Timepicker</li>
 <li>Pagination</li>
 <li>Tooltip</li>
@@ -102,7 +102,7 @@
 <p><em>Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.</em></p>
 
 <h2>
-<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h2>
 
 <ul>
 <li><a href="https://github.com/akserg">Sergey Akopkokhyants</a></li>
