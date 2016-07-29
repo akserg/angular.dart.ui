@@ -9,6 +9,20 @@ class TypeaheadHighlightFilter implements Function {
   }
 
   String call(String matchItem, String query) {
-    return (query == null || query.isEmpty) ? matchItem : ('$matchItem').replaceAllMapped(new RegExp(escapeRegexp(query), caseSensitive: false), (Match m)=> '<strong>${m[0]}</strong>');
+    if (query == null || query.isEmpty) {
+      return matchItem;
+    } else {
+      var queryArray = escapeRegexp(query).split(" ");
+      StringBuffer queryString = new StringBuffer();
+      if (queryArray.length > 1) {
+        queryString.writeAll(queryArray,'|');
+      } else {
+        queryString.write(queryArray[0]);
+      }
+      return ('$matchItem')
+          .replaceAllMapped(new RegExp(
+          queryString.toString().trim(), caseSensitive: false), (
+          Match m) =>  '<strong>${m[0]}</strong>');
+    }
   }
 }
