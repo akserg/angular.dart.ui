@@ -45,5 +45,11 @@ void typeaheadHighlightFilterTests() {
     it('should work correctly with numeric values', async(inject((){
       expect(highlightFilter('123', '2')).toEqual('1<strong>2</strong>3');
     })));
+
+    it('should highlight match results based on individual words', async(inject((){
+      expect(highlightFilter('John Doe 123', 'John 123')).toEqual('<strong>John</strong> Doe <strong>123</strong>');
+      expect(highlightFilter('John - Doe - Jane - Doe', 'John Jane')).toEqual('<strong>John</strong> - Doe - <strong>Jane</strong> - Doe');
+    })));
+
   });
 }
