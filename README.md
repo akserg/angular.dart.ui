@@ -34,7 +34,7 @@ void main() {
 }
 ```
 
-Use the angular-ui components as descrpied below or in the [demo](http://akserg.github.io/angular.dart.ui.demo/index.html).
+Use the angular-ui components as described below or in the [demo](http://akserg.github.io/angular.dart.ui.demo/index.html).
 
 
 ##Bootstrap directives and components

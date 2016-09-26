@@ -1,8 +1,9 @@
-# Version 0.6.13 (2016/25/02)
+# Version 0.6.13 (2016/26/09)
 
 ## Bug Fixes
 
-- Accordion collapsed after initialisation with delay [#154](https://github.com/akserg/angular.dart.ui/issues/154)
+- Accordion collapsed after initialization with delay [#154](https://github.com/akserg/angular.dart.ui/issues/154)
+- Typeahead highlight only works with the exact match need it to show highlight based on the words [#171](https://github.com/akserg/angular.dart.ui/issues/171)
 
 # Version 0.6.12 (2015/12/04)
 
@@ -16,7 +17,7 @@
 
 ## Bug Fixes
 
-- Carousel transition cancelled
+- Carousel transition canceled
 
 # Version 0.6.9, (2015/09/24)
 
@@ -27,21 +28,21 @@
 # Version 0.6.8, (2015/03/01)
 
 - Updated Copyright info.
-- Improved documantation for Carousel component and general README file
+- Improved documentation for Carousel component and general README file
 
 # Version 0.6.7, (2015/02/27)
 
 ## Bug Fixes
 
-- Accordion: double click on title causes inconstent state or bad rendering
+- Accordion: double click on title causes inconsistent state or bad rendering
 - Accordion Collapse
 - Accordion doesn't expand after creation if is-open equals true
-- Accordion: fast clicks on title causes inconstent state or bad rendering
+- Accordion: fast clicks on title causes inconsistent state or bad rendering
 - Combine slide and angular css files
 
 # Version 0.6.0, (2014/12/12)
 
-- Migration on Angualr Dart 1.0, support Bootstrap 3.3.1 and bug fixes.
+- Migration on Angular Dart 1.0, support Bootstrap 3.3.1 and bug fixes.
 
 # Version 0.5.5, (2014/06/25)
 
@@ -59,7 +60,7 @@
 
 ## Bug Fixes
 
-- Typeahead placement of suggestion popover offset by approax 200px
+- Typeahead placement of suggestion popover offset by 200px
 - Fix animation toggle and z-index calculation in ModalWindow
 
 # Version 0.5.2, (2014/06/17)

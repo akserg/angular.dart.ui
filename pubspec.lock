@@ -161,3 +161,5 @@ packages:
     description: yaml
     source: hosted
     version: "2.1.8"
+sdks:
+  dart: ">=1.12.0 <2.0.0"
