@@ -37,7 +37,7 @@ void main() {
 Use the angular-ui components as described below or in the [demo](http://akserg.github.io/angular.dart.ui.demo/index.html).
 
 
-##Bootstrap directives and components
+## Bootstrap directives and components
 
 - Checkbox and RadioButton
 - DropdownToggle
@@ -59,7 +59,7 @@ Use the angular-ui components as described below or in the [demo](http://akserg.
 
 *Note: Drag and Drop support is experimental feature and API can be changed at any time in the future.*
 
-##Credits
+## Credits
 
 - [Sergey Akopkokhyants](https://github.com/akserg)
 - [Tõnis Pool](https://github.com/poolik).
